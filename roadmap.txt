@@ -5,20 +5,20 @@
 - Weitere Button-Kurzinfos (z.B. Pfad zeigen, Rückgängig, Stopp) ins Hilfemodul ausgelagert.
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
 - Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
+- Cache wird bei externen Datenbankänderungen automatisch invalidiert.
 - Automatische Startprüfung und Hilfestart integriert.
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
 - Sphinx-Dokumentation enthält eine Startanleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
+- Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.
+- FFmpeg-Aufrufe prüfen jetzt den Rückgabecode und geben verständliche Fehlermeldungen aus.
+- CLI liefert konsistente Exit-Codes.
+- Docstrings für CLI- und GUI-Helfer ergänzt.
 
-- Nächster Schritt: Alarme ergänzen.
-- Danach: CalDAV-Synchronisation und Gruppen-Kalender umsetzen.
+ - SQLite-Verbindung ist jetzt threadsicher.
+ - Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+ - Danach: Alarme und CalDAV-Synchronisation sowie Gruppen-Kalender umsetzen.
 
-1. Alarme für Termine implementieren.
-2. CalDAV-Synchronisation und Gruppen-Kalender entwickeln.
-
-- Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
-- Danach: Alarme und CalDAV-Synchronisation umsetzen.
-
-1. Kalender- und CalDAV-Funktionen entwickeln.
-2. Alarme und Gruppen-Kalender verbessern.
+ 1. Kalender- und CalDAV-Funktionen entwickeln.
+ 2. Alarme und Gruppen-Kalender verbessern.

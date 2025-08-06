@@ -11,7 +11,7 @@ from PySide6.QtCore import Qt  # noqa: E402
 from videobatch_gui import MainWindow, human_time, make_thumb, PairItem  # noqa: E402
 from utils import check_ffmpeg  # noqa: E402
 from storage import load_project  # noqa: E402
-from config.paths import DEFAULT_OUT_DIR  # noqa: E402
+from config.paths import DEFAULT_OUT_DIR, NOTES_FILE  # noqa: E402
 
 
 def test_human_time_gui():
@@ -128,7 +128,7 @@ def test_toggle_thumbnails(tmp_path):
 
 def test_notes_persist(tmp_path):
     os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
-    notes_file = Path("/tmp/.videobatchtool/notes.txt")
+    notes_file = NOTES_FILE
     if notes_file.exists():
         notes_file.unlink()
     QtWidgets.QApplication.instance() or QtWidgets.QApplication([])

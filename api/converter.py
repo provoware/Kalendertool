@@ -68,8 +68,21 @@ def build_ffmpeg_cmd(
     ]
 
 
-def run_ffmpeg(cmd: List[str]) -> subprocess.Popen:
-    """Starte ffmpeg mit dem gegebenen Befehl."""
+def start_ffmpeg(cmd: List[str]) -> subprocess.Popen:
+    """Starte ffmpeg asynchron (im Hintergrund)."""
     return subprocess.Popen(
         cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True
     )
+
+
+def run_ffmpeg(cmd: List[str]) -> subprocess.CompletedProcess:
+    """Führe ffmpeg aus und werte den Rückgabecode aus.
+
+    Gibt ein ``CompletedProcess``-Objekt zurück oder hebt bei Fehlern eine
+    ``RuntimeError`` mit der letzten Fehlermeldung (``stderr``) aus.
+    """
+    res = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    if res.returncode != 0:
+        msg = res.stderr.strip() or f"ffmpeg Fehlercode {res.returncode}"
+        raise RuntimeError(msg)
+    return res

@@ -24,7 +24,7 @@ from utils import (
     validate_pair,
 )
 
-from api import build_ffmpeg_cmd, run_ffmpeg
+from api import build_ffmpeg_cmd, start_ffmpeg
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
@@ -37,6 +37,7 @@ from config.paths import (
     PROJECT_DB,
     DEFAULT_OUT_DIR,
     USED_DIR,
+    ensure_directories,
 )
 from storage import save_project, load_project, close as close_storage
 from help.tooltips import (
@@ -54,19 +55,14 @@ from help.tooltips import (
 
 # ---------- Logging & Persistenz ----------
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_FILE, encoding="utf-8"),
-        logging.StreamHandler(sys.stdout),
-    ],
-)
 logger = logging.getLogger("VideoBatchTool")
+logger.addHandler(logging.NullHandler())
 
 
 # ---------- Helpers ----------
 def probe_duration(path: str) -> float:
+    """Return audio duration in seconds using ffmpeg (falls back to 0)."""
+
     try:
         import ffmpeg
 
@@ -83,7 +79,12 @@ def probe_duration(path: str) -> float:
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
-    dst_dir.mkdir(parents=True, exist_ok=True)
+    """Move or copy a file into dst_dir and handle name clashes safely."""
+
+    try:
+        dst_dir.mkdir(parents=True, exist_ok=True)
+    except OSError as err:
+        raise RuntimeError(f"Zielordner konnte nicht erstellt werden: {err}") from err
     tgt = dst_dir / src.name
     if tgt.exists():
         stem, suf = src.stem, src.suffix
@@ -106,6 +107,8 @@ def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
 
 @lru_cache(maxsize=128)
 def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
+    """Create a thumbnail pixmap for the GUI (returns gray on error)."""
+
     try:
         from PIL import Image
 
@@ -131,6 +134,8 @@ COLUMNS = ["#", "Thumb", "Bild", "Audio", "Dauer", "Ausgabe", "Fortschritt", "St
 
 @dataclass
 class PairItem:
+    """Ein Bild/Audio-Paar samt Status für die Tabelle."""
+
     image_path: str
     audio_path: Optional[str] = None
     duration: float = 0.0
@@ -141,15 +146,21 @@ class PairItem:
     valid: bool = True
     validation_msg: str = ""
 
-    def update_duration(self):
+    def update_duration(self) -> None:
+        """Ermittle Audiodauer neu."""
+
         if self.audio_path:
             self.duration = probe_duration(self.audio_path)
 
-    def load_thumb(self):
+    def load_thumb(self) -> None:
+        """Thumbnail bei Bedarf erzeugen."""
+
         if self.thumb is None and self.image_path:
             self.thumb = make_thumb(self.image_path)
 
-    def validate(self):
+    def validate(self) -> None:
+        """Pfadpaar prüfen und Status setzen."""
+
         ok, msg = validate_pair(self.image_path, self.audio_path)
         self.valid = ok
         self.validation_msg = msg
@@ -307,11 +318,14 @@ class EncodeWorker(QtCore.QObject):
                     crf,
                     preset,
                 )
-                self._proc = run_ffmpeg(cmd)
+                self._proc = start_ffmpeg(cmd)
+                last_line = ""
                 for line in self._proc.stderr:
                     if self._stop:
                         self._proc.kill()
                         break
+                    if line:
+                        last_line = line.strip()
                     if "time=" in line:
                         try:
                             t = line.split("time=")[1].split(" ")[0]
@@ -327,7 +341,10 @@ class EncodeWorker(QtCore.QObject):
                 self._proc = None
                 if rc != 0:
                     item.status = "FEHLER"
-                    self.row_error.emit(i, "FFmpeg-Fehler")
+                    msg = (
+                        f"FFmpeg-Fehler: {last_line}" if last_line else "FFmpeg-Fehler"
+                    )
+                    self.row_error.emit(i, msg)
                 else:
                     item.status = "FERTIG"
                     item.progress = 100.0
@@ -487,6 +504,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
+        ensure_directories()
         self.setWindowTitle("VideoBatchTool 4.1 – Bild + Audio → MP4")
         screen = QtGui.QGuiApplication.primaryScreen()
         available = screen.availableGeometry()
@@ -794,6 +812,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 self._apply_project_data(data)
             except Exception as exc:
                 logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Projekt laden",
+                    "Projekt konnte nicht automatisch geladen werden.",
+                )
 
     # ----- UI helpers -----
     def _build_menus(self):
@@ -1255,6 +1278,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
 # ---- Public
 def run_gui():
+    ensure_directories()
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler(LOG_FILE, encoding="utf-8"),
+            logging.StreamHandler(sys.stdout),
+        ],
+    )
+    global logger
+    logger = logging.getLogger("VideoBatchTool")
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
     w = MainWindow()
     w.show()

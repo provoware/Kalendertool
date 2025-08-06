@@ -9,85 +9,67 @@
 from __future__ import annotations
 
 import re
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 from typing import List
 
 from utils import build_out_name, human_time, validate_pair
+from api import build_ffmpeg_cmd, run_ffmpeg
 
 
 def cli_encode(
     images: List[Path],
     audios: List[Path],
     out_dir: Path,
-    width=1920,
-    height=1080,
-    crf=23,
-    preset="ultrafast",
-    abitrate="192k",
+    width: int = 1920,
+    height: int = 1080,
+    crf: int = 23,
+    preset: str = "ultrafast",
+    abitrate: str = "192k",
 ) -> int:
+    """Encode multiple image/audio pairs into videos (CLI helper).
+
+    Returns 0 on success, 1 if lists mismatch, or 2 when ffmpeg fails.
+    """
+
     out_dir.mkdir(parents=True, exist_ok=True)
     if len(images) != len(audios):
         print("Fehler: Anzahl Bilder != Anzahl Audios")
         return 1
     total = len(images)
     done = 0
+    errors = 0
     for i, (img, aud) in enumerate(zip(images, audios), 1):
         ok, msg = validate_pair(img, aud)
         if not ok:
             print(f"[{i}/{total}] {msg}: {img} / {aud}")
+            errors += 1
             continue
         out_file = build_out_name(aud, out_dir)
-        cmd = [
-            "ffmpeg",
-            "-y",
-            "-loop",
-            "1",
-            "-i",
+        cmd = build_ffmpeg_cmd(
             str(img),
-            "-i",
             str(aud),
-            "-c:v",
-            "libx264",
-            "-tune",
-            "stillimage",
-            "-vf",
-            (
-                f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
-                f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2"
-            ),
-            "-c:a",
-            "aac",
-            "-b:a",
-            abitrate,
-            "-shortest",
-            "-preset",
-            preset,
-            "-crf",
-            str(crf),
             str(out_file),
-        ]
-        res = subprocess.run(
-            cmd,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE,
-            text=True,
-            stdin=subprocess.DEVNULL,
+            width,
+            height,
+            abitrate,
+            crf,
+            preset,
         )
-        if res.returncode == 0:
+        try:
+            run_ffmpeg(cmd)
             done += 1
-        else:
-            print(
-                "FFmpeg-Fehler:",
-                res.stderr.splitlines()[-1] if res.stderr else "unbekannt",
-            )
+        except RuntimeError as e:
+            print(f"FFmpeg-Fehler: {e}")
+            errors += 1
     print(f"Fertig: {done}/{total}")
-    return 0
+    return 0 if errors == 0 else 2
 
 
 def run_selftests() -> int:
+    """Run simple self-tests for CLI helpers."""
+
     assert human_time(65) == "01:05"
     with tempfile.TemporaryDirectory() as td:
         out = build_out_name(Path(td) / "a.mp3", Path(td))
@@ -97,7 +79,9 @@ def run_selftests() -> int:
     return 0
 
 
-def main():
+def main() -> None:
+    """Command line interface entry point."""
+
     import argparse
 
     p = argparse.ArgumentParser(description="VideoBatchTool CLI / Tests")

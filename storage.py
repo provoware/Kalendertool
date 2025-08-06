@@ -4,53 +4,76 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 _conn: Optional[sqlite3.Connection] = None
 _cache: Optional[Dict[str, Any]] = None
+_mtime: Optional[int] = None
+_lock = threading.Lock()
 
 
 def _get_conn(db_path: Path) -> sqlite3.Connection:
+    """Get or create the SQLite connection (thread-safe)."""
+
     global _conn
-    if _conn is None:
-        _conn = sqlite3.connect(db_path)
-        _conn.execute(
-            "CREATE TABLE IF NOT EXISTS project (id INTEGER PRIMARY KEY, data TEXT)"
-        )
+    with _lock:
+        if _conn is None:
+            _conn = sqlite3.connect(db_path, check_same_thread=False)
+            _conn.execute(
+                "CREATE TABLE IF NOT EXISTS project (id INTEGER PRIMARY KEY, data TEXT)"
+            )
     return _conn
 
 
 def save_project(data: Dict[str, Any], db_path: Path) -> None:
     """Projekt in SQLite-Datenbank speichern (mit Transaktion und Cache)."""
+
     conn = _get_conn(db_path)
-    with conn:
-        conn.execute("DELETE FROM project")
-        conn.execute("INSERT INTO project (data) VALUES (?)", [json.dumps(data)])
-    global _cache
-    _cache = data
+    try:
+        with _lock, conn:
+            conn.execute("DELETE FROM project")
+            conn.execute("INSERT INTO project (data) VALUES (?)", [json.dumps(data)])
+        global _cache, _mtime
+        _cache = data
+        _mtime = db_path.stat().st_mtime_ns
+    except sqlite3.Error as exc:
+        raise RuntimeError("Projekt konnte nicht gespeichert werden") from exc
 
 
 def load_project(db_path: Path) -> Dict[str, Any]:
-    """Projekt aus SQLite-Datenbank laden (mit Cache)."""
-    global _cache
-    if _cache is not None:
+    """Projekt aus SQLite-Datenbank laden (mit Cache und Invalidation)."""
+
+    global _cache, _mtime
+    with _lock:
+        current_mtime = db_path.stat().st_mtime_ns if db_path.exists() else None
+        if _cache is not None and _mtime == current_mtime:
+            return _cache
+        conn = _get_conn(db_path)
+        try:
+            cur = conn.execute("SELECT data FROM project ORDER BY id DESC LIMIT 1")
+            row = cur.fetchone()
+        except sqlite3.Error as exc:
+            raise RuntimeError("Projekt konnte nicht geladen werden") from exc
+        if row:
+            _cache = json.loads(row[0])
+        else:
+            _cache = {"pairs": [], "settings": {}}
+        _mtime = current_mtime
         return _cache
-    conn = _get_conn(db_path)
-    cur = conn.execute("SELECT data FROM project ORDER BY id DESC LIMIT 1")
-    row = cur.fetchone()
-    if row:
-        _cache = json.loads(row[0])
-    else:
-        _cache = {"pairs": [], "settings": {}}
-    return _cache
 
 
 def close() -> None:
-    global _conn
-    if _conn is not None:
-        _conn.close()
-        _conn = None
+    """Verbindung schließen und Cache leeren (thread-safe)."""
+
+    global _conn, _cache, _mtime
+    with _lock:
+        if _conn is not None:
+            _conn.close()
+            _conn = None
+        _cache = None
+        _mtime = None
 
 
 __all__ = ["save_project", "load_project", "close"]
