@@ -3,4 +3,4 @@
 1. API-Schicht ausbauen und weitere Hilfetexte zentralisieren.
 2. Dauerhafte Datenspeicherung mit SQLite vorbereiten.
 3. Automatische Startprüfung und Hilfestart integrieren.
-4. AppImage für Linux erstellen.
+4. Release-Workflow mit Dokumentation und PyPI-Paket vorbereiten.

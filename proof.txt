@@ -4,4 +4,3 @@
 - API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
 - Weitere Button-Kurzinfos liegen noch im GUI-Code; Hilfemodul wird nicht überall genutzt.
 - Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.
-- AppImage-Paket für Linux fehlt.

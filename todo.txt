@@ -7,7 +7,6 @@
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 - Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
-- AppImage für Linux erstellen
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -51,3 +50,5 @@
 - Hilfetexte ausgelagert
 - Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archiv vervollständigt
 - Tooltip 'Auto-Paaren' mit Hinweis auf automatische Zuordnung erweitert
+- AppImage für Linux erstellen
+- Tooltip 'Umwandlung starten' erklärt die Videoerstellung
