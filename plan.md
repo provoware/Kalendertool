@@ -10,6 +10,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 
 ## Aufgaben
 - Code analysieren und verbessern
+- Bedienung nur über Buttons oder Dialoge
 - Einheitliche Namen
 
 ## Erledigt

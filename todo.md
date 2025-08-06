@@ -1,5 +1,6 @@
 # Noch zu erledigen:
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
+- grafische Interaktivität immer über Buttons oder Auswahldialoge
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
 # # Final und vollständig abgeschlossen:
