@@ -5,9 +5,13 @@
 - Weitere Button-Kurzinfos (z.B. Pfad zeigen, Rückgängig, Stopp) ins Hilfemodul ausgelagert.
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
 - Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
+- Automatische Startprüfung und Hilfestart integriert.
+- Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
+- Sphinx-Dokumentation enthält eine Startanleitung.
+- Einfache CLI mit Hilfefunktion ergänzt.
 
-- Nächster Schritt: Automatische Startprüfung und Hilfestart integrieren.
-- Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+- Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+- Danach: Alarme und CalDAV-Synchronisation umsetzen.
 
-1. Automatische Startprüfung und Hilfestart integrieren.
-2. Kalender- und CalDAV-Funktionen entwickeln.
+1. Kalender- und CalDAV-Funktionen entwickeln.
+2. Alarme und Gruppen-Kalender verbessern.
