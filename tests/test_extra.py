@@ -11,7 +11,7 @@ def test_human_time_format():
 
 
 def test_build_out_name(tmp_path):
-    result = build_out_name("song.mp3", tmp_path)
+    result = build_out_name(Path("song.mp3"), tmp_path)
     assert result.parent == Path(tmp_path)
     assert result.suffix == ".mp4"
     assert result.name.startswith("song_")

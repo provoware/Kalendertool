@@ -11,7 +11,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 ## Aufgaben
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
-- Portabilität für Linux
 - Einheitliche Namen
 
 ## Erledigt
@@ -25,6 +24,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Selbstreparatur
 - Autonome Startprüfung
 - Ressourcen schonen
+- Portabilität für Linux (Pfadbehandlung mit `pathlib`)
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

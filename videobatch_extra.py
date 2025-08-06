@@ -24,43 +24,40 @@ def human_time(s: int) -> str:
     return f"{h:02d}:{m:02d}:{s:02d}" if h else f"{m:02d}:{s:02d}"
 
 
-def build_out_name(audio: str, out_dir: Path) -> Path:
-    return (
-        out_dir / f"{Path(audio).stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
-    )
+def build_out_name(audio: Path, out_dir: Path) -> Path:
+    return out_dir / f"{audio.stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
 
 
 def cli_encode(
-    images: List[str],
-    audios: List[str],
-    out_dir: str,
+    images: List[Path],
+    audios: List[Path],
+    out_dir: Path,
     width=1920,
     height=1080,
     crf=23,
     preset="ultrafast",
     abitrate="192k",
 ) -> int:
-    out_dir_p = Path(out_dir)
-    out_dir_p.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     if len(images) != len(audios):
         print("Fehler: Anzahl Bilder != Anzahl Audios")
         return 1
     total = len(images)
     done = 0
     for i, (img, aud) in enumerate(zip(images, audios), 1):
-        if not Path(img).exists() or not Path(aud).exists():
+        if not img.exists() or not aud.exists():
             print(f"[{i}/{total}] FEHLT: {img} / {aud}")
             continue
-        out_file = build_out_name(aud, out_dir_p)
+        out_file = build_out_name(aud, out_dir)
         cmd = [
             "ffmpeg",
             "-y",
             "-loop",
             "1",
             "-i",
-            img,
+            str(img),
             "-i",
-            aud,
+            str(aud),
             "-c:v",
             "libx264",
             "-tune",
@@ -98,7 +95,7 @@ def cli_encode(
 def run_selftests() -> int:
     assert human_time(65) == "01:05"
     with tempfile.TemporaryDirectory() as td:
-        out = build_out_name(str(Path(td) / "a.mp3"), Path(td))
+        out = build_out_name(Path(td) / "a.mp3", Path(td))
         assert out.name.endswith(".mp4")
         assert re.search(r"a_\d{8}-\d{6}\.mp4$", out.name)
     print("Selftests OK")
@@ -123,11 +120,14 @@ def main():
     if args.selftest:
         sys.exit(run_selftests())
     if args.img and args.aud:
+        images = [Path(p) for p in args.img]
+        audios = [Path(p) for p in args.aud]
+        out_dir = Path(args.out)
         sys.exit(
             cli_encode(
-                args.img,
-                args.aud,
-                args.out,
+                images,
+                audios,
+                out_dir,
                 args.width,
                 args.height,
                 args.crf,

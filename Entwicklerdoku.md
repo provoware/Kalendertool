@@ -23,3 +23,4 @@ Dieses Tool besteht aus drei Hauptdateien:
 - Die Tab-Reihenfolge der wichtigsten Elemente wird mit `setTabOrder` (Reihenfolge für Tastatur-Bedienung) festgelegt.
 - Der Starter (`videobatch_launcher.py`) prüft beim Start automatisch auf fehlende Pakete oder `ffmpeg` und versucht, alles selbst zu installieren.
 - Vorschaubilder werden mit einem Zwischenspeicher (`lru_cache`) nur einmal erzeugt, um Rechenzeit zu sparen.
+- Dateipfade werden mit `pathlib.Path` verwaltet, damit das Tool auf verschiedenen Systemen funktioniert.
