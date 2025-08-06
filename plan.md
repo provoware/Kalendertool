@@ -9,7 +9,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - `pip install -r requirements.txt` (installiert notwendige Zusatzprogramme, "Abhängigkeiten")
 
 ## Aufgaben
-- Fenstergröße flexibel machen
 - Keine waagerechten Scrollbalken
 - Vier Farb-Themes nach Kontrast-Standards
 - Code analysieren und verbessern
@@ -22,6 +21,9 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Klarer Hilfetext
 - Vollautomatische Prüfungen und Selbstreparatur
 - Autonome Startprüfung
+
+## Erledigt
+- Fenstergröße flexibel machen
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

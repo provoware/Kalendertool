@@ -1,5 +1,4 @@
 # Noch zu erledigen:
-- Fenster flexibel in Größe machen und auch für kleine Bildschirme optimieren
 - Keine Links rechts scrollen im Tool, besser anordnen oder zweite Zeile verwenden, alles soll sichtbar sein
 - 4 verschiedene Farbthemes als Auswahl im Tool, nach gängigen Kontraststandards für Bildschirmarbeiter
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
@@ -18,3 +17,4 @@
 - fortschritt.txt angelegt und erste Fortschrittszeile ergänzt
 - Entwicklerdoku.md angelegt
 - jede Funktion mit Beschreibung, Tooltip und Hilfe mit Beispiel
+- Fenster flexibel in Größe machen und auch für kleine Bildschirme optimieren
