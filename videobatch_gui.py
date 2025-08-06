@@ -304,9 +304,15 @@ class EncodeWorker(QtCore.QObject):
         self.settings = settings
         self.copy_only = copy_only
         self._stop = False
+        self._proc: Optional[subprocess.Popen] = None
 
     def stop(self):
         self._stop = True
+        if self._proc and self._proc.poll() is None:
+            try:
+                self._proc.kill()
+            except Exception as exc:
+                self.log.emit(f"Prozess konnte nicht beendet werden: {exc}")
 
     def run(self):
         total = len(self.pairs)
@@ -360,12 +366,12 @@ class EncodeWorker(QtCore.QObject):
                     str(crf),
                     item.output,
                 ]
-                proc = subprocess.Popen(
+                self._proc = subprocess.Popen(
                     cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True
                 )
-                for line in proc.stderr:
+                for line in self._proc.stderr:
                     if self._stop:
-                        proc.kill()
+                        self._proc.kill()
                         break
                     if "time=" in line:
                         try:
@@ -377,8 +383,10 @@ class EncodeWorker(QtCore.QObject):
                             self.row_progress.emit(i, perc)
                         except Exception as e:
                             self.log.emit(f"Fortschritt nicht lesbar: {e}")
-                proc.wait()
-                if proc.returncode != 0:
+                self._proc.wait()
+                rc = self._proc.returncode
+                self._proc = None
+                if rc != 0:
                     item.status = "FEHLER"
                     self.row_error.emit(i, "FFmpeg-Fehler")
                 else:
@@ -973,6 +981,8 @@ class MainWindow(QtWidgets.QMainWindow):
             f"{img_count} Bilder | {aud_count} Audios | {pair_count} Paare"
         )
         self.dashboard.set_counts(pair_count, fin_count, err_count)
+        running = self.thread is not None and self.thread.isRunning()
+        self.btn_encode.setEnabled(pair_count > 0 and not running)
 
     def _on_toggle_thumbs(self, checked: bool):
         self.model.show_thumbs = checked
@@ -1152,6 +1162,9 @@ class MainWindow(QtWidgets.QMainWindow):
             )
             return
         if not self.pairs:
+            QtWidgets.QMessageBox.information(
+                self, "Keine Aufgaben", "Es sind keine Paare zum Verarbeiten vorhanden."
+            )
             return
         if any(p.audio_path is None for p in self.pairs):
             QtWidgets.QMessageBox.warning(
@@ -1254,6 +1267,24 @@ class MainWindow(QtWidgets.QMainWindow):
             self.statusBar().showMessage(self.model.data(index, Qt.DisplayRole), 5000)
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        if self.thread and self.thread.isRunning():
+            reply = QtWidgets.QMessageBox.question(
+                self,
+                "Laufender Vorgang",
+                "Es laufen noch Umwandlungen. Wirklich beenden?",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No,
+            )
+            if reply != QtWidgets.QMessageBox.Yes:
+                event.ignore()
+                return
+            if self.worker:
+                self.worker.stop()
+            self.thread.quit()
+            self.thread.wait()
+            self.thread = None
+            self.worker = None
+        self._update_counts()
         self.settings.setValue("ui/geometry", self.saveGeometry())
         self.settings.setValue("ui/window_state", self.saveState())
         self.settings.setValue("ui/clear_after", self.clear_after.isChecked())
