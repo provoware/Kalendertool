@@ -1,0 +1,5 @@
+# Kurz-Roadmap
+
+1. Weitere Tooltips vereinfachen und mit Beispielen ergänzen.
+2. API-Schicht einführen, um Oberfläche und Logik zu trennen.
+3. Dauerhafte Datenspeicherung mit SQLite vorbereiten.

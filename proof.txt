@@ -1,0 +1,4 @@
+# Schwachstellen
+
+- Einige Tooltips (Kurzinfos) sind sehr knapp; weitere Erklärungen helfen Einsteigern.
+- Keine separate API-Schicht (Trennung von Oberfläche und Logik fehlt).

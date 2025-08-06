@@ -733,7 +733,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Buttons
         self.btn_add_images = QtWidgets.QPushButton("Bilder wählen")
-        self.btn_add_images.setToolTip("Bilder auf dem Rechner wählen")
+        self.btn_add_images.setToolTip(
+            "Bilder für das Video auswählen (öffnet Fenster zum Auswählen von Dateien)"
+        )
         self.btn_add_images.setStatusTip(
             "Öffnet einen Dialog zum Auswählen von Bilddateien, z.\u202fB. Urlaub.jpg"
         )
