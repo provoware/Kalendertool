@@ -11,7 +11,9 @@ from typing import Any, Dict, Optional
 _conn: Optional[sqlite3.Connection] = None
 _cache: Optional[Dict[str, Any]] = None
 _mtime: Optional[int] = None
-_lock = threading.Lock()
+# Reentrant Lock to avoid deadlocks when nested
+# (allows the same thread to acquire the lock multiple times)
+_lock = threading.RLock()
 
 
 def _get_conn(db_path: Path) -> sqlite3.Connection:

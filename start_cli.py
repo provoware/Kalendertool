@@ -20,15 +20,21 @@ def _load_events() -> tuple[list[dict[str, str]], dict]:
     return data.setdefault("events", []), data
 
 
-def add_event(title: str, date_str: str) -> None:
+def add_event(title: str, date_str: str, alarm: int | None = None) -> None:
     """Termin speichern."""
     try:
         date = datetime.fromisoformat(date_str)
     except ValueError:
         print("Ungültiges Datum. Bitte JJJJ-MM-TT verwenden.")
         return
+    if alarm is not None and alarm < 0:
+        print("Alarm muss eine positive Zahl sein.")
+        return
     events, data = _load_events()
-    events.append({"title": title, "date": date.isoformat()})
+    entry = {"title": title, "date": date.isoformat()}
+    if alarm is not None:
+        entry["alarm"] = alarm
+    events.append(entry)
     save_project(data, DB_PATH)
     print(f"Termin '{title}' am {date.date()} gespeichert.")
 
@@ -40,7 +46,8 @@ def list_events() -> None:
         print("Keine Termine vorhanden.")
         return
     for event in events:
-        print(f"{event['date']}: {event['title']}")
+        alarm = f" (Alarm {event['alarm']} min vorher)" if event.get("alarm") else ""
+        print(f"{event['date']}: {event['title']}{alarm}")
 
 
 def export_ical(file_path: Path) -> None:
@@ -64,9 +71,19 @@ def export_ical(file_path: Path) -> None:
                 f"DTSTAMP:{stamp}",
                 f"DTSTART;VALUE=DATE:{date}",
                 f"SUMMARY:{ev['title']}",
-                "END:VEVENT",
             ]
         )
+        if ev.get("alarm"):
+            lines.extend(
+                [
+                    "BEGIN:VALARM",
+                    f"TRIGGER:-PT{ev['alarm']}M",
+                    "ACTION:DISPLAY",
+                    f"DESCRIPTION:{ev['title']}",
+                    "END:VALARM",
+                ]
+            )
+        lines.append("END:VEVENT")
     lines.append("END:VCALENDAR")
     try:
         file_path.write_text("\n".join(lines), encoding="utf-8")
@@ -77,12 +94,18 @@ def export_ical(file_path: Path) -> None:
 
 
 def main() -> None:
+    """Einstiegspunkt für die CLI und Befehlsverarbeitung."""
     parser = argparse.ArgumentParser(description="Kalender per Kommandozeile bedienen")
     sub = parser.add_subparsers(dest="cmd")
 
     add_p = sub.add_parser("add", help="Termin anlegen")
     add_p.add_argument("title", help="Bezeichnung des Termins")
     add_p.add_argument("date", help="Datum im Format JJJJ-MM-TT")
+    add_p.add_argument(
+        "--alarm",
+        type=int,
+        help="Erinnerung in Minuten vor dem Termin",
+    )
 
     sub.add_parser("list", help="Termine anzeigen")
 
@@ -92,7 +115,7 @@ def main() -> None:
     args = parser.parse_args()
     ensure_directories()
     if args.cmd == "add":
-        add_event(args.title, args.date)
+        add_event(args.title, args.date, args.alarm)
     elif args.cmd == "list":
         list_events()
     elif args.cmd == "export":
