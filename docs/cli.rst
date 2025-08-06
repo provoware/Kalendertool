@@ -3,19 +3,25 @@ CLI nutzen
 
 Termine lassen sich über die Kommandozeile verwalten:
 
-1. Termin anlegen:
+#. Termin anlegen:
 
    .. code-block:: bash
 
       python start_cli.py add "Meeting" 2025-12-24
 
-2. Termine anzeigen:
+#. Termine anzeigen:
 
    .. code-block:: bash
 
       python start_cli.py list
 
-3. Termine als iCal exportieren:
+#. Termin bearbeiten:
+
+   .. code-block:: bash
+
+      python start_cli.py edit 0 --title "Neuer Titel" --date 2025-12-25 --alarm 60
+
+#. Termine als iCal exportieren:
 
    .. code-block:: bash
 

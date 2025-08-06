@@ -94,3 +94,4 @@
 - Markdown-Dateien unter /docs organisiert
 - CI baut Sphinx-Dokumentation
 - Logrotation für das zentrale Logging ergänzt
+- Bearbeitungsfunktion für Termine in CLI und GUI

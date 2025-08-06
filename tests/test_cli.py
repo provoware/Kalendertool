@@ -7,6 +7,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from start_cli import (
     add_event,
+    edit_event,
     export_ical,
     sync_caldav,
     remove_event,
@@ -104,3 +105,16 @@ def test_remove_event(tmp_path, monkeypatch):
     groups, _ = _load_groups()
     assert len(groups["default"]) == 1
     assert groups["default"][0]["title"] == "Neu"
+
+
+def test_edit_event(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")
+    close()
+    add_event("Alt", "2025-01-01", alarm=10)
+    edit_event(0, title="Neu", date_str="2025-02-02", alarm=20)
+    groups, _ = _load_groups()
+    ev = groups["default"][0]
+    assert ev["title"] == "Neu"
+    assert ev["date"].startswith("2025-02-02")
+    assert ev["alarm"] == 20

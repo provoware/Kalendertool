@@ -6,7 +6,14 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from datetime import datetime
 
-from start_cli import add_event, _load_groups, sync_caldav, remove_event, close
+from start_cli import (
+    add_event,
+    edit_event,
+    _load_groups,
+    sync_caldav,
+    remove_event,
+    close,
+)
 
 
 def run() -> None:
@@ -43,6 +50,16 @@ def run() -> None:
             if ev.get("alarm"):
                 txt += f" (Alarm {ev['alarm']} min)"
             listbox.insert(tk.END, txt)
+
+    def on_select(event: tk.Event) -> None:  # pragma: no cover - GUI-Interaktion
+        sel = listbox.curselection()
+        if not sel:
+            return
+        groups, _ = _load_groups()
+        ev = groups.get(group_var.get(), [])[sel[0]]
+        title_var.set(ev["title"])
+        date_var.set(ev["date"][:10])
+        alarm_var.set(str(ev.get("alarm", "")))
 
     def add_cb() -> None:
         if not title_var.get().strip():
@@ -87,10 +104,37 @@ def run() -> None:
         remove_event(sel[0], group_var.get())
         refresh()
 
+    def edit_cb() -> None:
+        sel = listbox.curselection()
+        if not sel:
+            messagebox.showerror("Fehler", "Bitte Termin auswählen")
+            return
+        if not title_var.get().strip():
+            messagebox.showerror("Fehler", "Titel angeben")
+            return
+        try:
+            datetime.fromisoformat(date_var.get())
+        except ValueError:
+            messagebox.showerror("Fehler", "Datum im Format JJJJ-MM-TT angeben")
+            return
+        try:
+            alarm = int(alarm_var.get()) if alarm_var.get() else None
+            if alarm is not None and alarm < 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Fehler", "Alarm muss eine positive Zahl sein")
+            return
+        edit_event(sel[0], title_var.get(), date_var.get(), alarm, group_var.get())
+        refresh()
+
+    listbox.bind("<<ListboxSelect>>", on_select)
     tk.Button(root, text="Aktualisieren", command=refresh).grid(row=5, column=0)
     tk.Button(root, text="Speichern", command=add_cb).grid(row=5, column=1)
-    tk.Button(root, text="Löschen", command=delete_cb).grid(row=6, column=0)
-    tk.Button(root, text="Synchronisieren", command=sync_cb).grid(row=6, column=1)
+    tk.Button(root, text="Ändern", command=edit_cb).grid(row=6, column=0)
+    tk.Button(root, text="Löschen", command=delete_cb).grid(row=6, column=1)
+    tk.Button(root, text="Synchronisieren", command=sync_cb).grid(
+        row=7, column=0, columnspan=2
+    )
 
     refresh()
     root.mainloop()

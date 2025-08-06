@@ -25,6 +25,6 @@ GUI
 ----
 
 Die grafische Oberfläche (*GUI*) bietet ein Feld für die Gruppe. Über die
-Buttons können Termine gespeichert, gelöscht oder per CalDAV synchronisiert
-werden. Nach einer Synchronisation erscheint eine Meldung mit Erfolg oder
-Fehlschlag.
+Buttons können Termine gespeichert, bearbeitet, gelöscht oder per CalDAV
+Synchronisation übertragen werden. Nach einer Synchronisation erscheint eine
+Meldung mit Erfolg oder Fehlschlag.

@@ -152,6 +152,38 @@ def remove_event(index: int, group: str = "default") -> None:
     )
 
 
+def edit_event(
+    index: int,
+    title: str | None = None,
+    date_str: str | None = None,
+    alarm: int | None = None,
+    group: str = "default",
+) -> None:
+    """Bestehenden Termin aktualisieren."""
+    groups, data = _load_groups()
+    events = groups.get(group, [])
+    try:
+        event = events[index]
+    except IndexError:
+        logger.error("Kein Termin an Position %s", index)
+        return
+    if title is not None:
+        event["title"] = title
+    if date_str is not None:
+        try:
+            event["date"] = datetime.fromisoformat(date_str).isoformat()
+        except ValueError:
+            logger.error("Ungültiges Datum. Bitte JJJJ-MM-TT verwenden.")
+            return
+    if alarm is not None:
+        if alarm < 0:
+            logger.error("Alarm muss eine positive Zahl sein.")
+            return
+        event["alarm"] = alarm
+    save_project(data, DB_PATH)
+    logger.info("Termin an Position %s aktualisiert", index)
+
+
 def sync_caldav(url: str, user: str, password: str, group: str = "default") -> bool:
     """Termine einer Gruppe per CalDAV synchronisieren.
 
@@ -246,6 +278,21 @@ def main() -> None:
         help="Nur Termine dieser Gruppe anzeigen",
     )
 
+    edit_p = sub.add_parser("edit", help="Termin bearbeiten")
+    edit_p.add_argument("index", type=int, help="Position des Termins")
+    edit_p.add_argument("--title", help="Neuer Titel")
+    edit_p.add_argument("--date", help="Neues Datum JJJJ-MM-TT")
+    edit_p.add_argument(
+        "--alarm",
+        type=int,
+        help="Neue Erinnerung in Minuten vor dem Termin",
+    )
+    edit_p.add_argument(
+        "--group",
+        default="default",
+        help="Name der Gruppe (z.B. familie)",
+    )
+
     export_p = sub.add_parser("export", help="Termine als iCal exportieren")
     export_p.add_argument("file", help="Zieldatei, z.B. events.ics")
     export_p.add_argument(
@@ -275,6 +322,8 @@ def main() -> None:
         add_event(args.title, args.date, args.alarm, args.group)
     elif args.cmd == "list":
         list_events(args.group)
+    elif args.cmd == "edit":
+        edit_event(args.index, args.title, args.date, args.alarm, args.group)
     elif args.cmd == "export":
         export_ical(Path(args.file), args.group, force=args.force)
     elif args.cmd == "sync":

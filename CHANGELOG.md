@@ -10,10 +10,12 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - GUI unterstützt Gruppen-Kalender.
 - Dokumentation zu Gruppen-Kalender und CalDAV.
 - Löschfunktion in der GUI und Rückmeldung zur Synchronisation.
+- Bearbeitungsfunktion für bestehende Termine in CLI und GUI.
 
 ### Verbessert
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
 - iCal-Export verweigert Überschreiben ohne `--force`.
+- GUI füllt Felder bei Auswahl automatisch und meldet Eingabefehler.
 
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt
