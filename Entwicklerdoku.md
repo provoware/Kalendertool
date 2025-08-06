@@ -13,6 +13,7 @@ Dieses Tool besteht aus drei Hauptdateien:
 
 ## Tests
 - `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py` (prüft den Quelltext auf Syntaxfehler)
+- `pytest` (führt automatische Tests aus)
 
 ## Beitrag leisten
 - Änderungen mit `git add <datei>` (Datei für Versionsspeicher vormerken) und `git commit -m "Nachricht"` (Änderung speichern) sichern.

@@ -14,7 +14,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Ressourcen schonen
 - Portabilität für Linux
 - Einheitliche Namen
-- Vollautomatische Prüfungen und Selbstreparatur
+- Selbstreparatur
 - Autonome Startprüfung
 
 ## Erledigt
@@ -24,6 +24,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Keine waagerechten Scrollbalken
 - Standards, Best Practices und Barrierefreiheit (Tab-Reihenfolge für Tastenbedienung)
 - Klarer Hilfetext
+- Vollautomatische Prüfungen
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`
