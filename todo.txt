@@ -2,10 +2,8 @@
 
 ## Offene Aufgaben
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
-- grafische Interaktivität immer über Buttons oder Auswahldialoge
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
-- Weitere Eingabefelder auf sinnvolle Platzhalter und Standards prüfen
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -25,3 +23,4 @@
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
 - Platzhaltertexte und Standardwerte für Ausgabeordner und Audio-Bitrate ergänzt
+- Weitere Eingabefelder auf sinnvolle Platzhalter und Standards geprüft
