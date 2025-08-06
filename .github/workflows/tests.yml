@@ -10,7 +10,8 @@ jobs:
           python-version: '3.12'
       - run: sudo apt-get update && sudo apt-get install -y libgl1
       - run: pip install -r requirements.txt
-      - run: pip install pre-commit coverage bandit
+      - run: pip install pre-commit coverage bandit sphinx pydocstyle
       - run: pre-commit run --all-files --show-diff-on-failure
       - run: pytest --cov=. -q
       - run: bandit -r .
+      - run: sphinx-build -b html docs docs/_build

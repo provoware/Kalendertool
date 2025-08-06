@@ -5,8 +5,12 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+import logging
 
 from videobatch_launcher import bootstrap_console
+from logging_config import setup_logging
+
+logger = logging.getLogger(__name__)
 
 
 def _ensure_ffmpeg() -> None:
@@ -26,7 +30,7 @@ def _ensure_ffmpeg() -> None:
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # pragma: no cover - Installation kann variieren
-            print(f"FFmpeg konnte nicht automatisch installiert werden: {exc}")
+            logger.error("FFmpeg konnte nicht automatisch installiert werden: %s", exc)
     else:  # pragma: no cover - Plattformabhängig
         msg = "FFmpeg nicht gefunden. Bitte manuell installieren."
         if sys.platform.startswith("win"):
@@ -35,14 +39,15 @@ def _ensure_ffmpeg() -> None:
             msg += " macOS: 'brew install ffmpeg'"
         else:
             msg += " Siehe https://ffmpeg.org"
-        print(msg)
-        print(
+        logger.error(msg)
+        logger.error(
             "FFmpeg nicht gefunden. Bitte manuell von https://ffmpeg.org installieren."
         )
 
 
 def main() -> None:
-    """Starte das Tool nach automatischer Prüfung."""
+    """Start the tool after an automatic check."""
+    setup_logging()
     bootstrap_console()
     _ensure_ffmpeg()
     try:
@@ -50,7 +55,7 @@ def main() -> None:
 
         gui.run_gui()
     except Exception as exc:  # pragma: no cover - GUI-Fehler schwer testbar
-        print(f"GUI konnte nicht gestartet werden: {exc}")
+        logger.error("GUI konnte nicht gestartet werden: %s", exc)
 
 
 if __name__ == "__main__":
