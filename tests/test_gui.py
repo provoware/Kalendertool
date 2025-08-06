@@ -12,6 +12,7 @@ from videobatch_gui import (  # noqa: E402
     human_time,
     make_thumb,
     PairItem,
+    default_output_dir,
 )
 
 
@@ -62,4 +63,18 @@ def test_show_selected_path_button(tmp_path):
     win.table.selectRow(0)
     win.btn_show_path.click()
     assert win.statusBar().currentMessage() == "img.png"
+    win.close()
+
+
+def test_placeholders_and_defaults(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    win = MainWindow()
+    assert win.out_dir_edit.placeholderText() == f"Standard: {default_output_dir()}"
+    assert win.abitrate_edit.placeholderText() == "z.B. 192k (Kilobit pro Sekunde)"
+    win.out_dir_edit.setText("")
+    win.abitrate_edit.setText("")
+    settings = win._gather_settings()
+    assert settings["out_dir"] == str(default_output_dir())
+    assert settings["abitrate"] == "192k"
     win.close()

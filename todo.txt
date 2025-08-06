@@ -1,7 +1,7 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-- Tests für Platzhalter und Standardwerte ergänzen
+- Weitere Grenzfälle für Eingaben testen
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -25,3 +25,4 @@
 - Button-Benennungen vereinheitlicht
 - Code auf suboptimale Strukturen geprüft; Audio-Bitrate validiert und Pixel-Einheiten ergänzt
 - Ausgabeordner und Audio-Bitrate nutzen Standardwerte, wenn Felder leer bleiben
+- Tests für Platzhalter und Standardwerte ergänzen
