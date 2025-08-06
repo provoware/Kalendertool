@@ -9,9 +9,10 @@
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
 - Sphinx-Dokumentation enthält eine Startanleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
+- CLI exportiert Termine als iCal-Datei.
 
-- Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
-- Danach: Alarme und CalDAV-Synchronisation umsetzen.
+- Nächster Schritt: Alarme ergänzen.
+- Danach: CalDAV-Synchronisation und Gruppen-Kalender umsetzen.
 
-1. Kalender- und CalDAV-Funktionen entwickeln.
-2. Alarme und Gruppen-Kalender verbessern.
+1. Alarme für Termine implementieren.
+2. CalDAV-Synchronisation und Gruppen-Kalender entwickeln.

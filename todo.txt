@@ -2,7 +2,8 @@
 
 ## Offene Aufgaben
 // Architektur & Erweiterungen
-- Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
+- Alarme für Termine ergänzen
+- Gruppen-Kalender und CalDAV-Synchronisation umsetzen
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -19,6 +20,7 @@
 - Selbstreparatur einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 - GUI-Startdatei mit automatischer Abhängigkeitsprüfung und Reparatur erstellt
+- iCal-Export für CLI-Termine ergänzt
 - System Leistung und Ram schützen und Ressourcen schonen
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - grafische Interaktivität immer über Buttons oder Auswahldialoge

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime
 from pathlib import Path
+from uuid import uuid4
 
 from storage import load_project, save_project, close
 
@@ -39,6 +40,39 @@ def list_events() -> None:
         print(f"{event['date']}: {event['title']}")
 
 
+def export_ical(file_path: Path) -> None:
+    """Termine als iCal-Datei exportieren."""
+    events, _ = _load_events()
+    if not events:
+        print("Keine Termine zum Export vorhanden.")
+        return
+    lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Kalendertool//DE",
+    ]
+    stamp = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    for ev in events:
+        date = datetime.fromisoformat(ev["date"]).strftime("%Y%m%d")
+        lines.extend(
+            [
+                "BEGIN:VEVENT",
+                f"UID:{uuid4()}",
+                f"DTSTAMP:{stamp}",
+                f"DTSTART;VALUE=DATE:{date}",
+                f"SUMMARY:{ev['title']}",
+                "END:VEVENT",
+            ]
+        )
+    lines.append("END:VCALENDAR")
+    try:
+        file_path.write_text("\n".join(lines), encoding="utf-8")
+    except OSError as exc:
+        print(f"Export fehlgeschlagen: {exc}")
+        return
+    print(f"iCal-Datei unter {file_path} erstellt.")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Kalender per Kommandozeile bedienen")
     sub = parser.add_subparsers(dest="cmd")
@@ -49,12 +83,17 @@ def main() -> None:
 
     sub.add_parser("list", help="Termine anzeigen")
 
+    export_p = sub.add_parser("export", help="Termine als iCal exportieren")
+    export_p.add_argument("file", help="Zieldatei, z.B. events.ics")
+
     args = parser.parse_args()
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     if args.cmd == "add":
         add_event(args.title, args.date)
     elif args.cmd == "list":
         list_events()
+    elif args.cmd == "export":
+        export_ical(Path(args.file))
     else:
         parser.print_help()
     close()
