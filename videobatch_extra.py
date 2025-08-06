@@ -22,12 +22,17 @@ def cli_encode(
     images: List[Path],
     audios: List[Path],
     out_dir: Path,
-    width=1920,
-    height=1080,
-    crf=23,
-    preset="ultrafast",
-    abitrate="192k",
+    width: int = 1920,
+    height: int = 1080,
+    crf: int = 23,
+    preset: str = "ultrafast",
+    abitrate: str = "192k",
 ) -> int:
+    """Encode multiple image/audio pairs into videos (CLI helper).
+
+    Returns 0 on success, 1 if lists mismatch, or 2 when ffmpeg fails.
+    """
+
     out_dir.mkdir(parents=True, exist_ok=True)
     if len(images) != len(audios):
         print("Fehler: Anzahl Bilder != Anzahl Audios")
@@ -63,6 +68,8 @@ def cli_encode(
 
 
 def run_selftests() -> int:
+    """Run simple self-tests for CLI helpers."""
+
     assert human_time(65) == "01:05"
     with tempfile.TemporaryDirectory() as td:
         out = build_out_name(Path(td) / "a.mp3", Path(td))
@@ -72,7 +79,9 @@ def run_selftests() -> int:
     return 0
 
 
-def main():
+def main() -> None:
+    """Command line interface entry point."""
+
     import argparse
 
     p = argparse.ArgumentParser(description="VideoBatchTool CLI / Tests")

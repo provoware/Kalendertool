@@ -8,5 +8,5 @@
 - Automatische ffmpeg-Installation läuft nur über apt auf Linux; andere Systeme benötigen manuelle Einrichtung.
 - Neue CLI speichert Termine im Klartext ohne Eingabevalidierung oder Verschlüsselung.
 - iCal-Export überschreibt vorhandene Dateien ohne Rückfrage und speichert Termine im Klartext.
-- Viele Funktionen besitzen keine Docstrings, was Wartung und API-Generierung erschwert.
+- Viele Funktionen besitzen keine Docstrings, was Wartung und API-Generierung erschwert (teils ergänzt).
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.

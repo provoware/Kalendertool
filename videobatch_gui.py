@@ -61,6 +61,8 @@ logger.addHandler(logging.NullHandler())
 
 # ---------- Helpers ----------
 def probe_duration(path: str) -> float:
+    """Return audio duration in seconds using ffmpeg (falls back to 0)."""
+
     try:
         import ffmpeg
 
@@ -77,7 +79,12 @@ def probe_duration(path: str) -> float:
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
-    dst_dir.mkdir(parents=True, exist_ok=True)
+    """Move or copy a file into dst_dir and handle name clashes safely."""
+
+    try:
+        dst_dir.mkdir(parents=True, exist_ok=True)
+    except OSError as err:
+        raise RuntimeError(f"Zielordner konnte nicht erstellt werden: {err}") from err
     tgt = dst_dir / src.name
     if tgt.exists():
         stem, suf = src.stem, src.suffix
@@ -100,6 +107,8 @@ def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
 
 @lru_cache(maxsize=128)
 def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
+    """Create a thumbnail pixmap for the GUI (returns gray on error)."""
+
     try:
         from PIL import Image
 
@@ -125,6 +134,8 @@ COLUMNS = ["#", "Thumb", "Bild", "Audio", "Dauer", "Ausgabe", "Fortschritt", "St
 
 @dataclass
 class PairItem:
+    """Ein Bild/Audio-Paar samt Status für die Tabelle."""
+
     image_path: str
     audio_path: Optional[str] = None
     duration: float = 0.0
@@ -135,15 +146,21 @@ class PairItem:
     valid: bool = True
     validation_msg: str = ""
 
-    def update_duration(self):
+    def update_duration(self) -> None:
+        """Ermittle Audiodauer neu."""
+
         if self.audio_path:
             self.duration = probe_duration(self.audio_path)
 
-    def load_thumb(self):
+    def load_thumb(self) -> None:
+        """Thumbnail bei Bedarf erzeugen."""
+
         if self.thumb is None and self.image_path:
             self.thumb = make_thumb(self.image_path)
 
-    def validate(self):
+    def validate(self) -> None:
+        """Pfadpaar prüfen und Status setzen."""
+
         ok, msg = validate_pair(self.image_path, self.audio_path)
         self.valid = ok
         self.validation_msg = msg
