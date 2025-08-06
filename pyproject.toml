@@ -12,7 +12,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "PyInstaller", "pre-commit", "black", "ruff"]
+dev = [
+    "pytest",
+    "PyInstaller",
+    "pre-commit",
+    "black",
+    "ruff",
+    "build",
+    "twine",
+]
 
 [build-system]
 requires = ["setuptools>=61"]

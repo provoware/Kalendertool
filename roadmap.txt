@@ -1,14 +1,13 @@
 # Kurz-Roadmap
-- API-Schicht für ffmpeg-Aufruf eingeführt.
-- Nächster Schritt: Persistente Ablage mit SQLite oder PostgreSQL einführen.
-- Danach: Kalenderfunktionen mit iCal-Unterstützung und CalDAV-Synchronisation ergänzen.
-- Abschließend: Moderne CLI/TUI mit Hilfefunktion entwickeln und Release-Workflow für PyPI aufsetzen.
+- Spezialprüfungen für Medienpaare in utils gebündelt.
+- Projekt wird beim Beenden automatisch gespeichert und beim Start geladen.
+- Release-Skript führt Tests aus und baut Paket automatisiert.
+- Weitere Button-Kurzinfos (z.B. Pfad zeigen, Rückgängig, Stopp) ins Hilfemodul ausgelagert.
+- Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
+- Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
 
-1. API-Schicht ausbauen und weitere Hilfetexte zentralisieren.
-2. Dauerhafte Datenspeicherung mit SQLite vorbereiten.
-3. Automatische Startprüfung und Hilfestart integrieren.
-4. Release-Workflow mit Dokumentation und PyPI-Paket vorbereiten.
-1. Verzeichnisstruktur und API-Schicht ausbauen (Daten, Konfiguration, Hilfetexte trennen).
-2. Dauerhafte Datenspeicherung mit SQLite vorbereiten.
-3. Automatische Startprüfung und Hilfestart integrieren.
-4. AppImage für Linux erstellen.
+- Nächster Schritt: Automatische Startprüfung und Hilfestart integrieren.
+- Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+
+1. Automatische Startprüfung und Hilfestart integrieren.
+2. Kalender- und CalDAV-Funktionen entwickeln.

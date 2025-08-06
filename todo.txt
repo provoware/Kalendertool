@@ -2,15 +2,11 @@
 
 ## Offene Aufgaben
 // Architektur & Erweiterungen
-- Modularisierung und Design-Patterns (z.B. Fassade, Observer)
-- Persistente Ablage mit SQLite oder PostgreSQL samt Transaktionen und Caching
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
-- Release-Workflow und Veröffentlichung auf PyPI
-- Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
-- AppImage für Linux erstellen
-- Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archiv vervollständigen
+- Sphinx-Dokumentation vervollständigen
 ## Erledigte Aufgaben
+- Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
 - Entwicklerdoku.md angelegt
@@ -40,6 +36,7 @@
 - Ausgaben von FFmpeg unterdrückt, spart Speicher
 - requirements.txt und pyproject.toml angelegt
 - Lizenzdatei hinzugefügt
+- Gemeinsame Hilfsfunktionen in utils.py ausgelagert (Modularisierung)
 - README mit Installationshinweisen erweitert
 - Automatische Tests über GitHub Actions eingerichtet
 - pre-commit mit black und ruff ergänzt
@@ -57,3 +54,14 @@
 - Tooltip 'Auto-Paaren' mit Hinweis auf automatische Zuordnung erweitert
 - AppImage für Linux erstellen
 - Tooltip 'Umwandlung starten' erklärt die Videoerstellung
+- Doppelte Importe im Hauptmodul entfernt und Code komprimiert
+- Tooltip 'Audios wählen' nennt unterstützte Formate
+- Prüflogik in utils ausgelagert
+- Tooltip 'Bilder wählen' nennt unterstützte Formate
+- Release-Workflow und Veröffentlichung auf PyPI
+- Automatisches Speichern und Laden der Projekte als JSON
+- Weitere Button-Kurzinfos ins Hilfemodul ausgelagert
+- Release-Skript führt Tests aus
+- Dateiauswahldialoge über Hilfsfunktion vereinheitlicht
+- Tooltip 'Pfad zeigen' erklärt den Speicherort
+- Persistente Ablage auf SQLite migriert

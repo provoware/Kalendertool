@@ -8,14 +8,10 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from PySide6 import QtGui, QtWidgets  # noqa: E402
 from PySide6.QtCore import Qt  # noqa: E402
-from videobatch_gui import (  # noqa: E402
-    MainWindow,
-    check_ffmpeg,
-    human_time,
-    make_thumb,
-    PairItem,
-    default_output_dir,
-)
+from videobatch_gui import MainWindow, human_time, make_thumb, PairItem  # noqa: E402
+from utils import check_ffmpeg  # noqa: E402
+from storage import load_project  # noqa: E402
+from config.paths import DEFAULT_OUT_DIR  # noqa: E402
 
 
 def test_human_time_gui():
@@ -23,9 +19,9 @@ def test_human_time_gui():
 
 
 def test_check_ffmpeg(monkeypatch):
-    monkeypatch.setattr("videobatch_gui.which", lambda x: "/usr/bin/" + x)
+    monkeypatch.setattr("utils.which", lambda x: "/usr/bin/" + x)
     assert check_ffmpeg()
-    monkeypatch.setattr("videobatch_gui.which", lambda x: None)
+    monkeypatch.setattr("utils.which", lambda x: None)
     assert not check_ffmpeg()
 
 
@@ -72,12 +68,12 @@ def test_placeholders_and_defaults(tmp_path):
     os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
     QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
     win = MainWindow()
-    assert win.out_dir_edit.placeholderText() == f"Standard: {default_output_dir()}"
+    assert win.out_dir_edit.placeholderText() == f"Standard: {DEFAULT_OUT_DIR}"
     assert win.abitrate_edit.placeholderText() == "z.B. 192k (Kilobit pro Sekunde)"
     win.out_dir_edit.setText("")
     win.abitrate_edit.setText("")
     settings = win._gather_settings()
-    assert settings["out_dir"] == str(default_output_dir())
+    assert settings["out_dir"] == str(DEFAULT_OUT_DIR)
     assert settings["abitrate"] == "192k"
     win.close()
 
@@ -140,6 +136,22 @@ def test_notes_persist(tmp_path):
     win.notes_edit.setPlainText("Testnotiz")
     win.close()
     assert notes_file.read_text(encoding="utf-8") == "Testnotiz"
+
+
+def test_project_autosave(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    from PIL import Image
+
+    img_path = tmp_path / "img.png"
+    Image.new("RGB", (10, 10), "white").save(img_path)
+    win = MainWindow()
+    win.model.add_pairs([PairItem(str(img_path))])
+    win.close()
+    from config.paths import PROJECT_DB
+
+    data = load_project(PROJECT_DB)
+    assert data["pairs"][0]["image"].endswith("img.png")
 
 
 def test_start_encode_requires_ffmpeg(monkeypatch, tmp_path):

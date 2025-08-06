@@ -6,9 +6,7 @@
 # =========================================
 
 from __future__ import annotations
-import json
 import logging
-import re
 import shutil
 import subprocess
 import sys
@@ -18,6 +16,14 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from utils import (
+    build_out_name,
+    human_time,
+    check_ffmpeg,
+    normalize_bitrate,
+    validate_pair,
+)
+
 from api import build_ffmpeg_cmd, run_ffmpeg
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -25,14 +31,26 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
-from config.paths import LOG_FILE, NOTES_FILE
+from config.paths import (
+    LOG_FILE,
+    NOTES_FILE,
+    PROJECT_DB,
+    DEFAULT_OUT_DIR,
+    USED_DIR,
+)
+from storage import save_project, load_project, close as close_storage
 from help.tooltips import (
     TIP_ADD_IMAGES,
     TIP_ADD_AUDIOS,
     TIP_AUTO_PAIR,
+    TIP_CLEAR_LIST,
     TIP_START_ENCODE,
+    TIP_SAVE_PROJECT,
+    TIP_LOAD_PROJECT,
+    TIP_SHOW_PATH,
+    TIP_UNDO,
+    TIP_STOP,
 )
-from help.tooltips import TIP_ADD_IMAGES, TIP_ADD_AUDIOS
 
 # ---------- Logging & Persistenz ----------
 
@@ -48,21 +66,6 @@ logger = logging.getLogger("VideoBatchTool")
 
 
 # ---------- Helpers ----------
-def which(p: str):
-    return shutil.which(p)
-
-
-def check_ffmpeg():
-    return which("ffmpeg") and which("ffprobe")
-
-
-def human_time(sec: float) -> str:
-    sec = int(sec)
-    m, s = divmod(sec, 60)
-    h, m = divmod(m, 60)
-    return f"{h:02d}:{m:02d}:{s:02d}" if h else f"{m:02d}:{s:02d}"
-
-
 def probe_duration(path: str) -> float:
     try:
         import ffmpeg
@@ -77,28 +80,6 @@ def probe_duration(path: str) -> float:
     except Exception as e:
         logger.debug("Dauer konnte nicht ermittelt werden: %s", e)
     return 0.0
-
-
-def get_used_dir() -> Path:
-    return Path.home() / "benutzte_dateien"
-
-
-def default_output_dir() -> Path:
-    return Path.home() / "Videos" / "VideoBatchTool_Out"
-
-
-def normalize_bitrate(text: str) -> str:
-    """Ensure audio bitrate has a unit and fallback to default."""
-    text = text.strip().lower()
-    if not text:
-        return "192k"
-    m = re.fullmatch(r"(\d+)([km]?)", text)
-    if not m:
-        return "192k"
-    value, unit = m.groups()
-    if not unit:
-        unit = "k"
-    return f"{value}{unit}"
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
@@ -144,13 +125,6 @@ def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
         return pix
 
 
-def build_out_name(audio_path: str, out_dir: Path) -> str:
-    return str(
-        out_dir
-        / f"{Path(audio_path).stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
-    )
-
-
 # ---------- Datenmodell ----------
 COLUMNS = ["#", "Thumb", "Bild", "Audio", "Dauer", "Ausgabe", "Fortschritt", "Status"]
 
@@ -176,29 +150,9 @@ class PairItem:
             self.thumb = make_thumb(self.image_path)
 
     def validate(self):
-        if not self.image_path or not self.audio_path:
-            self.valid = False
-            self.validation_msg = "Bild oder Audio fehlt"
-            return
-        ip, ap = Path(self.image_path), Path(self.audio_path)
-        if not ip.exists():
-            self.valid = False
-            self.validation_msg = f"Bild fehlt: {ip}"
-            return
-        if not ap.exists():
-            self.valid = False
-            self.validation_msg = f"Audio fehlt: {ap}"
-            return
-        if ip.suffix.lower() not in (".jpg", ".jpeg", ".png", ".bmp", ".webp"):
-            self.valid = False
-            self.validation_msg = "Ungültiges Bildformat"
-            return
-        if ap.suffix.lower() not in (".mp3", ".wav", ".flac", ".m4a", ".aac"):
-            self.valid = False
-            self.validation_msg = "Ungültiges Audioformat"
-            return
-        self.valid = True
-        self.validation_msg = ""
+        ok, msg = validate_pair(self.image_path, self.audio_path)
+        self.valid = ok
+        self.validation_msg = msg
 
 
 class PairTableModel(QAbstractTableModel):
@@ -386,7 +340,7 @@ class EncodeWorker(QtCore.QObject):
             self.overall_progress.emit(done / max(1, total) * 100.0)
         if all(p.status == "FERTIG" for p in self.pairs):
             try:
-                dst = get_used_dir()
+                dst = USED_DIR
                 moved = 0
                 for p in self.pairs:
                     for f in (p.image_path, p.audio_path):
@@ -582,7 +536,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.out_dir_edit = QtWidgets.QLineEdit(
             self.settings.value("encode/out_dir", "", str)
         )
-        self.out_dir_edit.setPlaceholderText(f"Standard: {default_output_dir()}")
+        self.out_dir_edit.setPlaceholderText(f"Standard: {DEFAULT_OUT_DIR}")
         self.out_dir_edit.setAccessibleName("Ausgabeordner")
         self.crf_spin = QtWidgets.QSpinBox()
         self.crf_spin.setRange(0, 51)
@@ -730,43 +684,38 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_auto_pair = QtWidgets.QPushButton("Auto-Paaren")
-        self.btn_auto_pair.setToolTip(
-            "Bilder und Audios automatisch verbinden (paart Dateien mit gleichem Namen)"
-        )
         self.btn_auto_pair.setToolTip(TIP_AUTO_PAIR)
         self.btn_auto_pair.setStatusTip(
             "Verknüpft die Dateien paarweise ohne manuelle Auswahl"
         )
 
         self.btn_clear = QtWidgets.QPushButton("Alles löschen")
-        self.btn_clear.setToolTip("Alle Listen leeren")
+        self.btn_clear.setToolTip(TIP_CLEAR_LIST)
         self.btn_clear.setStatusTip(
             "Entfernt alle geladenen Bilder und Audios aus den Listen"
         )
 
         self.btn_undo = QtWidgets.QPushButton("Rückgängig")
-        self.btn_undo.setToolTip("Letzte Aktion rückgängig machen")
+        self.btn_undo.setToolTip(TIP_UNDO)
         self.btn_undo.setStatusTip(
             "Stellt den Zustand vor der letzten Änderung wieder her"
         )
         self.btn_undo.setAccessibleName("Rückgängig")
 
         self.btn_save = QtWidgets.QPushButton("Projekt speichern")
-        self.btn_save.setToolTip(
-            "Projekt als Datei speichern (JSON-Datei, um später weiterzuarbeiten)"
-        )
+        self.btn_save.setToolTip(TIP_SAVE_PROJECT)
         self.btn_save.setStatusTip(
-            "Speichert aktuelle Paare in einer Datei, z.\u202fB. projekt.json"
+            "Speichert aktuelle Paare in einer Datenbankdatei, z.\u202fB. projekt.db"
         )
 
         self.btn_load = QtWidgets.QPushButton("Projekt laden")
-        self.btn_load.setToolTip("Gespeichertes Projekt öffnen")
+        self.btn_load.setToolTip(TIP_LOAD_PROJECT)
         self.btn_load.setStatusTip(
             "Lädt eine Projektdatei und stellt alle Paare wieder her"
         )
 
         self.btn_show_path = QtWidgets.QPushButton("Pfad zeigen")
-        self.btn_show_path.setToolTip("Pfad der Auswahl anzeigen")
+        self.btn_show_path.setToolTip(TIP_SHOW_PATH)
         self.btn_show_path.setStatusTip(
             "Zeigt den Speicherort der gewählten Datei unten an"
         )
@@ -778,7 +727,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_encode.setAccessibleName("Start")
 
         self.btn_stop = QtWidgets.QPushButton("Stopp")
-        self.btn_stop.setToolTip("Vorgang stoppen")
+        self.btn_stop.setToolTip(TIP_STOP)
         self.btn_stop.setStatusTip("Bricht die laufende Umwandlung ab")
         self.btn_stop.setAccessibleName("Stopp")
         self.btn_stop.setEnabled(False)
@@ -838,6 +787,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self._apply_font()
         self.restoreGeometry(self.settings.value("ui/geometry", b"", bytes))
         self.restoreState(self.settings.value("ui/window_state", b"", bytes))
+
+        if PROJECT_DB.exists():
+            try:
+                data = load_project(PROJECT_DB)
+                self._apply_project_data(data)
+            except Exception as exc:
+                logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
 
     # ----- UI helpers -----
     def _build_menus(self):
@@ -982,38 +938,40 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table.viewport().update()
 
     # ----- file actions -----
-    def _pick_images(self):
+    def _pick_files(self, title: str, pattern: str, handler):
         files, _ = QtWidgets.QFileDialog.getOpenFileNames(
-            self,
-            "Bilder wählen",
-            str(Path.cwd()),
-            "Bilder (*.jpg *.jpeg *.png *.bmp *.webp)",
+            self, title, str(Path.cwd()), pattern
         )
         if files:
-            self._on_images_added(files)
+            handler(files)
+
+    def _pick_images(self):
+        self._pick_files(
+            "Bilder wählen",
+            "Bilder (*.jpg *.jpeg *.png *.bmp *.webp)",
+            self._on_images_added,
+        )
 
     def _pick_audios(self):
-        files, _ = QtWidgets.QFileDialog.getOpenFileNames(
-            self,
+        self._pick_files(
             "Audios wählen",
-            str(Path.cwd()),
             "Audio (*.mp3 *.wav *.flac *.m4a *.aac)",
+            self._on_audios_added,
         )
-        if files:
-            self._on_audios_added(files)
 
-    def _on_images_added(self, files: List[str]):
-        self._push_history()
-        for f in files:
-            self.image_list.add_files([f])
-            self.model.add_pairs([PairItem(f)])
+    def _post_add(self):
         self._update_counts()
         self._resize_columns()
 
+    def _on_images_added(self, files: List[str]):
+        self._push_history()
+        self.image_list.add_files(files)
+        self.model.add_pairs([PairItem(f) for f in files])
+        self._post_add()
+
     def _on_audios_added(self, files: List[str]):
         self._push_history()
-        for f in files:
-            self.audio_list.add_files([f])
+        self.audio_list.add_files(files)
         it = iter(files)
         for p in self.pairs:
             if p.audio_path is None:
@@ -1024,8 +982,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 except StopIteration:
                     break
         self.model.layoutChanged.emit()
-        self._update_counts()
-        self._resize_columns()
+        self._post_add()
 
     def _auto_pair(self):
         self._push_history()
@@ -1076,31 +1033,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self._resize_columns()
 
     # ----- save / load -----
-    def _save_project(self):
-        path, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Projekt speichern", str(Path.cwd() / "projekt.json"), "JSON (*.json)"
-        )
-        if not path:
-            return
-        data = {
+    def _project_data(self) -> Dict[str, Any]:
+        return {
             "pairs": [
                 {"image": p.image_path, "audio": p.audio_path, "output": p.output}
                 for p in self.pairs
             ],
             "settings": self._gather_settings(),
         }
-        Path(path).write_text(
-            json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
-        )
-        self._log(f"Projekt gespeichert: {path}")
 
-    def _load_project(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Projekt laden", str(Path.cwd()), "JSON (*.json)"
-        )
-        if not path:
-            return
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    def _apply_project_data(self, data: Dict[str, Any]) -> None:
         self._push_history()
         self.model.clear()
         new = []
@@ -1113,10 +1055,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.model.add_pairs(new)
         s = data.get("settings", {})
         out_dir = s.get("out_dir", "")
-        if out_dir == str(default_output_dir()):
-            self.out_dir_edit.setText("")
-        else:
-            self.out_dir_edit.setText(out_dir)
+        self.out_dir_edit.setText("" if out_dir == str(DEFAULT_OUT_DIR) else out_dir)
         self.crf_spin.setValue(s.get("crf", self.crf_spin.value()))
         self.preset_combo.setCurrentText(
             s.get("preset", self.preset_combo.currentText())
@@ -1124,18 +1063,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.width_spin.setValue(s.get("width", self.width_spin.value()))
         self.height_spin.setValue(s.get("height", self.height_spin.value()))
         abitrate = s.get("abitrate", "")
-        if abitrate in ("", "192k"):
-            self.abitrate_edit.setText("")
-        else:
-            self.abitrate_edit.setText(abitrate)
+        self.abitrate_edit.setText("" if abitrate in ("", "192k") else abitrate)
         self._update_counts()
         self._resize_columns()
+
+    def _save_project(self):
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Projekt speichern", str(Path.cwd() / "projekt.db"), "DB (*.db)"
+        )
+        if not path:
+            return
+        save_project(self._project_data(), Path(path))
+        self._log(f"Projekt gespeichert: {path}")
+
+    def _load_project(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Projekt laden", str(Path.cwd()), "DB (*.db)"
+        )
+        if not path:
+            return
+        data = load_project(Path(path))
+        self._apply_project_data(data)
         self._log(f"Projekt geladen: {path}")
 
     # ----- encode -----
     def _gather_settings(self) -> Dict[str, Any]:
         return {
-            "out_dir": self.out_dir_edit.text().strip() or str(default_output_dir()),
+            "out_dir": self.out_dir_edit.text().strip() or str(DEFAULT_OUT_DIR),
             "crf": self.crf_spin.value(),
             "preset": self.preset_combo.currentText(),
             "width": self.width_spin.value(),
@@ -1290,6 +1244,12 @@ class MainWindow(QtWidgets.QMainWindow):
             NOTES_FILE.write_text(self.notes_edit.toPlainText(), encoding="utf-8")
         except Exception as exc:
             logger.error("Notizen konnten nicht gespeichert werden: %s", exc)
+        try:
+            save_project(self._project_data(), PROJECT_DB)
+        except Exception as exc:
+            logger.error("Projekt konnte nicht gespeichert werden: %s", exc)
+        finally:
+            close_storage()
         super().closeEvent(event)
 
 

@@ -12,20 +12,10 @@ import re
 import subprocess
 import sys
 import tempfile
-from datetime import datetime
 from pathlib import Path
 from typing import List
 
-
-def human_time(s: int) -> str:
-    s = int(s)
-    m, s = divmod(s, 60)
-    h, m = divmod(m, 60)
-    return f"{h:02d}:{m:02d}:{s:02d}" if h else f"{m:02d}:{s:02d}"
-
-
-def build_out_name(audio: Path, out_dir: Path) -> Path:
-    return out_dir / f"{audio.stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
+from utils import build_out_name, human_time, validate_pair
 
 
 def cli_encode(
@@ -45,8 +35,9 @@ def cli_encode(
     total = len(images)
     done = 0
     for i, (img, aud) in enumerate(zip(images, audios), 1):
-        if not img.exists() or not aud.exists():
-            print(f"[{i}/{total}] FEHLT: {img} / {aud}")
+        ok, msg = validate_pair(img, aud)
+        if not ok:
+            print(f"[{i}/{total}] {msg}: {img} / {aud}")
             continue
         out_file = build_out_name(aud, out_dir)
         cmd = [
