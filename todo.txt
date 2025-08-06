@@ -1,7 +1,13 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-
+// Architektur & Erweiterungen
+- Modularisierung und Design-Patterns (z.B. Fassade, Observer)
+- API-Schicht zur Trennung von GUI und Logik
+- Persistente Ablage mit SQLite oder PostgreSQL samt Transaktionen und Caching
+- Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
+- Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
+- Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -36,3 +42,6 @@
 - Automatische Tests über GitHub Actions eingerichtet
 - pre-commit mit black und ruff ergänzt
 - Skript für ausführbares Paket erstellt
+- Fehlerbehandlung verbessert und Platzhalter entfernt
+- Sicheres Beenden laufender Prozesse beim Schließen des Tools
+- CI-Pipeline um Linting, Testabdeckung und Security-Scan erweitert
