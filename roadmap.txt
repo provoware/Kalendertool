@@ -1,10 +1,11 @@
 # Kurz-Roadmap
 - API-Schicht für ffmpeg-Aufruf eingeführt.
 - Validierungslogik in utils gebündelt und Tooltip "Bilder wählen" ergänzt.
+- Release-Skript für PyPI ergänzt.
+
 - Nächster Schritt: Persistente Ablage mit SQLite oder PostgreSQL einführen.
-- Danach: Release-Workflow für PyPI aufsetzen und Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+- Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
 
 1. Persistente Datenspeicherung mit SQLite vorbereiten.
-2. Release-Workflow für PyPI einrichten.
-3. Automatische Startprüfung und Hilfestart integrieren.
-4. Kalender- und CalDAV-Funktionen entwickeln.
+2. Automatische Startprüfung und Hilfestart integrieren.
+3. Kalender- und CalDAV-Funktionen entwickeln.

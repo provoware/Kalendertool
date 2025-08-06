@@ -10,3 +10,6 @@ TIP_AUTO_PAIR = (
 TIP_START_ENCODE = (
     "Umwandlung starten" " (erstellt Videos und zeigt den Fortschritt in der Liste)"
 )
+TIP_CLEAR_LIST = (
+    "Alle Listen leeren" " (entfernt alle Einträge dauerhaft aus der Tabelle)"
+)

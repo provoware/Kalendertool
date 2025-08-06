@@ -31,6 +31,7 @@ from help.tooltips import (
     TIP_ADD_IMAGES,
     TIP_ADD_AUDIOS,
     TIP_AUTO_PAIR,
+    TIP_CLEAR_LIST,
     TIP_START_ENCODE,
 )
 
@@ -703,7 +704,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_clear = QtWidgets.QPushButton("Alles löschen")
-        self.btn_clear.setToolTip("Alle Listen leeren")
+        self.btn_clear.setToolTip(TIP_CLEAR_LIST)
         self.btn_clear.setStatusTip(
             "Entfernt alle geladenen Bilder und Audios aus den Listen"
         )

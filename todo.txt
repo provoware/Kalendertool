@@ -5,8 +5,7 @@
 - Persistente Ablage mit SQLite oder PostgreSQL samt Transaktionen und Caching
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
-- Release-Workflow und Veröffentlichung auf PyPI
-- Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
+- Sphinx-Dokumentation vervollständigen
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -59,3 +58,4 @@
 - Tooltip 'Audios wählen' nennt unterstützte Formate
 - Prüflogik in utils ausgelagert
 - Tooltip 'Bilder wählen' nennt unterstützte Formate
+- Release-Workflow und Veröffentlichung auf PyPI
