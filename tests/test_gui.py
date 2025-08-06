@@ -3,9 +3,11 @@ from pathlib import Path
 import sys
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+os.environ["HOME"] = "/tmp"
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from PySide6 import QtGui, QtWidgets  # noqa: E402
+from PySide6.QtCore import Qt  # noqa: E402
 from videobatch_gui import (  # noqa: E402
     MainWindow,
     check_ffmpeg,
@@ -109,6 +111,35 @@ def test_abitrate_normalization(tmp_path):
     win.abitrate_edit.setText("abc")
     assert win._gather_settings()["abitrate"] == "192k"
     win.close()
+
+
+def test_toggle_thumbnails(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    from PIL import Image
+
+    img_path = tmp_path / "img.png"
+    Image.new("RGB", (10, 10), "white").save(img_path)
+    win = MainWindow()
+    win.show_thumbs.setChecked(False)
+    win.model.add_pairs([PairItem(str(img_path))])
+    idx = win.model.index(0, 1)
+    assert win.model.data(idx, Qt.DecorationRole) is None
+    win.show_thumbs.setChecked(True)
+    assert isinstance(win.model.data(idx, Qt.DecorationRole), QtGui.QPixmap)
+    win.close()
+
+
+def test_notes_persist(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    notes_file = Path("/tmp/.videobatchtool/notes.txt")
+    if notes_file.exists():
+        notes_file.unlink()
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    win = MainWindow()
+    win.notes_edit.setPlainText("Testnotiz")
+    win.close()
+    assert notes_file.read_text(encoding="utf-8") == "Testnotiz"
 
 
 def test_start_encode_requires_ffmpeg(monkeypatch, tmp_path):

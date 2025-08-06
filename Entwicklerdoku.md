@@ -27,3 +27,5 @@ Dieses Tool besteht aus drei Hauptdateien:
 - Vor dem Kodieren prüft die Oberfläche, ob `ffmpeg` verfügbar ist; Zahlen bei der Audio-Bitrate erhalten automatisch ein "k" (Kilobit).
 - Vorschaubilder werden mit einem Zwischenspeicher (`lru_cache`) nur einmal erzeugt, um Rechenzeit zu sparen.
 - Dateipfade werden mit `pathlib.Path` verwaltet, damit das Tool auf verschiedenen Systemen funktioniert.
+- Vorschaubilder lassen sich abschalten, um Speicher zu sparen.
+- Ein Notizfeld speichert Aufgaben automatisch in `~/.videobatchtool/notes.txt`.

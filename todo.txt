@@ -1,7 +1,7 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-- (keine)
+- Weitere Einsparpotenziale bei Ressourcen prüfen
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -28,3 +28,5 @@
 - Tests für Platzhalter und Standardwerte ergänzen
 - Weitere Grenzfälle für Eingaben getestet
 - ffmpeg-Prüfung vor Start und automatische Ergänzung der Audio-Bitrate
+- Thumbnails optional, um Speicher zu sparen
+- Notizfeld für Aufgaben ergänzt

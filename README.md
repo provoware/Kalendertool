@@ -19,3 +19,6 @@ von Medien) vorhanden ist. Bei reinen Zahlen ergänzt das Tool den Buchstaben
 "k" (Kilobit), damit die Audio-Bitrate (Tonqualität in Bits pro Sekunde) gültig
 ist.
 
+Vorschaubilder lassen sich abschalten, um Arbeitsspeicher (RAM) zu sparen, und
+ein kleines Notizfeld speichert persönliche Aufgaben automatisch.
+

@@ -23,10 +23,12 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
-# ---------- Logging ----------
+# ---------- Logging & Persistenz ----------
 LOG_DIR = Path.home() / ".videobatchtool" / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / f"{datetime.now().strftime('%Y%m%d-%H%M%S')}.log"
+# Datei für Notizen
+NOTES_FILE = LOG_DIR.parent / "notes.txt"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -192,9 +194,10 @@ class PairItem:
 
 
 class PairTableModel(QAbstractTableModel):
-    def __init__(self, pairs: List[PairItem]):
+    def __init__(self, pairs: List[PairItem], show_thumbs: bool = True):
         super().__init__()
         self.pairs = pairs
+        self.show_thumbs = show_thumbs
 
     def rowCount(self, parent=QModelIndex()):
         return len(self.pairs)
@@ -227,7 +230,7 @@ class PairTableModel(QAbstractTableModel):
                 return f"{int(item.progress)}%"
             if col == 7:
                 return item.status
-        if role == Qt.DecorationRole and col == 1:
+        if role == Qt.DecorationRole and col == 1 and self.show_thumbs:
             item.load_thumb()
             return item.thumb
         if role == Qt.ToolTipRole:
@@ -546,11 +549,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings = QtCore.QSettings("Provoware", "VideoBatchTool")
         self._font_size = self.settings.value("ui/font_size", 11, int)
         self._theme = self.settings.value("ui/theme", "Hell", str)
+        show_thumbs = self.settings.value("ui/show_thumbs", True, bool)
 
         sys.excepthook = self._global_exception
 
         self.pairs: List[PairItem] = []
-        self.model = PairTableModel(self.pairs)
+        self.model = PairTableModel(self.pairs, show_thumbs)
 
         self.dashboard = InfoDashboard()
         self.dashboard.set_env(check_ffmpeg(), True)
@@ -629,6 +633,13 @@ class MainWindow(QtWidgets.QMainWindow):
             )
         )
         self.abitrate_edit.setAccessibleName("Audio-Bitrate")
+        self.show_thumbs = QtWidgets.QCheckBox("Vorschau-Bilder anzeigen")
+        self.show_thumbs.setToolTip(
+            "Zeigt kleine Vorschaubilder, spart Speicher wenn ausgeschaltet"
+        )
+        self.show_thumbs.setAccessibleName("Vorschau-Bilder anzeigen")
+        self.show_thumbs.setChecked(self.model.show_thumbs)
+        self.show_thumbs.toggled.connect(self._on_toggle_thumbs)
         self.clear_after = QtWidgets.QCheckBox("Nach Fertigstellung Listen leeren")
         self.clear_after.setChecked(self.settings.value("ui/clear_after", False, bool))
 
@@ -669,6 +680,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.abitrate_edit,
             "z. B. 192k",
         )
+        form.addRow("", self.show_thumbs)
         form.addRow("", self.clear_after)
 
         self.settings_widget = QtWidgets.QWidget()
@@ -689,11 +701,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_edit = QtWidgets.QPlainTextEdit()
         self.log_edit.setReadOnly(True)
         self.log_edit.setMaximumBlockCount(5000)
+        self.notes_edit = QtWidgets.QPlainTextEdit()
+        self.notes_edit.setPlaceholderText("Notizen (werden gespeichert)")
+        self.notes_edit.setAccessibleName("Notizfeld")
+        self.notes_edit.setToolTip(
+            "Eigene Aufgaben oder Hinweise; wird automatisch gespeichert"
+        )
+        self.notes_edit.setFixedHeight(80)
+        try:
+            self.notes_edit.setPlainText(NOTES_FILE.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            pass
 
         log_box = QtWidgets.QWidget()
         bl = QtWidgets.QVBoxLayout(log_box)
         bl.addWidget(self.progress_total)
         bl.addWidget(self.log_edit)
+        bl.addWidget(self.notes_edit)
 
         outer_split = QtWidgets.QSplitter(Qt.Vertical)
         outer_split.addWidget(grid_split)
@@ -951,6 +975,13 @@ class MainWindow(QtWidgets.QMainWindow):
             f"{img_count} Bilder | {aud_count} Audios | {pair_count} Paare"
         )
         self.dashboard.set_counts(pair_count, fin_count, err_count)
+
+    def _on_toggle_thumbs(self, checked: bool):
+        self.model.show_thumbs = checked
+        if not checked:
+            for p in self.pairs:
+                p.thumb = None
+        self.table.viewport().update()
 
     # ----- file actions -----
     def _pick_images(self):
@@ -1228,6 +1259,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("ui/geometry", self.saveGeometry())
         self.settings.setValue("ui/window_state", self.saveState())
         self.settings.setValue("ui/clear_after", self.clear_after.isChecked())
+        self.settings.setValue("ui/show_thumbs", self.show_thumbs.isChecked())
         s = self._gather_settings()
         self.settings.setValue("encode/out_dir", s["out_dir"])
         self.settings.setValue("encode/crf", s["crf"])
@@ -1235,6 +1267,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("encode/width", s["width"])
         self.settings.setValue("encode/height", s["height"])
         self.settings.setValue("encode/abitrate", s["abitrate"])
+        try:
+            NOTES_FILE.write_text(
+                self.notes_edit.toPlainText(), encoding="utf-8"
+            )
+        except Exception as exc:
+            logger.error("Notizen konnten nicht gespeichert werden: %s", exc)
         super().closeEvent(event)
 
 
