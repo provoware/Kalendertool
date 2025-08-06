@@ -12,6 +12,11 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
 - Einheitliche Namen
+- requirements.txt und pyproject.toml anlegen
+- Lizenzdatei und ausführliche README schreiben
+- Automatische Tests (GitHub Actions) einrichten
+- pre-commit mit black und ruff hinzufügen
+- Ausführbares Paket (z.B. PyInstaller) vorbereiten
 
 ## Erledigt
 - Fenstergröße flexibel machen
