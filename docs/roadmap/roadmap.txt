@@ -22,6 +22,7 @@
 - Versionsnummer auf 0.1.1 erhöht.
 - Skripte in eigenes Verzeichnis verschoben und Dokumentationsskript ergänzt.
 - CI baut nun die Sphinx-Dokumentation.
+- Sphinx-Dokumentation manuell gebaut und geprüft.
 - Markdown-Dateien unter /docs organisiert.
 
 - SQLite-Verbindung ist jetzt threadsicher.
