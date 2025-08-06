@@ -8,11 +8,14 @@ from pathlib import Path
 from uuid import uuid4
 
 from storage import load_project, save_project, close
+from config.paths import PROJECT_DB, ensure_directories
 
-DB_PATH = Path("data/project.db")
+DB_PATH = PROJECT_DB
 
 
 def _load_events() -> tuple[list[dict[str, str]], dict]:
+    """Termine und Rohdaten laden (Datenbankabfrage)."""
+    ensure_directories()
     data = load_project(DB_PATH)
     return data.setdefault("events", []), data
 
@@ -87,7 +90,7 @@ def main() -> None:
     export_p.add_argument("file", help="Zieldatei, z.B. events.ics")
 
     args = parser.parse_args()
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    ensure_directories()
     if args.cmd == "add":
         add_event(args.title, args.date)
     elif args.cmd == "list":

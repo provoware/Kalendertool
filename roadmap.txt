@@ -10,9 +10,10 @@
 - Sphinx-Dokumentation enthält eine Startanleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
+- Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.
 
-- Nächster Schritt: Alarme ergänzen.
-- Danach: CalDAV-Synchronisation und Gruppen-Kalender umsetzen.
+- Nächster Schritt: SQLite-Verbindung threadsicher machen.
+- Danach: Alarme ergänzen und CalDAV-Synchronisation sowie Gruppen-Kalender umsetzen.
 
 1. Alarme für Termine implementieren.
 2. CalDAV-Synchronisation und Gruppen-Kalender entwickeln.

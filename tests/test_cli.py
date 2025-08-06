@@ -7,6 +7,7 @@ from start_cli import add_event, export_ical  # noqa: E402
 
 
 def test_export_creates_file(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")
     add_event("Feier", "2025-12-24")
     out = tmp_path / "events.ics"

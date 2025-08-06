@@ -69,3 +69,4 @@
 - Persistente Ablage auf SQLite migriert
 - Sphinx-Dokumentation vervollständigen
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
+- Verzeichnisse werden nicht mehr beim Import von config.paths angelegt; Erstellung erfolgt bei Bedarf

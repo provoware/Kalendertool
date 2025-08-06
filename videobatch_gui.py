@@ -37,6 +37,7 @@ from config.paths import (
     PROJECT_DB,
     DEFAULT_OUT_DIR,
     USED_DIR,
+    ensure_directories,
 )
 from storage import save_project, load_project, close as close_storage
 from help.tooltips import (
@@ -51,6 +52,9 @@ from help.tooltips import (
     TIP_UNDO,
     TIP_STOP,
 )
+
+# benötigte Verzeichnisse sicherstellen
+ensure_directories()
 
 # ---------- Logging & Persistenz ----------
 
