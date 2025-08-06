@@ -36,3 +36,5 @@
 - Automatische Tests über GitHub Actions eingerichtet
 - pre-commit mit black und ruff ergänzt
 - Skript für ausführbares Paket erstellt
+- Fehlerbehandlung verbessert und Platzhalter entfernt
+- Sicheres Beenden laufender Prozesse beim Schließen des Tools
