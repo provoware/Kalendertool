@@ -18,9 +18,6 @@
 - Observability: OpenTelemetry-Traces + Prometheus-Metriken einbinden
 - TLS + HSTS erzwingen, Backup-/Restore-Procedures dokumentieren
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
-- grafische Interaktivität immer über Buttons oder Auswahldialoge
-- Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
-- Fixen
 - Drei-Säulen-Layout: klare Trennung Navigation – Content – Settings
 - Farbkodierung modular: jede Karte erhält eigene Akzentfarbe für schnelle Orientierung
 - Dark-Mode-Palette mit kontrastreichen Buttons und weißen Schriften

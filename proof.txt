@@ -1,0 +1,4 @@
+# Schwachstellen
+- Trennung von Oberfläche (GUI) und Logik nur teilweise umgesetzt.
+- Keine dauerhafte Speicherung (persistente Ablage) für Projekte.
+- Sphinx-Dokumentation weiterhin inhaltlich unvollständig.
