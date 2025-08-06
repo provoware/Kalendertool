@@ -46,6 +46,27 @@ def run() -> None:
     alarm_entry = tk.Entry(root, textvariable=alarm_var)
     alarm_entry.grid(row=4, column=1)
 
+    def _validate(
+        title: str, date_str: str, alarm_str: str
+    ) -> tuple[str, str, int | None] | None:
+        """Prüfe Eingaben und gebe Werte zurück."""
+        if not title.strip():
+            messagebox.showerror("Fehler", "Titel angeben")
+            return None
+        try:
+            datetime.fromisoformat(date_str)
+        except ValueError:
+            messagebox.showerror("Fehler", "Datum im Format JJJJ-MM-TT angeben")
+            return None
+        try:
+            alarm = int(alarm_str) if alarm_str else None
+            if alarm is not None and alarm < 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Fehler", "Alarm muss eine positive Zahl sein")
+            return None
+        return title, date_str, alarm
+
     def create_tooltip(widget: tk.Widget, text: str) -> None:
         """Zeige Text beim Überfahren des Widgets an."""
         tip: tk.Toplevel | None = None
@@ -101,22 +122,11 @@ def run() -> None:
         if not group_var.get().strip():
             messagebox.showerror("Fehler", "Gruppe angeben")
             return
-        if not title_var.get().strip():
-            messagebox.showerror("Fehler", "Titel angeben")
+        parsed = _validate(title_var.get(), date_var.get(), alarm_var.get())
+        if not parsed:
             return
-        try:
-            datetime.fromisoformat(date_var.get())
-        except ValueError:
-            messagebox.showerror("Fehler", "Datum im Format JJJJ-MM-TT angeben")
-            return
-        try:
-            alarm = int(alarm_var.get()) if alarm_var.get() else None
-            if alarm is not None and alarm < 0:
-                raise ValueError
-        except ValueError:
-            messagebox.showerror("Fehler", "Alarm muss eine positive Zahl sein")
-            return
-        add_event(title_var.get(), date_var.get(), alarm, group_var.get())
+        title, date_str, alarm = parsed
+        add_event(title, date_str, alarm, group_var.get())
         refresh()
 
     def sync_cb() -> None:
@@ -157,22 +167,11 @@ def run() -> None:
         if not group_var.get().strip():
             messagebox.showerror("Fehler", "Gruppe angeben")
             return
-        if not title_var.get().strip():
-            messagebox.showerror("Fehler", "Titel angeben")
+        parsed = _validate(title_var.get(), date_var.get(), alarm_var.get())
+        if not parsed:
             return
-        try:
-            datetime.fromisoformat(date_var.get())
-        except ValueError:
-            messagebox.showerror("Fehler", "Datum im Format JJJJ-MM-TT angeben")
-            return
-        try:
-            alarm = int(alarm_var.get()) if alarm_var.get() else None
-            if alarm is not None and alarm < 0:
-                raise ValueError
-        except ValueError:
-            messagebox.showerror("Fehler", "Alarm muss eine positive Zahl sein")
-            return
-        edit_event(sel[0], title_var.get(), date_var.get(), alarm, group_var.get())
+        title, date_str, alarm = parsed
+        edit_event(sel[0], title, date_str, alarm, group_var.get())
         refresh()
 
     def month_view_cb() -> None:
@@ -201,10 +200,15 @@ def run() -> None:
             for r, week in enumerate(weeks, start=1):
                 for c, day in enumerate(week):
                     txt = "" if day == 0 else str(day)
-                    lbl = tk.Label(win, text=txt)
+                    if day == 0:
+                        tk.Label(win, text="").grid(row=r, column=c, padx=2, pady=2)
+                        continue
+                    btn = tk.Button(
+                        win, text=txt, width=4, command=lambda d=day: open_day(d)
+                    )
                     if day in days:
-                        lbl.configure(background="lightblue")
-                    lbl.grid(row=r, column=c, padx=2, pady=2)
+                        btn.configure(background="lightblue")
+                    btn.grid(row=r, column=c, padx=2, pady=2)
             btn_prev = tk.Button(win, text="<", command=prev_month)
             btn_prev.grid(row=len(weeks) + 1, column=0, columnspan=3, sticky="w")
             btn_next = tk.Button(win, text=">", command=next_month)
@@ -220,6 +224,74 @@ def run() -> None:
         def next_month() -> None:
             nonlocal current
             current = (current + timedelta(days=31)).replace(day=1)
+            draw()
+
+        def open_day(day: int) -> None:
+            groups, _ = _load_groups()
+            events = [
+                (idx, ev)
+                for idx, ev in enumerate(groups.get(group_var.get(), []))
+                if ev["date"].startswith(
+                    f"{current.year:04d}-{current.month:02d}-{day:02d}"
+                )
+            ]
+            if not events:
+                title = simpledialog.askstring("Neuer Termin", "Titel")
+                if not title:
+                    return
+                alarm_str = simpledialog.askstring(
+                    "Alarm", "Alarm in Minuten", initialvalue=""
+                )
+                parsed = _validate(
+                    title,
+                    f"{current.year:04d}-{current.month:02d}-{day:02d}",
+                    alarm_str or "",
+                )
+                if not parsed:
+                    return
+                t, d, a = parsed
+                add_event(t, d, a, group_var.get())
+                refresh()
+                draw()
+                return
+            if len(events) > 1:
+                choice = simpledialog.askinteger(
+                    "Termin wählen",
+                    "Nummer wählen:\n"
+                    + "\n".join(
+                        f"{i}: {ev['title']}" for i, (_, ev) in enumerate(events)
+                    ),
+                )
+                if choice is None or not 0 <= choice < len(events):
+                    return
+                idx, ev = events[choice]
+            else:
+                idx, ev = events[0]
+            new_title = simpledialog.askstring(
+                "Titel", "Neuer Titel", initialvalue=ev["title"]
+            )
+            if new_title is None:
+                return
+            new_date = simpledialog.askstring(
+                "Datum",
+                "Datum JJJJ-MM-TT",
+                initialvalue=ev["date"][:10],
+            )
+            if new_date is None:
+                return
+            alarm_str = simpledialog.askstring(
+                "Alarm",
+                "Alarm in Minuten",
+                initialvalue=str(ev.get("alarm", "")),
+            )
+            if alarm_str is None:
+                return
+            parsed = _validate(new_title, new_date, alarm_str)
+            if not parsed:
+                return
+            t, d, a = parsed
+            edit_event(idx, t, d, a, group_var.get())
+            refresh()
             draw()
 
         draw()

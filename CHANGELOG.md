@@ -12,6 +12,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - Löschfunktion in der GUI und Rückmeldung zur Synchronisation.
 - Bearbeitungsfunktion für bestehende Termine in CLI und GUI.
 - Monatsübersicht in der GUI zur besseren Terminübersicht.
+ - Direktes Bearbeiten und Anlegen von Terminen in der Monatsübersicht.
 
 ### Verbessert
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
@@ -19,6 +20,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - GUI füllt Felder bei Auswahl automatisch und meldet Eingabefehler.
 - GUI prüft Gruppenfeld und zeigt Hilfetexte (Tooltips) an.
 - Monatsansicht erlaubt Wechsel zu anderen Monaten.
+ - Monatsansicht ermöglicht Bearbeiten und Anlegen per Mausklick.
 
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt

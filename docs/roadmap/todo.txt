@@ -19,6 +19,7 @@
 - GUI prüft Gruppenfeld und zeigt Tooltips für Eingabefelder und Buttons
 - Monatsübersicht in GUI integriert
 - Monatsübersicht erlaubt Navigation zu anderen Monaten
+- Monatsübersicht ermöglicht Bearbeiten und Anlegen per Mausklick
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt

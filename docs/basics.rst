@@ -37,5 +37,6 @@ Die wichtigsten Schritte im Überblick:
    - Auf "Monat" klicken.
    - Mit "<" oder ">" zu anderem Monat wechseln.
    - Es erscheint ein Kalendergitter; Tage mit Terminen sind blau markiert.
+   - Auf einen Tag klicken, um dort Termine direkt zu ändern oder anzulegen.
 
 Diese Schritte helfen Einsteigern, Termine anzulegen und zu verwalten.
