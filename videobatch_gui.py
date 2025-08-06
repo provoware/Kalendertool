@@ -25,12 +25,16 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
+from config.paths import LOG_FILE, NOTES_FILE
+from help.tooltips import (
+    TIP_ADD_IMAGES,
+    TIP_ADD_AUDIOS,
+    TIP_AUTO_PAIR,
+    TIP_START_ENCODE,
+)
+from help.tooltips import TIP_ADD_IMAGES, TIP_ADD_AUDIOS
+
 # ---------- Logging & Persistenz ----------
-LOG_DIR = Path.home() / ".videobatchtool" / "logs"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-LOG_FILE = LOG_DIR / f"{datetime.now().strftime('%Y%m%d-%H%M%S')}.log"
-# Datei für Notizen
-NOTES_FILE = LOG_DIR.parent / "notes.txt"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -714,13 +718,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Buttons
         self.btn_add_images = QtWidgets.QPushButton("Bilder wählen")
-        self.btn_add_images.setToolTip("Bilder auf dem Rechner wählen")
+        self.btn_add_images.setToolTip(TIP_ADD_IMAGES)
         self.btn_add_images.setStatusTip(
             "Öffnet einen Dialog zum Auswählen von Bilddateien, z.\u202fB. Urlaub.jpg"
         )
 
         self.btn_add_audios = QtWidgets.QPushButton("Audios wählen")
-        self.btn_add_audios.setToolTip("Audiodateien wählen")
+        self.btn_add_audios.setToolTip(TIP_ADD_AUDIOS)
         self.btn_add_audios.setStatusTip(
             "Öffnet einen Dialog zum Auswählen von Audiodateien, z.\u202fB. Musik.mp3"
         )
@@ -729,6 +733,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_auto_pair.setToolTip(
             "Bilder und Audios automatisch verbinden (paart Dateien mit gleichem Namen)"
         )
+        self.btn_auto_pair.setToolTip(TIP_AUTO_PAIR)
         self.btn_auto_pair.setStatusTip(
             "Verknüpft die Dateien paarweise ohne manuelle Auswahl"
         )
@@ -768,7 +773,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_show_path.clicked.connect(self._show_selected_path)
 
         self.btn_encode = QtWidgets.QPushButton("Start")
-        self.btn_encode.setToolTip("Umwandlung starten")
+        self.btn_encode.setToolTip(TIP_START_ENCODE)
         self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
         self.btn_encode.setAccessibleName("Start")
 

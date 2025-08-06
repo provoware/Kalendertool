@@ -2,3 +2,11 @@
 - Trennung von Oberfläche (GUI) und Logik nur teilweise umgesetzt.
 - Keine dauerhafte Speicherung (persistente Ablage) für Projekte.
 - Sphinx-Dokumentation weiterhin inhaltlich unvollständig.
+
+- Weitere Tooltips (Kurzinfos) sind knapp; zusätzliche Erklärungen helfen Einsteigern.
+- API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
+- Weitere Button-Kurzinfos liegen noch im GUI-Code; Hilfemodul wird nicht überall genutzt.
+- Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.
+- Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archive noch unvollständig.
+- Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.
+- AppImage-Paket für Linux fehlt.
