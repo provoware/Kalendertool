@@ -1,7 +1,8 @@
 # Kurz-Roadmap
-- API-Schicht für ffmpeg-Aufruf eingeführt.
-- Validierungslogik in utils gebündelt und Tooltip "Bilder wählen" ergänzt.
-- Release-Skript für PyPI ergänzt.
+- Spezialprüfungen für Medienpaare in utils gebündelt.
+- Projekt wird beim Beenden automatisch gespeichert und beim Start geladen.
+- Release-Skript führt Tests aus und baut Paket automatisiert.
+- Weitere Button-Kurzinfos ins Hilfemodul ausgelagert.
 
 - Nächster Schritt: Persistente Ablage mit SQLite oder PostgreSQL einführen.
 - Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.

@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 import re
 import shutil
+from typing import Tuple
 
 
 def human_time(sec: int) -> str:
@@ -45,10 +46,27 @@ def normalize_bitrate(text: str) -> str:
     return f"{value}{unit}"
 
 
+def validate_pair(image: Path | str, audio: Path | str | None) -> Tuple[bool, str]:
+    """Bild und Audio auf Existenz und Format prüfen."""
+    if not image or not audio:
+        return False, "Bild oder Audio fehlt"
+    ip, ap = Path(image), Path(audio)
+    if not ip.exists():
+        return False, f"Bild fehlt: {ip}"
+    if not ap.exists():
+        return False, f"Audio fehlt: {ap}"
+    if ip.suffix.lower() not in (".jpg", ".jpeg", ".png", ".bmp", ".webp"):
+        return False, "Ungültiges Bildformat"
+    if ap.suffix.lower() not in (".mp3", ".wav", ".flac", ".m4a", ".aac"):
+        return False, "Ungültiges Audioformat"
+    return True, ""
+
+
 __all__ = [
     "human_time",
     "build_out_name",
     "which",
     "check_ffmpeg",
     "normalize_bitrate",
+    "validate_pair",
 ]

@@ -17,7 +17,13 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from utils import build_out_name, human_time, check_ffmpeg, normalize_bitrate
+from utils import (
+    build_out_name,
+    human_time,
+    check_ffmpeg,
+    normalize_bitrate,
+    validate_pair,
+)
 
 from api import build_ffmpeg_cmd, run_ffmpeg
 
@@ -26,13 +32,15 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
-from config.paths import LOG_FILE, NOTES_FILE
+from config.paths import LOG_FILE, NOTES_FILE, PROJECT_FILE
 from help.tooltips import (
     TIP_ADD_IMAGES,
     TIP_ADD_AUDIOS,
     TIP_AUTO_PAIR,
     TIP_CLEAR_LIST,
     TIP_START_ENCODE,
+    TIP_SAVE_PROJECT,
+    TIP_LOAD_PROJECT,
 )
 
 # ---------- Logging & Persistenz ----------
@@ -141,29 +149,9 @@ class PairItem:
             self.thumb = make_thumb(self.image_path)
 
     def validate(self):
-        if not self.image_path or not self.audio_path:
-            self.valid = False
-            self.validation_msg = "Bild oder Audio fehlt"
-            return
-        ip, ap = Path(self.image_path), Path(self.audio_path)
-        if not ip.exists():
-            self.valid = False
-            self.validation_msg = f"Bild fehlt: {ip}"
-            return
-        if not ap.exists():
-            self.valid = False
-            self.validation_msg = f"Audio fehlt: {ap}"
-            return
-        if ip.suffix.lower() not in (".jpg", ".jpeg", ".png", ".bmp", ".webp"):
-            self.valid = False
-            self.validation_msg = "Ungültiges Bildformat"
-            return
-        if ap.suffix.lower() not in (".mp3", ".wav", ".flac", ".m4a", ".aac"):
-            self.valid = False
-            self.validation_msg = "Ungültiges Audioformat"
-            return
-        self.valid = True
-        self.validation_msg = ""
+        ok, msg = validate_pair(self.image_path, self.audio_path)
+        self.valid = ok
+        self.validation_msg = msg
 
 
 class PairTableModel(QAbstractTableModel):
@@ -717,15 +705,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_undo.setAccessibleName("Rückgängig")
 
         self.btn_save = QtWidgets.QPushButton("Projekt speichern")
-        self.btn_save.setToolTip(
-            "Projekt als Datei speichern (JSON-Datei, um später weiterzuarbeiten)"
-        )
+        self.btn_save.setToolTip(TIP_SAVE_PROJECT)
         self.btn_save.setStatusTip(
             "Speichert aktuelle Paare in einer Datei, z.\u202fB. projekt.json"
         )
 
         self.btn_load = QtWidgets.QPushButton("Projekt laden")
-        self.btn_load.setToolTip("Gespeichertes Projekt öffnen")
+        self.btn_load.setToolTip(TIP_LOAD_PROJECT)
         self.btn_load.setStatusTip(
             "Lädt eine Projektdatei und stellt alle Paare wieder her"
         )
@@ -803,6 +789,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self._apply_font()
         self.restoreGeometry(self.settings.value("ui/geometry", b"", bytes))
         self.restoreState(self.settings.value("ui/window_state", b"", bytes))
+
+        if PROJECT_FILE.exists():
+            try:
+                data = json.loads(PROJECT_FILE.read_text(encoding="utf-8"))
+                self._apply_project_data(data)
+            except Exception as exc:
+                logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
 
     # ----- UI helpers -----
     def _build_menus(self):
@@ -1041,31 +1034,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self._resize_columns()
 
     # ----- save / load -----
-    def _save_project(self):
-        path, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Projekt speichern", str(Path.cwd() / "projekt.json"), "JSON (*.json)"
-        )
-        if not path:
-            return
-        data = {
+    def _project_data(self) -> Dict[str, Any]:
+        return {
             "pairs": [
                 {"image": p.image_path, "audio": p.audio_path, "output": p.output}
                 for p in self.pairs
             ],
             "settings": self._gather_settings(),
         }
-        Path(path).write_text(
-            json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
-        )
-        self._log(f"Projekt gespeichert: {path}")
 
-    def _load_project(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Projekt laden", str(Path.cwd()), "JSON (*.json)"
-        )
-        if not path:
-            return
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    def _apply_project_data(self, data: Dict[str, Any]) -> None:
         self._push_history()
         self.model.clear()
         new = []
@@ -1078,10 +1056,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.model.add_pairs(new)
         s = data.get("settings", {})
         out_dir = s.get("out_dir", "")
-        if out_dir == str(default_output_dir()):
-            self.out_dir_edit.setText("")
-        else:
-            self.out_dir_edit.setText(out_dir)
+        self.out_dir_edit.setText(
+            "" if out_dir == str(default_output_dir()) else out_dir
+        )
         self.crf_spin.setValue(s.get("crf", self.crf_spin.value()))
         self.preset_combo.setCurrentText(
             s.get("preset", self.preset_combo.currentText())
@@ -1089,12 +1066,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.width_spin.setValue(s.get("width", self.width_spin.value()))
         self.height_spin.setValue(s.get("height", self.height_spin.value()))
         abitrate = s.get("abitrate", "")
-        if abitrate in ("", "192k"):
-            self.abitrate_edit.setText("")
-        else:
-            self.abitrate_edit.setText(abitrate)
+        self.abitrate_edit.setText("" if abitrate in ("", "192k") else abitrate)
         self._update_counts()
         self._resize_columns()
+
+    def _save_project(self):
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Projekt speichern", str(Path.cwd() / "projekt.json"), "JSON (*.json)"
+        )
+        if not path:
+            return
+        Path(path).write_text(
+            json.dumps(self._project_data(), indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        self._log(f"Projekt gespeichert: {path}")
+
+    def _load_project(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Projekt laden", str(Path.cwd()), "JSON (*.json)"
+        )
+        if not path:
+            return
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        self._apply_project_data(data)
         self._log(f"Projekt geladen: {path}")
 
     # ----- encode -----
@@ -1255,6 +1250,13 @@ class MainWindow(QtWidgets.QMainWindow):
             NOTES_FILE.write_text(self.notes_edit.toPlainText(), encoding="utf-8")
         except Exception as exc:
             logger.error("Notizen konnten nicht gespeichert werden: %s", exc)
+        try:
+            PROJECT_FILE.write_text(
+                json.dumps(self._project_data(), indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+        except Exception as exc:
+            logger.error("Projekt konnte nicht gespeichert werden: %s", exc)
         super().closeEvent(event)
 
 

@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path
 from typing import List
 
-from utils import build_out_name, human_time
+from utils import build_out_name, human_time, validate_pair
 
 
 def cli_encode(
@@ -35,8 +35,9 @@ def cli_encode(
     total = len(images)
     done = 0
     for i, (img, aud) in enumerate(zip(images, audios), 1):
-        if not img.exists() or not aud.exists():
-            print(f"[{i}/{total}] FEHLT: {img} / {aud}")
+        ok, msg = validate_pair(img, aud)
+        if not ok:
+            print(f"[{i}/{total}] {msg}: {img} / {aud}")
             continue
         out_file = build_out_name(aud, out_dir)
         cmd = [

@@ -13,3 +13,7 @@ TIP_START_ENCODE = (
 TIP_CLEAR_LIST = (
     "Alle Listen leeren" " (entfernt alle Einträge dauerhaft aus der Tabelle)"
 )
+TIP_SAVE_PROJECT = (
+    "Projekt speichern" " (legt eine JSON-Datei zum späteren Fortsetzen an)"
+)
+TIP_LOAD_PROJECT = "Projekt laden" " (lädt eine zuvor gespeicherte Projektdatei)"
