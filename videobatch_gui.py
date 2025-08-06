@@ -566,7 +566,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Einstellungen
         self.out_dir_edit = QtWidgets.QLineEdit(
-            str(self.settings.value("encode/out_dir", default_output_dir(), str))
+            self.settings.value("encode/out_dir", "", str)
         )
         self.out_dir_edit.setPlaceholderText(
             f"Standard: {default_output_dir()}"
@@ -600,7 +600,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.height_spin.setValue(self.settings.value("encode/height", 1080, int))
         self.height_spin.setSuffix(" px")
         self.abitrate_edit = QtWidgets.QLineEdit(
-            self.settings.value("encode/abitrate", "192k", str)
+            self.settings.value("encode/abitrate", "", str)
         )
         self.abitrate_edit.setPlaceholderText("z.B. 192k (Kilobit pro Sekunde)")
         self.abitrate_edit.setValidator(
@@ -1059,14 +1059,22 @@ class MainWindow(QtWidgets.QMainWindow):
             new.append(p)
         self.model.add_pairs(new)
         s = data.get("settings", {})
-        self.out_dir_edit.setText(s.get("out_dir", self.out_dir_edit.text()))
+        out_dir = s.get("out_dir", "")
+        if out_dir == str(default_output_dir()):
+            self.out_dir_edit.setText("")
+        else:
+            self.out_dir_edit.setText(out_dir)
         self.crf_spin.setValue(s.get("crf", self.crf_spin.value()))
         self.preset_combo.setCurrentText(
             s.get("preset", self.preset_combo.currentText())
         )
         self.width_spin.setValue(s.get("width", self.width_spin.value()))
         self.height_spin.setValue(s.get("height", self.height_spin.value()))
-        self.abitrate_edit.setText(s.get("abitrate", self.abitrate_edit.text()))
+        abitrate = s.get("abitrate", "")
+        if abitrate in ("", "192k"):
+            self.abitrate_edit.setText("")
+        else:
+            self.abitrate_edit.setText(abitrate)
         self._update_counts()
         self._resize_columns()
         self._log(f"Projekt geladen: {path}")
