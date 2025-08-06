@@ -1,0 +1,6 @@
+# Kurz-Roadmap
+
+1. Verzeichnisstruktur und API-Schicht ausbauen (Daten, Konfiguration, Hilfetexte trennen).
+2. Dauerhafte Datenspeicherung mit SQLite vorbereiten.
+3. Automatische Startprüfung und Hilfestart integrieren.
+4. AppImage für Linux erstellen.
