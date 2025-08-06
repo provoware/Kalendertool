@@ -11,7 +11,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 ## Aufgaben
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
-- Ressourcen schonen
 - Portabilität für Linux
 - Einheitliche Namen
 
@@ -25,6 +24,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Vollautomatische Prüfungen
 - Selbstreparatur
 - Autonome Startprüfung
+- Ressourcen schonen
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

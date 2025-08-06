@@ -1,7 +1,6 @@
 # Noch zu erledigen:
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
-- System Leistung und Ram schützen und Ressourcen schonen
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
@@ -19,3 +18,4 @@
 - Vollautomatische Prüfungen einbauen
 - Selbstreparatur einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
+- System Leistung und Ram schützen und Ressourcen schonen

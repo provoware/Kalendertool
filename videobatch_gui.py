@@ -13,6 +13,7 @@ import subprocess
 import sys
 from datetime import datetime
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -98,6 +99,7 @@ def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
     return tgt
 
 
+@lru_cache(maxsize=128)
 def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
     try:
         from PIL import Image
