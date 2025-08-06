@@ -11,6 +11,7 @@
 - Release-Tag erstellen und Paket veröffentlichen
 
 ## Erledigte Aufgaben
+- Release-Prozess dokumentiert (docs/release.rst)
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
