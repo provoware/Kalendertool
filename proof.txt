@@ -2,3 +2,4 @@
 
 - Einige Tooltips (Kurzinfos) sind sehr knapp; weitere Erklärungen helfen Einsteigern.
 - Keine separate API-Schicht (Trennung von Oberfläche und Logik fehlt).
+- Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.

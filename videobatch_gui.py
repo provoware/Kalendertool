@@ -741,7 +741,9 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_add_audios = QtWidgets.QPushButton("Audios wählen")
-        self.btn_add_audios.setToolTip("Audiodateien wählen")
+        self.btn_add_audios.setToolTip(
+            "Audios für das Video auswählen (öffnet Fenster zum Auswählen von Dateien)"
+        )
         self.btn_add_audios.setStatusTip(
             "Öffnet einen Dialog zum Auswählen von Audiodateien, z.\u202fB. Musik.mp3"
         )

@@ -8,7 +8,6 @@
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 - Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
-- Weitere Tooltips vereinfachen und mit Beispielen ergänzen
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -47,3 +46,4 @@
 - Sicheres Beenden laufender Prozesse beim Schließen des Tools
 - CI-Pipeline um Linting, Testabdeckung und Security-Scan erweitert
 - Tooltip 'Bilder wählen' um Hinweis auf Dateifenster erweitert
+- Tooltip 'Audios wählen' um Hinweis auf Dateifenster erweitert
