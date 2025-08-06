@@ -53,20 +53,10 @@ from help.tooltips import (
     TIP_STOP,
 )
 
-# benötigte Verzeichnisse sicherstellen
-ensure_directories()
-
 # ---------- Logging & Persistenz ----------
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_FILE, encoding="utf-8"),
-        logging.StreamHandler(sys.stdout),
-    ],
-)
 logger = logging.getLogger("VideoBatchTool")
+logger.addHandler(logging.NullHandler())
 
 
 # ---------- Helpers ----------
@@ -497,6 +487,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
+        ensure_directories()
         self.setWindowTitle("VideoBatchTool 4.1 – Bild + Audio → MP4")
         screen = QtGui.QGuiApplication.primaryScreen()
         available = screen.availableGeometry()
@@ -1265,6 +1256,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
 # ---- Public
 def run_gui():
+    ensure_directories()
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler(LOG_FILE, encoding="utf-8"),
+            logging.StreamHandler(sys.stdout),
+        ],
+    )
+    global logger
+    logger = logging.getLogger("VideoBatchTool")
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
     w = MainWindow()
     w.show()

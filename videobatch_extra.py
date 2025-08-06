@@ -34,10 +34,12 @@ def cli_encode(
         return 1
     total = len(images)
     done = 0
+    errors = 0
     for i, (img, aud) in enumerate(zip(images, audios), 1):
         ok, msg = validate_pair(img, aud)
         if not ok:
             print(f"[{i}/{total}] {msg}: {img} / {aud}")
+            errors += 1
             continue
         out_file = build_out_name(aud, out_dir)
         cmd = build_ffmpeg_cmd(
@@ -55,8 +57,9 @@ def cli_encode(
             done += 1
         except RuntimeError as e:
             print(f"FFmpeg-Fehler: {e}")
+            errors += 1
     print(f"Fertig: {done}/{total}")
-    return 0
+    return 0 if errors == 0 else 2
 
 
 def run_selftests() -> int:

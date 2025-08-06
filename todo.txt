@@ -6,7 +6,6 @@
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - SQLite-Cache invalidieren, wenn Datenbank extern geändert wird
-- CLI-Exit-Codes vereinheitlichen, damit Fehler korrekt gemeldet werden
 
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
@@ -75,3 +74,4 @@
 - Verzeichnisse werden nicht mehr beim Import von config.paths angelegt; Erstellung erfolgt bei Bedarf
 - SQLite-Verbindung mit Lock threadsicher gemacht
 - FFmpeg-Fehlerbehandlung verbessert und CLI nutzt zentrale ffmpeg-Funktionen
+- CLI-Exit-Codes vereinheitlicht
