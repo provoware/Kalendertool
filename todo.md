@@ -1,4 +1,22 @@
 # Noch zu erledigen:
+- pyproject.toml + saubere Abhängigkeits­verwaltung anlegen
+- Paket-/Ordnerstruktur in kalendertool/, tests/, scripts/ aufräumen
+- Durchgängig Typ-Annotationen + pydantic-Modelle einführen
+- Linting (ruff), Formatting (black), Pre-commit-Hooks einrichten
+- Vollständige Entwickler-/Nutzer­doku mit MkDocs Material erstellen
+- Zeitzonen-Handling via zoneinfo, konsequent aware-Datetime nutzen
+- RFC 5545-Recurrence-Engine implementieren + Property-Tests (Hypothesis)
+- Sweep-Line-Algorithmus für Termin­überschneidungen umsetzen
+- iCal-Import/Export-Pipeline kapseln (Parsing ≠ Persistenz)
+- Unit-, Property-, Contract- und Mutation-Tests ≥ 80 % Coverage
+- Performance-Profiling, Batch-Writes & Async-I/O integrieren
+- Redis-Cache für Agenda-Views (TTL 5 min) aufsetzen
+- Secrets in .env + Trivy-Scan; ICS-Upload sanitizen
+- GDPR-Konformität: Daten-TTL, Audit-Log mit Hash-Chain
+- Rate-Limiting für API-Endpunkte implementieren
+- CI/CD-Pipeline (GitHub Actions → Docker → Trivy → Staging) bauen
+- Observability: OpenTelemetry-Traces + Prometheus-Metriken einbinden
+- TLS + HSTS erzwingen, Backup-/Restore-Procedures dokumentieren
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
