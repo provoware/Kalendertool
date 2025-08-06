@@ -5,8 +5,6 @@
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
-- Selbstreparatur einbauen
-- Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 # # Final und vollständig abgeschlossen:
 - plan.md angelegt
 - fortschritt.txt angelegt und erste Fortschrittszeile ergänzt
@@ -19,3 +17,5 @@
 - Globale Standards, Best Practices und Barrierefreiheit
 - einfache verständliche und eindeutige sprache bei Hilfe oder Tips im Tool
 - Vollautomatische Prüfungen einbauen
+- Selbstreparatur einbauen
+- Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback

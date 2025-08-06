@@ -21,3 +21,4 @@ Dieses Tool besteht aus drei Hauptdateien:
 - Die Oberfläche bietet vier Farb-Themes und anpassbare Schriftgröße; neue Widgets sollen diese Vorgaben übernehmen.
 - Tabellen zeigen nur Dateinamen und blenden horizontale Scrollbalken aus; volle Pfade stehen als Tooltip bereit.
 - Die Tab-Reihenfolge der wichtigsten Elemente wird mit `setTabOrder` (Reihenfolge für Tastatur-Bedienung) festgelegt.
+- Der Starter (`videobatch_launcher.py`) prüft beim Start automatisch auf fehlende Pakete oder `ffmpeg` und versucht, alles selbst zu installieren.

@@ -79,7 +79,7 @@ def bootstrap_console():
 def main():
     bootstrap_console()
 
-    from PySide6 import QtWidgets
+    from PySide6 import QtWidgets, QtCore
     import subprocess as sp
 
     class Wizard(QtWidgets.QDialog):
@@ -90,6 +90,7 @@ def main():
             self.py = str(venv_python())
             self._build_ui()
             self._check()
+            QtCore.QTimer.singleShot(0, self._auto_fix)
 
         def _build_ui(self):
             self.info = QtWidgets.QTextBrowser()
@@ -163,6 +164,12 @@ def main():
 
             self.setEnabled(True)
             self._check()
+
+        def _auto_fix(self):
+            if self.missing_pkgs or not self.ffmpeg_ok:
+                self._fix_all()
+            if self.progress.value() == 100:
+                self.accept()
 
     app = QtWidgets.QApplication(sys.argv)
     wiz = Wizard()
