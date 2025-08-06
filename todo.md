@@ -5,7 +5,6 @@
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
-- einfache verständliche und eindeutige sprache bei Hilfe oder Tips im Tool
 - Vollautomatische Prüfungen und Selbstrepair einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 # # Final und vollständig abgeschlossen:
@@ -18,3 +17,4 @@
 - Schriftgrößen flexibel einstellbar machen und darauf achten das sich alles fehlerfrei automatisch anpasst
 - Keine Links rechts scrollen im Tool, besser anordnen oder zweite Zeile verwenden, alles soll sichtbar sein
 - Globale Standards, Best Practices und Barrierefreiheit
+- einfache verständliche und eindeutige sprache bei Hilfe oder Tips im Tool
