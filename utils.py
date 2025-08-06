@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import re
+import shutil
 
 
 def human_time(sec: int) -> str:
@@ -20,4 +22,33 @@ def build_out_name(audio: Path | str, out_dir: Path) -> Path:
     return out_dir / f"{audio.stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
 
 
-__all__ = ["human_time", "build_out_name"]
+def which(p: str) -> str | None:
+    """Pfad zu ausführbarem Programm ermitteln."""
+    return shutil.which(p)
+
+
+def check_ffmpeg() -> bool:
+    """Prüfen, ob ffmpeg und ffprobe verfügbar sind."""
+    return bool(which("ffmpeg") and which("ffprobe"))
+
+
+def normalize_bitrate(text: str) -> str:
+    """Audio-Bitrate auf ein gültiges Format bringen."""
+    text = text.strip().lower()
+    if not text:
+        return "192k"
+    m = re.fullmatch(r"(\d+)([km]?)", text)
+    if not m:
+        return "192k"
+    value, unit = m.groups()
+    unit = unit or "k"
+    return f"{value}{unit}"
+
+
+__all__ = [
+    "human_time",
+    "build_out_name",
+    "which",
+    "check_ffmpeg",
+    "normalize_bitrate",
+]

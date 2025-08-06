@@ -8,7 +8,6 @@
 from __future__ import annotations
 import json
 import logging
-import re
 import shutil
 import subprocess
 import sys
@@ -18,7 +17,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from utils import build_out_name, human_time
+from utils import build_out_name, human_time, check_ffmpeg, normalize_bitrate
 
 from api import build_ffmpeg_cmd, run_ffmpeg
 
@@ -49,14 +48,6 @@ logger = logging.getLogger("VideoBatchTool")
 
 
 # ---------- Helpers ----------
-def which(p: str):
-    return shutil.which(p)
-
-
-def check_ffmpeg():
-    return which("ffmpeg") and which("ffprobe")
-
-
 def probe_duration(path: str) -> float:
     try:
         import ffmpeg
@@ -79,20 +70,6 @@ def get_used_dir() -> Path:
 
 def default_output_dir() -> Path:
     return Path.home() / "Videos" / "VideoBatchTool_Out"
-
-
-def normalize_bitrate(text: str) -> str:
-    """Ensure audio bitrate has a unit and fallback to default."""
-    text = text.strip().lower()
-    if not text:
-        return "192k"
-    m = re.fullmatch(r"(\d+)([km]?)", text)
-    if not m:
-        return "192k"
-    value, unit = m.groups()
-    if not unit:
-        unit = "k"
-    return f"{value}{unit}"
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:

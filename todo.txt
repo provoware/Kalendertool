@@ -57,3 +57,5 @@
 - Tooltip 'Umwandlung starten' erklärt die Videoerstellung
 - Doppelte Importe im Hauptmodul entfernt und Code komprimiert
 - Tooltip 'Audios wählen' nennt unterstützte Formate
+- Prüflogik in utils ausgelagert
+- Tooltip 'Bilder wählen' nennt unterstützte Formate

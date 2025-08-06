@@ -7,4 +7,4 @@
 - API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
 - Weitere Button-Kurzinfos liegen noch im GUI-Code; Hilfemodul wird nicht überall genutzt.
 - Release-Workflow für PyPI fehlt.
-- Auslagerung der Prüf-Logik begonnen, weitere Wiederholungen bestehen.
+- Spezialprüfungen liegen teils noch im GUI und könnten gebündelt werden.

@@ -10,12 +10,12 @@ from PySide6 import QtGui, QtWidgets  # noqa: E402
 from PySide6.QtCore import Qt  # noqa: E402
 from videobatch_gui import (  # noqa: E402
     MainWindow,
-    check_ffmpeg,
     human_time,
     make_thumb,
     PairItem,
     default_output_dir,
 )
+from utils import check_ffmpeg  # noqa: E402
 
 
 def test_human_time_gui():
@@ -23,9 +23,9 @@ def test_human_time_gui():
 
 
 def test_check_ffmpeg(monkeypatch):
-    monkeypatch.setattr("videobatch_gui.which", lambda x: "/usr/bin/" + x)
+    monkeypatch.setattr("utils.which", lambda x: "/usr/bin/" + x)
     assert check_ffmpeg()
-    monkeypatch.setattr("videobatch_gui.which", lambda x: None)
+    monkeypatch.setattr("utils.which", lambda x: None)
     assert not check_ffmpeg()
 
 

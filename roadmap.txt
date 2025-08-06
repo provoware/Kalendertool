@@ -1,6 +1,6 @@
 # Kurz-Roadmap
 - API-Schicht für ffmpeg-Aufruf eingeführt.
-- Validierungslogik teilweise ausgelagert und Tooltips erweitert.
+- Validierungslogik in utils gebündelt und Tooltip "Bilder wählen" ergänzt.
 - Nächster Schritt: Persistente Ablage mit SQLite oder PostgreSQL einführen.
 - Danach: Release-Workflow für PyPI aufsetzen und Kalenderfunktionen mit iCal-Unterstützung ergänzen.
 
