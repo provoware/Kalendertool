@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional
 
 _conn: Optional[sqlite3.Connection] = None
 _cache: Optional[Dict[str, Any]] = None
+_mtime: Optional[int] = None
 _lock = threading.Lock()
 
 
@@ -34,18 +35,20 @@ def save_project(data: Dict[str, Any], db_path: Path) -> None:
         with _lock, conn:
             conn.execute("DELETE FROM project")
             conn.execute("INSERT INTO project (data) VALUES (?)", [json.dumps(data)])
-        global _cache
+        global _cache, _mtime
         _cache = data
+        _mtime = db_path.stat().st_mtime_ns
     except sqlite3.Error as exc:
         raise RuntimeError("Projekt konnte nicht gespeichert werden") from exc
 
 
 def load_project(db_path: Path) -> Dict[str, Any]:
-    """Projekt aus SQLite-Datenbank laden (mit Cache)."""
+    """Projekt aus SQLite-Datenbank laden (mit Cache und Invalidation)."""
 
-    global _cache
+    global _cache, _mtime
     with _lock:
-        if _cache is not None:
+        current_mtime = db_path.stat().st_mtime_ns if db_path.exists() else None
+        if _cache is not None and _mtime == current_mtime:
             return _cache
         conn = _get_conn(db_path)
         try:
@@ -57,18 +60,20 @@ def load_project(db_path: Path) -> Dict[str, Any]:
             _cache = json.loads(row[0])
         else:
             _cache = {"pairs": [], "settings": {}}
+        _mtime = current_mtime
         return _cache
 
 
 def close() -> None:
     """Verbindung schließen und Cache leeren (thread-safe)."""
 
-    global _conn, _cache
+    global _conn, _cache, _mtime
     with _lock:
         if _conn is not None:
             _conn.close()
             _conn = None
         _cache = None
+        _mtime = None
 
 
 __all__ = ["save_project", "load_project", "close"]

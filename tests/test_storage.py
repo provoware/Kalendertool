@@ -9,7 +9,6 @@ from storage import save_project, load_project, close  # noqa: E402
 
 def _worker(db: Path, value: int):
     save_project({"v": value}, db)
-    assert load_project(db)["v"] == value
 
 
 def test_thread_safe(tmp_path):

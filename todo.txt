@@ -5,7 +5,6 @@
 - Alarme für Termine ergänzen
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
-- SQLite-Cache invalidieren, wenn Datenbank extern geändert wird
 
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
@@ -75,3 +74,4 @@
 - SQLite-Verbindung mit Lock threadsicher gemacht
 - FFmpeg-Fehlerbehandlung verbessert und CLI nutzt zentrale ffmpeg-Funktionen
 - CLI-Exit-Codes vereinheitlicht
+- SQLite-Cache wird bei externen Änderungen invalidiert

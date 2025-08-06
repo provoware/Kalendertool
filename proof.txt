@@ -5,7 +5,8 @@
 - Weitere Tooltips (Kurzinfos) sind knapp; zusätzliche Erklärungen helfen Einsteigern.
 - API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
 - Datenbank nutzt nur eine einfache JSON-Spalte; strukturierte Tabellen fehlen.
-- Der SQLite-Cache wird nicht invalidiert, wenn externe Änderungen an der Datenbank erfolgen.
 - Automatische ffmpeg-Installation läuft nur über apt auf Linux; andere Systeme benötigen manuelle Einrichtung.
 - Neue CLI speichert Termine im Klartext ohne Eingabevalidierung oder Verschlüsselung.
 - iCal-Export überschreibt vorhandene Dateien ohne Rückfrage und speichert Termine im Klartext.
+- Viele Funktionen besitzen keine Docstrings, was Wartung und API-Generierung erschwert.
+- Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.

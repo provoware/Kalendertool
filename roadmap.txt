@@ -5,6 +5,7 @@
 - Weitere Button-Kurzinfos (z.B. Pfad zeigen, Rückgängig, Stopp) ins Hilfemodul ausgelagert.
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
 - Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
+- Cache wird bei externen Datenbankänderungen automatisch invalidiert.
 - Automatische Startprüfung und Hilfestart integriert.
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
 - Sphinx-Dokumentation enthält eine Startanleitung.

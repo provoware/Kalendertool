@@ -795,6 +795,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 self._apply_project_data(data)
             except Exception as exc:
                 logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Projekt laden",
+                    "Projekt konnte nicht automatisch geladen werden.",
+                )
 
     # ----- UI helpers -----
     def _build_menus(self):
