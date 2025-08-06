@@ -10,6 +10,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - Sphinx erstellt API-Dokumentation automatisch.
 - CI baut nun auch die Dokumentation.
 - Markdown-Dateien in `/docs` organisiert.
+- Logrotation begrenzt die Logdateigröße.
 
 ### Entfernt
 - Veraltete Tracking-Dateien `plan.md`, `fortschritt.txt` und `todo.md`.

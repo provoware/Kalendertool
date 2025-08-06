@@ -17,6 +17,7 @@
 - Docstrings für CLI- und GUI-Helfer ergänzt.
 - Docstrings in der CLI-Hauptfunktion ergänzt; Tests laufen automatisch über pre-commit.
 - Logging zentral konfiguriert und in CLI/GUI integriert.
+- Logrotation begrenzt die Logdateigröße.
 - Skripte in eigenes Verzeichnis verschoben und Dokumentationsskript ergänzt.
 - CI baut nun die Sphinx-Dokumentation.
 - Markdown-Dateien unter /docs organisiert.

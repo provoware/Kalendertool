@@ -4,7 +4,11 @@
 // Architektur & Erweiterungen
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Gruppen-Kalender und CalDAV-Synchronisation
-- Logrotation für das zentrale Logging ergänzen
+// Release-Vorbereitung
+- Version in pyproject.toml aktualisieren
+- CHANGELOG prüfen und Version eintragen
+- Tests (pre-commit und pytest) vor Release ausführen
+- Release-Tag erstellen und Paket veröffentlichen
 
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
@@ -84,3 +88,4 @@
 - Skripte in /scripts verschoben und Dokumentationsskript ergänzt
 - Markdown-Dateien unter /docs organisiert
 - CI baut Sphinx-Dokumentation
+- Logrotation für das zentrale Logging ergänzt
