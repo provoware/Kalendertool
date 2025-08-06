@@ -11,6 +11,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - Dokumentation zu Gruppen-Kalender und CalDAV.
 - Löschfunktion in der GUI und Rückmeldung zur Synchronisation.
 - Bearbeitungsfunktion für bestehende Termine in CLI und GUI.
+- Monatsübersicht in der GUI zur besseren Terminübersicht.
 
 ### Verbessert
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.

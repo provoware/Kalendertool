@@ -33,6 +33,7 @@
 - GUI kann Termine löschen und meldet Ergebnis der Synchronisation.
 - GUI kann Termine bearbeiten.
 - GUI prüft das Gruppenfeld und zeigt Tooltips für Felder und Buttons.
+- GUI zeigt Monatsübersicht zur besseren Terminanzeige.
 - CLI bietet Befehl zum Bearbeiten bestehender Termine.
 
 - SQLite-Verbindung ist jetzt threadsicher.

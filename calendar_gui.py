@@ -5,6 +5,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 from datetime import datetime
+import calendar
 
 from start_cli import (
     add_event,
@@ -174,6 +175,31 @@ def run() -> None:
         edit_event(sel[0], title_var.get(), date_var.get(), alarm, group_var.get())
         refresh()
 
+    def month_view_cb() -> None:
+        if not group_var.get().strip():
+            messagebox.showerror("Fehler", "Gruppe angeben")
+            return
+        now = datetime.now()
+        weeks = calendar.monthcalendar(now.year, now.month)
+        groups, _ = _load_groups()
+        events = groups.get(group_var.get(), [])
+        days = {
+            int(ev["date"][8:10])
+            for ev in events
+            if ev["date"].startswith(f"{now.year:04d}-{now.month:02d}")
+        }
+        win = tk.Toplevel(root)
+        win.title(f"{calendar.month_name[now.month]} {now.year}")
+        for col, name in enumerate(["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]):
+            tk.Label(win, text=name, font=("Arial", 10, "bold")).grid(row=0, column=col)
+        for r, week in enumerate(weeks, start=1):
+            for c, day in enumerate(week):
+                txt = "" if day == 0 else str(day)
+                lbl = tk.Label(win, text=txt)
+                if day in days:
+                    lbl.configure(background="lightblue")
+                lbl.grid(row=r, column=c, padx=2, pady=2)
+
     listbox.bind("<<ListboxSelect>>", on_select)
     btn_refresh = tk.Button(root, text="Aktualisieren", command=refresh)
     btn_refresh.grid(row=5, column=0)
@@ -185,6 +211,8 @@ def run() -> None:
     btn_delete.grid(row=6, column=1)
     btn_sync = tk.Button(root, text="Synchronisieren", command=sync_cb)
     btn_sync.grid(row=7, column=0, columnspan=2)
+    btn_month = tk.Button(root, text="Monat", command=month_view_cb)
+    btn_month.grid(row=8, column=0, columnspan=2)
 
     create_tooltip(group_entry, "Gruppe für den Termin (z. B. familie)")
     create_tooltip(title_entry, "Titel des Termins")
@@ -195,6 +223,7 @@ def run() -> None:
     create_tooltip(btn_edit, "Markierten Termin ändern")
     create_tooltip(btn_delete, "Markierten Termin löschen")
     create_tooltip(btn_sync, "Termine mit CalDAV-Server abgleichen")
+    create_tooltip(btn_month, "Monatsübersicht anzeigen")
 
     refresh()
     root.mainloop()

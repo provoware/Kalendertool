@@ -33,4 +33,8 @@ Die wichtigsten Schritte im Überblick:
    - "Exportieren" auswählen und eine iCal-Datei (standardisiertes Kalenderformat) erzeugen.
    - Bestehende Datei wird nur nach Nachfrage (Option "Überschreiben") ersetzt.
 
+#. Monatsübersicht anzeigen:
+   - Auf "Monat" klicken.
+   - Es erscheint ein Kalendergitter; Tage mit Terminen sind blau markiert.
+
 Diese Schritte helfen Einsteigern, Termine anzulegen und zu verwalten.
