@@ -6,6 +6,8 @@
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
 - Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
 - Automatische Startprüfung und Hilfestart integriert.
+- Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
+- Sphinx-Dokumentation enthält eine Startanleitung.
 
 - Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
 - Danach: Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion.

@@ -13,14 +13,24 @@ def _ensure_ffmpeg() -> None:
     """Installiere ffmpeg bei Bedarf automatisch."""
     if shutil.which("ffmpeg") and shutil.which("ffprobe"):
         return
-    if sys.platform.startswith("linux"):
+    if sys.platform.startswith("linux") and shutil.which("apt"):
         try:
-            subprocess.check_call(["sudo", "apt", "update"], stdout=subprocess.DEVNULL)
             subprocess.check_call(
-                ["sudo", "apt", "install", "-y", "ffmpeg"], stdout=subprocess.DEVNULL
+                ["sudo", "apt", "update"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            subprocess.check_call(
+                ["sudo", "apt", "install", "-y", "ffmpeg"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # pragma: no cover - Installation kann variieren
             print(f"FFmpeg konnte nicht automatisch installiert werden: {exc}")
+    else:  # pragma: no cover - Plattformabhängig
+        print(
+            "FFmpeg nicht gefunden. Bitte manuell von https://ffmpeg.org installieren."
+        )
 
 
 def main() -> None:
