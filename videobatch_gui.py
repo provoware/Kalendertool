@@ -68,8 +68,8 @@ def probe_duration(path: str) -> float:
         for st in pr.get("streams", []):
             if st.get("codec_type") == "audio":
                 return float(st.get("duration", 0) or 0)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Dauer konnte nicht ermittelt werden: %s", e)
     return 0.0
 
 
@@ -106,13 +106,14 @@ def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
             shutil.copy2(src, tgt)
         else:
             shutil.move(src, tgt)
-    except Exception:
+    except Exception as e:
+        logger.debug("Verschieben fehlgeschlagen (%s), Kopie wird erstellt", e)
         shutil.copy2(src, tgt)
         if not copy_only:
             try:
                 src.unlink()
-            except Exception:
-                pass
+            except Exception as del_err:
+                logger.debug("Quelle konnte nicht gelöscht werden: %s", del_err)
     return tgt
 
 
@@ -121,16 +122,17 @@ def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
     try:
         from PIL import Image
 
-        img = Image.open(path)
-        img.thumbnail(size)
-        if img.mode != "RGBA":
-            img = img.convert("RGBA")
-        data = img.tobytes("raw", "RGBA")
+        with Image.open(path) as img:
+            img.thumbnail(size)
+            if img.mode != "RGBA":
+                img = img.convert("RGBA")
+            data = img.tobytes("raw", "RGBA")
         qimg = QtGui.QImage(
             data, img.size[0], img.size[1], QtGui.QImage.Format_RGBA8888
         )
         return QtGui.QPixmap.fromImage(qimg)
-    except Exception:
+    except Exception as e:
+        logger.debug("Thumbnail-Erstellung fehlgeschlagen: %s", e)
         pix = QtGui.QPixmap(size[0], size[1])
         pix.fill(Qt.gray)
         return pix
@@ -373,8 +375,8 @@ class EncodeWorker(QtCore.QObject):
                             perc = min(100.0, elapsed / duration * 100.0)
                             item.progress = perc
                             self.row_progress.emit(i, perc)
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            self.log.emit(f"Fortschritt nicht lesbar: {e}")
                 proc.wait()
                 if proc.returncode != 0:
                     item.status = "FEHLER"
@@ -587,9 +589,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.out_dir_edit = QtWidgets.QLineEdit(
             self.settings.value("encode/out_dir", "", str)
         )
-        self.out_dir_edit.setPlaceholderText(
-            f"Standard: {default_output_dir()}"
-        )
+        self.out_dir_edit.setPlaceholderText(f"Standard: {default_output_dir()}")
         self.out_dir_edit.setAccessibleName("Ausgabeordner")
         self.crf_spin = QtWidgets.QSpinBox()
         self.crf_spin.setRange(0, 51)
@@ -628,9 +628,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         self.abitrate_edit.setPlaceholderText("z.B. 192k (Kilobit pro Sekunde)")
         self.abitrate_edit.setValidator(
-            QtGui.QRegularExpressionValidator(
-                QtCore.QRegularExpression(r"\d+[kKmM]?")
-            )
+            QtGui.QRegularExpressionValidator(QtCore.QRegularExpression(r"\d+[kKmM]?"))
         )
         self.abitrate_edit.setAccessibleName("Audio-Bitrate")
         self.show_thumbs = QtWidgets.QCheckBox("Vorschau-Bilder anzeigen")
@@ -711,7 +709,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             self.notes_edit.setPlainText(NOTES_FILE.read_text(encoding="utf-8"))
         except FileNotFoundError:
-            pass
+            NOTES_FILE.touch()
 
         log_box = QtWidgets.QWidget()
         bl = QtWidgets.QVBoxLayout(log_box)
@@ -1268,9 +1266,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("encode/height", s["height"])
         self.settings.setValue("encode/abitrate", s["abitrate"])
         try:
-            NOTES_FILE.write_text(
-                self.notes_edit.toPlainText(), encoding="utf-8"
-            )
+            NOTES_FILE.write_text(self.notes_edit.toPlainText(), encoding="utf-8")
         except Exception as exc:
             logger.error("Notizen konnten nicht gespeichert werden: %s", exc)
         super().closeEvent(event)
