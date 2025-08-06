@@ -698,7 +698,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "Entfernt alle geladenen Bilder und Audios aus den Listen"
         )
 
-        self.btn_undo = QtWidgets.QPushButton("Undo")
+        self.btn_undo = QtWidgets.QPushButton("Rückgängig")
         self.btn_undo.setToolTip("Letzte Aktion rückgängig machen")
         self.btn_undo.setStatusTip(
             "Stellt den Zustand vor der letzten Änderung wieder her"
@@ -723,11 +723,11 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         self.btn_show_path.clicked.connect(self._show_selected_path)
 
-        self.btn_encode = QtWidgets.QPushButton("START")
+        self.btn_encode = QtWidgets.QPushButton("Start")
         self.btn_encode.setToolTip("Umwandlung starten")
         self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
 
-        self.btn_stop = QtWidgets.QPushButton("Stop")
+        self.btn_stop = QtWidgets.QPushButton("Stopp")
         self.btn_stop.setToolTip("Vorgang stoppen")
         self.btn_stop.setStatusTip("Bricht die laufende Umwandlung ab")
         self.btn_stop.setEnabled(False)
