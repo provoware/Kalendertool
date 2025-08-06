@@ -6,7 +6,7 @@
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 - Sphinx-Dokumentation vervollständigen
 // Datenhaltung
-- Persistente Ablage auf SQLite migrieren und Transaktionen/Caching ergänzen
+- Transaktionen und Caching für SQLite ergänzen
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -65,3 +65,4 @@
 - Release-Skript führt Tests aus
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht
 - Tooltip 'Pfad zeigen' erklärt den Speicherort
+- Persistente Ablage auf SQLite migriert

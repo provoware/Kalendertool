@@ -4,10 +4,11 @@
 - Release-Skript führt Tests aus und baut Paket automatisiert.
 - Weitere Button-Kurzinfos (z.B. Pfad zeigen) ins Hilfemodul ausgelagert.
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
+- Persistente Ablage speichert Projekte jetzt in SQLite.
 
-- Nächster Schritt: Persistente Ablage mit SQLite oder PostgreSQL einführen.
+- Nächster Schritt: Automatische Startprüfung und Hilfestart integrieren.
 - Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
 
-1. Persistente Datenspeicherung mit SQLite vorbereiten.
-2. Automatische Startprüfung und Hilfestart integrieren.
-3. Kalender- und CalDAV-Funktionen entwickeln.
+1. Automatische Startprüfung und Hilfestart integrieren.
+2. Kalender- und CalDAV-Funktionen entwickeln.
+3. Datenbankstruktur verfeinern und Caching ergänzen.

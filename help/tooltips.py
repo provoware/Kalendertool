@@ -14,7 +14,7 @@ TIP_CLEAR_LIST = (
     "Alle Listen leeren" " (entfernt alle Einträge dauerhaft aus der Tabelle)"
 )
 TIP_SAVE_PROJECT = (
-    "Projekt speichern" " (legt eine JSON-Datei zum späteren Fortsetzen an)"
+    "Projekt speichern" " (legt eine SQLite-Datenbank zum späteren Fortsetzen an)"
 )
-TIP_LOAD_PROJECT = "Projekt laden" " (lädt eine zuvor gespeicherte Projektdatei)"
+TIP_LOAD_PROJECT = "Projekt laden" " (lädt eine zuvor gespeicherte Datenbankdatei)"
 TIP_SHOW_PATH = "Pfad zeigen" " (zeigt den Speicherort der ausgewählten Datei unten an)"

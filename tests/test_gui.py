@@ -16,6 +16,7 @@ from videobatch_gui import (  # noqa: E402
     default_output_dir,
 )
 from utils import check_ffmpeg  # noqa: E402
+from storage import load_project  # noqa: E402
 
 
 def test_human_time_gui():
@@ -140,6 +141,22 @@ def test_notes_persist(tmp_path):
     win.notes_edit.setPlainText("Testnotiz")
     win.close()
     assert notes_file.read_text(encoding="utf-8") == "Testnotiz"
+
+
+def test_project_autosave(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    from PIL import Image
+
+    img_path = tmp_path / "img.png"
+    Image.new("RGB", (10, 10), "white").save(img_path)
+    win = MainWindow()
+    win.model.add_pairs([PairItem(str(img_path))])
+    win.close()
+    from config.paths import PROJECT_DB
+
+    data = load_project(PROJECT_DB)
+    assert data["pairs"][0]["image"].endswith("img.png")
 
 
 def test_start_encode_requires_ffmpeg(monkeypatch, tmp_path):

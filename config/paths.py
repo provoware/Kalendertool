@@ -13,7 +13,7 @@ HELP_DIR = BASE_DIR / "help"
 # Dateien
 NOTES_FILE = BASE_DIR / "notes.txt"
 LOG_FILE = LOG_DIR / f"{datetime.now().strftime('%Y%m%d-%H%M%S')}.log"
-PROJECT_FILE = DATA_DIR / "autosave.json"
+PROJECT_DB = DATA_DIR / "autosave.db"
 
 for d in (DATA_DIR, CONFIG_DIR, LOG_DIR, ARCHIVE_DIR, HELP_DIR):
     d.mkdir(parents=True, exist_ok=True)

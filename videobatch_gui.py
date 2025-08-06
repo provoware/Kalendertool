@@ -6,7 +6,6 @@
 # =========================================
 
 from __future__ import annotations
-import json
 import logging
 import shutil
 import subprocess
@@ -32,7 +31,8 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
-from config.paths import LOG_FILE, NOTES_FILE, PROJECT_FILE
+from config.paths import LOG_FILE, NOTES_FILE, PROJECT_DB
+from storage import save_project, load_project
 from help.tooltips import (
     TIP_ADD_IMAGES,
     TIP_ADD_AUDIOS,
@@ -705,7 +705,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_save = QtWidgets.QPushButton("Projekt speichern")
         self.btn_save.setToolTip(TIP_SAVE_PROJECT)
         self.btn_save.setStatusTip(
-            "Speichert aktuelle Paare in einer Datei, z.\u202fB. projekt.json"
+            "Speichert aktuelle Paare in einer Datenbankdatei, z.\u202fB. projekt.db"
         )
 
         self.btn_load = QtWidgets.QPushButton("Projekt laden")
@@ -788,9 +788,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.restoreGeometry(self.settings.value("ui/geometry", b"", bytes))
         self.restoreState(self.settings.value("ui/window_state", b"", bytes))
 
-        if PROJECT_FILE.exists():
+        if PROJECT_DB.exists():
             try:
-                data = json.loads(PROJECT_FILE.read_text(encoding="utf-8"))
+                data = load_project(PROJECT_DB)
                 self._apply_project_data(data)
             except Exception as exc:
                 logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
@@ -1071,23 +1071,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def _save_project(self):
         path, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Projekt speichern", str(Path.cwd() / "projekt.json"), "JSON (*.json)"
+            self, "Projekt speichern", str(Path.cwd() / "projekt.db"), "DB (*.db)"
         )
         if not path:
             return
-        Path(path).write_text(
-            json.dumps(self._project_data(), indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
+        save_project(self._project_data(), Path(path))
         self._log(f"Projekt gespeichert: {path}")
 
     def _load_project(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Projekt laden", str(Path.cwd()), "JSON (*.json)"
+            self, "Projekt laden", str(Path.cwd()), "DB (*.db)"
         )
         if not path:
             return
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        data = load_project(Path(path))
         self._apply_project_data(data)
         self._log(f"Projekt geladen: {path}")
 
@@ -1250,10 +1247,7 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as exc:
             logger.error("Notizen konnten nicht gespeichert werden: %s", exc)
         try:
-            PROJECT_FILE.write_text(
-                json.dumps(self._project_data(), indent=2, ensure_ascii=False),
-                encoding="utf-8",
-            )
+            save_project(self._project_data(), PROJECT_DB)
         except Exception as exc:
             logger.error("Projekt konnte nicht gespeichert werden: %s", exc)
         super().closeEvent(event)
