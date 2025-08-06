@@ -9,7 +9,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - `pip install -r requirements.txt` (installiert notwendige Zusatzprogramme, "Abhängigkeiten")
 
 ## Aufgaben
-- Keine waagerechten Scrollbalken
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
 - Ressourcen schonen
@@ -24,6 +23,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Fenstergröße flexibel machen
 - Vier Farb-Themes nach Kontrast-Standards
 - Schriftgrößen flexibel
+- Keine waagerechten Scrollbalken
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

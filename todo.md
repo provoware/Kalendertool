@@ -1,5 +1,4 @@
 # Noch zu erledigen:
-- Keine Links rechts scrollen im Tool, besser anordnen oder zweite Zeile verwenden, alles soll sichtbar sein
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
 - System Leistung und Ram schützen und Ressourcen schonen
@@ -18,3 +17,4 @@
 - Fenster flexibel in Größe machen und auch für kleine Bildschirme optimieren
 - 4 verschiedene Farbthemes als Auswahl im Tool, nach gängigen Kontraststandards für Bildschirmarbeiter
 - Schriftgrößen flexibel einstellbar machen und darauf achten das sich alles fehlerfrei automatisch anpasst
+- Keine Links rechts scrollen im Tool, besser anordnen oder zweite Zeile verwenden, alles soll sichtbar sein

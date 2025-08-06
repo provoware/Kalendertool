@@ -135,10 +135,10 @@ class PairTableModel(QAbstractTableModel):
         item = self.pairs[idx.row()]; col = idx.column()
         if role == Qt.DisplayRole:
             if col==0: return str(idx.row()+1)
-            if col==2: return item.image_path
-            if col==3: return item.audio_path or "—"
+            if col==2: return Path(item.image_path).name
+            if col==3: return Path(item.audio_path).name if item.audio_path else "—"
             if col==4: return human_time(item.duration) if item.duration else "?"
-            if col==5: return item.output or "—"
+            if col==5: return Path(item.output).name if item.output else "—"
             if col==6: return f"{int(item.progress)}%"
             if col==7: return item.status
         if role == Qt.DecorationRole and col==1:
@@ -355,7 +355,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table.setAlternatingRowColors(True)
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeToContents)
-        header.setStretchLastSection(True)
+        for col in (2, 3, 5):
+            header.setSectionResizeMode(col, QHeaderView.Stretch)
 
         self.help_pane = HelpPane()
 
