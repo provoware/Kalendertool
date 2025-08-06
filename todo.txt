@@ -2,7 +2,6 @@
 
 ## Offene Aufgaben
 // Architektur & Erweiterungen
-- Modularisierung und Design-Patterns (z.B. Fassade, Observer)
 - Persistente Ablage mit SQLite oder PostgreSQL samt Transaktionen und Caching
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
@@ -38,6 +37,7 @@
 - Ausgaben von FFmpeg unterdrückt, spart Speicher
 - requirements.txt und pyproject.toml angelegt
 - Lizenzdatei hinzugefügt
+- Gemeinsame Hilfsfunktionen in utils.py ausgelagert (Modularisierung)
 - README mit Installationshinweisen erweitert
 - Automatische Tests über GitHub Actions eingerichtet
 - pre-commit mit black und ruff ergänzt

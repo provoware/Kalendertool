@@ -12,20 +12,10 @@ import re
 import subprocess
 import sys
 import tempfile
-from datetime import datetime
 from pathlib import Path
 from typing import List
 
-
-def human_time(s: int) -> str:
-    s = int(s)
-    m, s = divmod(s, 60)
-    h, m = divmod(m, 60)
-    return f"{h:02d}:{m:02d}:{s:02d}" if h else f"{m:02d}:{s:02d}"
-
-
-def build_out_name(audio: Path, out_dir: Path) -> Path:
-    return out_dir / f"{audio.stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
+from utils import build_out_name, human_time
 
 
 def cli_encode(

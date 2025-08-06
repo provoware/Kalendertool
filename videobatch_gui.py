@@ -18,6 +18,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from utils import build_out_name, human_time
+
 from api import build_ffmpeg_cmd, run_ffmpeg
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -53,13 +55,6 @@ def which(p: str):
 
 def check_ffmpeg():
     return which("ffmpeg") and which("ffprobe")
-
-
-def human_time(sec: float) -> str:
-    sec = int(sec)
-    m, s = divmod(sec, 60)
-    h, m = divmod(m, 60)
-    return f"{h:02d}:{m:02d}:{s:02d}" if h else f"{m:02d}:{s:02d}"
 
 
 def probe_duration(path: str) -> float:
@@ -141,13 +136,6 @@ def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
         pix = QtGui.QPixmap(size[0], size[1])
         pix.fill(Qt.gray)
         return pix
-
-
-def build_out_name(audio_path: str, out_dir: Path) -> str:
-    return str(
-        out_dir
-        / f"{Path(audio_path).stem}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
-    )
 
 
 # ---------- Datenmodell ----------
