@@ -25,9 +25,11 @@
 - Sphinx-Dokumentation manuell gebaut und geprüft.
 - Markdown-Dateien unter /docs organisiert.
 
+- Gruppen-Kalender und CalDAV-Synchronisation umgesetzt.
+
 - SQLite-Verbindung ist jetzt threadsicher.
 - Alarme für Termine hinzugefügt.
-- Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
+- Nächster Schritt: Release-Tag erstellen und Paket veröffentlichen.
 
- 1. Kalender- und CalDAV-Funktionen entwickeln.
- 2. Gruppen-Kalender verbessern.
+ 1. Version anheben und CHANGELOG finalisieren.
+ 2. Paket bauen und auf PyPI hochladen.

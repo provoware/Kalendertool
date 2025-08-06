@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 def _ensure_ffmpeg() -> None:
     """Installiere ffmpeg bei Bedarf automatisch."""
     if shutil.which("ffmpeg") and shutil.which("ffprobe"):
+        logger.info("FFmpeg gefunden")
         return
     if sys.platform.startswith("linux") and shutil.which("apt"):
         try:
@@ -29,6 +30,7 @@ def _ensure_ffmpeg() -> None:
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
+            logger.info("FFmpeg erfolgreich installiert")
         except Exception as exc:  # pragma: no cover - Installation kann variieren
             logger.error("FFmpeg konnte nicht automatisch installiert werden: %s", exc)
     else:  # pragma: no cover - Plattformabhängig

@@ -7,6 +7,7 @@ Kalendertool Dokumentation
 
    start
    basics
+   groups
    cli
    api/modules
    release

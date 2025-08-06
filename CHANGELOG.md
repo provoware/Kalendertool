@@ -4,6 +4,11 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 
 ## [Unreleased]
 
+### Hinzugefügt
+- Gruppen-Kalender mit `--group`-Option in der CLI.
+- CalDAV-Synchronisation über den Befehl `sync`.
+- Dokumentation zu Gruppen-Kalender und CalDAV.
+
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt
 - Zentrales CHANGELOG nach *Keep a Changelog*-Standard.
