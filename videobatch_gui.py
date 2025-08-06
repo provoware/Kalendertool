@@ -376,14 +376,41 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Buttons
         self.btn_add_images = QtWidgets.QPushButton("Bilder wählen")
+        self.btn_add_images.setToolTip("Bilder auf dem Rechner wählen")
+        self.btn_add_images.setStatusTip("Öffnet einen Dialog zum Auswählen von Bilddateien, z.\u202fB. Urlaub.jpg")
+
         self.btn_add_audios = QtWidgets.QPushButton("Audios wählen")
+        self.btn_add_audios.setToolTip("Audiodateien wählen")
+        self.btn_add_audios.setStatusTip("Öffnet einen Dialog zum Auswählen von Audiodateien, z.\u202fB. Musik.mp3")
+
         self.btn_auto_pair  = QtWidgets.QPushButton("Auto-Paaren")
+        self.btn_auto_pair.setToolTip("Bilder und Audios automatisch verbinden")
+        self.btn_auto_pair.setStatusTip("Verknüpft die Dateien paarweise ohne manuelle Auswahl")
+
         self.btn_clear      = QtWidgets.QPushButton("Alles löschen")
+        self.btn_clear.setToolTip("Alle Listen leeren")
+        self.btn_clear.setStatusTip("Entfernt alle geladenen Bilder und Audios aus den Listen")
+
         self.btn_undo       = QtWidgets.QPushButton("Undo")
+        self.btn_undo.setToolTip("Letzte Aktion rückgängig machen")
+        self.btn_undo.setStatusTip("Stellt den Zustand vor der letzten Änderung wieder her")
+
         self.btn_save       = QtWidgets.QPushButton("Projekt speichern")
+        self.btn_save.setToolTip("Projektdatei anlegen")
+        self.btn_save.setStatusTip("Speichert aktuelle Paare in einer Datei, z.\u202fB. projekt.json")
+
         self.btn_load       = QtWidgets.QPushButton("Projekt laden")
+        self.btn_load.setToolTip("Gespeichertes Projekt öffnen")
+        self.btn_load.setStatusTip("Lädt eine Projektdatei und stellt alle Paare wieder her")
+
         self.btn_encode     = QtWidgets.QPushButton("START")
-        self.btn_stop       = QtWidgets.QPushButton("Stop"); self.btn_stop.setEnabled(False)
+        self.btn_encode.setToolTip("Umwandlung starten")
+        self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
+
+        self.btn_stop       = QtWidgets.QPushButton("Stop")
+        self.btn_stop.setToolTip("Vorgang stoppen")
+        self.btn_stop.setStatusTip("Bricht die laufende Umwandlung ab")
+        self.btn_stop.setEnabled(False)
 
         self.btn_encode.setStyleSheet("font-size:16pt;font-weight:bold;background:#005BBB;color:white;padding:6px 14px;")
 

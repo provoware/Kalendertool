@@ -6,7 +6,6 @@
 - 4 verschiedene Farbthemes als Auswahl im Tool, nach gängigen Kontraststandards für Bildschirmarbeiter
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
-- jede Funktion mit Beschreibung, Tooltip und Hilfe mit Beispiel
 - System Leistung und Ram schützen und Ressourcen schonen
 - Globale Standards, Best Practices und Barrierefreiheit,
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
@@ -21,3 +20,4 @@
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
 - Entwicklerdoku.md angelegt
+- jede Funktion mit Beschreibung, Tooltip und Hilfe mit Beispiel

@@ -14,7 +14,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Vier Farb-Themes nach Kontrast-Standards
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
-- Jede Funktion mit Beschreibung, Tooltip und Hilfe
 - Ressourcen schonen
 - Standards, Best Practices und Barrierefreiheit
 - Portabilität für Linux
