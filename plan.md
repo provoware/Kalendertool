@@ -10,8 +10,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 
 ## Aufgaben
 - Code analysieren und verbessern
-- Bedienung nur über Buttons oder Dialoge
-- Einheitliche Namen
 
 ## Erledigt
 - Fenstergröße flexibel machen
@@ -31,6 +29,11 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Vorschaubilder optional, um Speicher zu sparen
 - Notizbereich speichert Aufgaben dauerhaft
 
+- requirements.txt und pyproject.toml angelegt
+- Lizenzdatei und README erweitert
+- Automatische Tests (GitHub Actions) eingerichtet
+- pre-commit mit black und ruff hinzugefügt
+- Skript für ausführbares Paket vorbereitet
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`
 - Fortschritt ergänzen: `echo "$(date +%d.%m.%Y) - Fortschritt: <zahl>%" >> fortschritt.txt`
