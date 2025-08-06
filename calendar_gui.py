@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from datetime import datetime
 
-from start_cli import add_event, _load_groups, sync_caldav, close
+from start_cli import add_event, _load_groups, sync_caldav, remove_event, close
 
 
 def run() -> None:
@@ -45,6 +45,9 @@ def run() -> None:
             listbox.insert(tk.END, txt)
 
     def add_cb() -> None:
+        if not title_var.get().strip():
+            messagebox.showerror("Fehler", "Titel angeben")
+            return
         try:
             datetime.fromisoformat(date_var.get())
         except ValueError:
@@ -70,13 +73,24 @@ def run() -> None:
         password = simpledialog.askstring("CalDAV", "Passwort", show="*")
         if password is None:
             return
-        sync_caldav(url, user, password, group_var.get())
+        ok = sync_caldav(url, user, password, group_var.get())
+        messagebox.showinfo(
+            "CalDAV",
+            "Synchronisation erfolgreich" if ok else "Synchronisation fehlgeschlagen",
+        )
+
+    def delete_cb() -> None:
+        sel = listbox.curselection()
+        if not sel:
+            messagebox.showerror("Fehler", "Bitte Termin auswählen")
+            return
+        remove_event(sel[0], group_var.get())
+        refresh()
 
     tk.Button(root, text="Aktualisieren", command=refresh).grid(row=5, column=0)
     tk.Button(root, text="Speichern", command=add_cb).grid(row=5, column=1)
-    tk.Button(root, text="Synchronisieren", command=sync_cb).grid(
-        row=6, column=0, columnspan=2, pady=5
-    )
+    tk.Button(root, text="Löschen", command=delete_cb).grid(row=6, column=0)
+    tk.Button(root, text="Synchronisieren", command=sync_cb).grid(row=6, column=1)
 
     refresh()
     root.mainloop()

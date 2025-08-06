@@ -9,6 +9,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - CalDAV-Synchronisation über den Befehl `sync`.
 - GUI unterstützt Gruppen-Kalender.
 - Dokumentation zu Gruppen-Kalender und CalDAV.
+- Löschfunktion in der GUI und Rückmeldung zur Synchronisation.
 
 ### Verbessert
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.

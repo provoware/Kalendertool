@@ -9,4 +9,4 @@
 - iCal-Export speichert Termine im Klartext; Verschlüsselung fehlt.
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.
 - Alarme unterstützen nur einfache Minuten-Offsets ohne Wiederholungen.
-- GUI bietet nur Grundfunktionen ohne erweiterte Ansichten.
+- GUI zeigt Termine nur als Liste; Bearbeiten oder Kalenderansicht fehlen.

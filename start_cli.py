@@ -134,13 +134,34 @@ def export_ical(
     logger.info("iCal-Datei unter %s erstellt", file_path)
 
 
-def sync_caldav(url: str, user: str, password: str, group: str = "default") -> None:
-    """Termine einer Gruppe per CalDAV synchronisieren."""
+def remove_event(index: int, group: str = "default") -> None:
+    """Termin anhand seines Index aus einer Gruppe löschen."""
+    groups, data = _load_groups()
+    events = groups.get(group, [])
+    try:
+        removed = events.pop(index)
+    except IndexError:
+        logger.error("Kein Termin an Position %s", index)
+        return
+    save_project(data, DB_PATH)
+    logger.info(
+        "Termin '%s' am %s aus Gruppe '%s' gelöscht",
+        removed["title"],
+        removed["date"],
+        group,
+    )
+
+
+def sync_caldav(url: str, user: str, password: str, group: str = "default") -> bool:
+    """Termine einer Gruppe per CalDAV synchronisieren.
+
+    Gibt ``True`` bei Erfolg und sonst ``False`` zurück.
+    """
     groups, _ = _load_groups()
     events = groups.get(group, [])
     if not events:
         logger.info("Keine Termine zum Synchronisieren in Gruppe '%s'.", group)
-        return
+        return False
     lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
@@ -183,7 +204,7 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> N
             if resp.status_code >= 400:
                 raise RuntimeError(f"Serverantwort {resp.status_code}")
             logger.info("CalDAV-Synchronisation erfolgreich")
-            return
+            return True
         except RequestException as exc:  # pragma: no cover - Netzwerkfehler
             wait = 2**attempt
             logger.warning(
@@ -194,8 +215,9 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> N
             time.sleep(wait)
         except Exception as exc:  # pragma: no cover - sonstige Fehler
             logger.error("CalDAV-Synchronisation fehlgeschlagen: %s", exc)
-            return
+            return False
     logger.error("CalDAV-Synchronisation abgebrochen nach mehreren Versuchen")
+    return False
 
 
 def main() -> None:

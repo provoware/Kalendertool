@@ -5,7 +5,14 @@ import requests
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from start_cli import add_event, export_ical, sync_caldav, close  # noqa: E402
+from start_cli import (
+    add_event,
+    export_ical,
+    sync_caldav,
+    remove_event,
+    _load_groups,
+    close,
+)  # noqa: E402
 
 
 def test_export_creates_file(tmp_path, monkeypatch):
@@ -85,3 +92,15 @@ def test_sync_caldav_retries_on_error(tmp_path, monkeypatch):
     monkeypatch.setattr("requests.put", fake_put)
     sync_caldav("http://example.com/cal", "user", "pass", "team")
     assert calls["count"] == 3
+
+
+def test_remove_event(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")
+    close()
+    add_event("Alt", "2025-01-01")
+    add_event("Neu", "2025-01-02")
+    remove_event(0)
+    groups, _ = _load_groups()
+    assert len(groups["default"]) == 1
+    assert groups["default"][0]["title"] == "Neu"

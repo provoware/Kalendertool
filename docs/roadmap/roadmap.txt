@@ -30,6 +30,7 @@
 
 - GUI verwaltet Gruppen-Kalender.
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+- GUI kann Termine löschen und meldet Ergebnis der Synchronisation.
 
 - SQLite-Verbindung ist jetzt threadsicher.
 - Alarme für Termine hinzugefügt.

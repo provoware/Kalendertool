@@ -5,6 +5,7 @@
 - Release-Tag erstellen und Paket veröffentlichen
 
 ## Erledigte Aufgaben
+- GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
 - GUI um Gruppen-Kalender erweitert
 - CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
