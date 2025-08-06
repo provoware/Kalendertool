@@ -28,6 +28,14 @@ def _ensure_ffmpeg() -> None:
         except Exception as exc:  # pragma: no cover - Installation kann variieren
             print(f"FFmpeg konnte nicht automatisch installiert werden: {exc}")
     else:  # pragma: no cover - Plattformabhängig
+        msg = "FFmpeg nicht gefunden. Bitte manuell installieren."
+        if sys.platform.startswith("win"):
+            msg += " Windows: 'winget install ffmpeg'"
+        elif sys.platform == "darwin":
+            msg += " macOS: 'brew install ffmpeg'"
+        else:
+            msg += " Siehe https://ffmpeg.org"
+        print(msg)
         print(
             "FFmpeg nicht gefunden. Bitte manuell von https://ffmpeg.org installieren."
         )

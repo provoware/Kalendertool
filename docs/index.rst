@@ -6,4 +6,5 @@ Kalendertool Dokumentation
    :caption: Inhalt:
 
    start
+   cli
 
