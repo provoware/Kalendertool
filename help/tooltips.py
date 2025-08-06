@@ -17,3 +17,4 @@ TIP_SAVE_PROJECT = (
     "Projekt speichern" " (legt eine JSON-Datei zum späteren Fortsetzen an)"
 )
 TIP_LOAD_PROJECT = "Projekt laden" " (lädt eine zuvor gespeicherte Projektdatei)"
+TIP_SHOW_PATH = "Pfad zeigen" " (zeigt den Speicherort der ausgewählten Datei unten an)"

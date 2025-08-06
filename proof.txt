@@ -4,5 +4,5 @@
 
 - Weitere Tooltips (Kurzinfos) sind knapp; zusätzliche Erklärungen helfen Einsteigern.
 - API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
-- Einige Button-Kurzinfos liegen noch im GUI-Code; Hilfemodul wird nicht überall genutzt.
+- Einige Button-Kurzinfos (z.B. Rückgängig) liegen weiterhin im GUI-Code; Hilfemodul deckt noch nicht alle ab.
 - Persistente Ablage erfolgt bislang nur als einfache JSON-Datei, keine Datenbank.

@@ -2,7 +2,8 @@
 - Spezialprüfungen für Medienpaare in utils gebündelt.
 - Projekt wird beim Beenden automatisch gespeichert und beim Start geladen.
 - Release-Skript führt Tests aus und baut Paket automatisiert.
-- Weitere Button-Kurzinfos ins Hilfemodul ausgelagert.
+- Weitere Button-Kurzinfos (z.B. Pfad zeigen) ins Hilfemodul ausgelagert.
+- Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
 
 - Nächster Schritt: Persistente Ablage mit SQLite oder PostgreSQL einführen.
 - Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.

@@ -63,3 +63,5 @@
 - Automatisches Speichern und Laden der Projekte als JSON
 - Weitere Button-Kurzinfos ins Hilfemodul ausgelagert
 - Release-Skript führt Tests aus
+- Dateiauswahldialoge über Hilfsfunktion vereinheitlicht
+- Tooltip 'Pfad zeigen' erklärt den Speicherort

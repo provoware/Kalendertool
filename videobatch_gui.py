@@ -41,6 +41,7 @@ from help.tooltips import (
     TIP_START_ENCODE,
     TIP_SAVE_PROJECT,
     TIP_LOAD_PROJECT,
+    TIP_SHOW_PATH,
 )
 
 # ---------- Logging & Persistenz ----------
@@ -683,9 +684,6 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_auto_pair = QtWidgets.QPushButton("Auto-Paaren")
-        self.btn_auto_pair.setToolTip(
-            "Bilder und Audios automatisch verbinden (paart Dateien mit gleichem Namen)"
-        )
         self.btn_auto_pair.setToolTip(TIP_AUTO_PAIR)
         self.btn_auto_pair.setStatusTip(
             "Verknüpft die Dateien paarweise ohne manuelle Auswahl"
@@ -717,7 +715,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_show_path = QtWidgets.QPushButton("Pfad zeigen")
-        self.btn_show_path.setToolTip("Pfad der Auswahl anzeigen")
+        self.btn_show_path.setToolTip(TIP_SHOW_PATH)
         self.btn_show_path.setStatusTip(
             "Zeigt den Speicherort der gewählten Datei unten an"
         )
@@ -940,38 +938,40 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table.viewport().update()
 
     # ----- file actions -----
-    def _pick_images(self):
+    def _pick_files(self, title: str, pattern: str, handler):
         files, _ = QtWidgets.QFileDialog.getOpenFileNames(
-            self,
-            "Bilder wählen",
-            str(Path.cwd()),
-            "Bilder (*.jpg *.jpeg *.png *.bmp *.webp)",
+            self, title, str(Path.cwd()), pattern
         )
         if files:
-            self._on_images_added(files)
+            handler(files)
+
+    def _pick_images(self):
+        self._pick_files(
+            "Bilder wählen",
+            "Bilder (*.jpg *.jpeg *.png *.bmp *.webp)",
+            self._on_images_added,
+        )
 
     def _pick_audios(self):
-        files, _ = QtWidgets.QFileDialog.getOpenFileNames(
-            self,
+        self._pick_files(
             "Audios wählen",
-            str(Path.cwd()),
             "Audio (*.mp3 *.wav *.flac *.m4a *.aac)",
+            self._on_audios_added,
         )
-        if files:
-            self._on_audios_added(files)
 
-    def _on_images_added(self, files: List[str]):
-        self._push_history()
-        for f in files:
-            self.image_list.add_files([f])
-            self.model.add_pairs([PairItem(f)])
+    def _post_add(self):
         self._update_counts()
         self._resize_columns()
 
+    def _on_images_added(self, files: List[str]):
+        self._push_history()
+        self.image_list.add_files(files)
+        self.model.add_pairs([PairItem(f) for f in files])
+        self._post_add()
+
     def _on_audios_added(self, files: List[str]):
         self._push_history()
-        for f in files:
-            self.audio_list.add_files([f])
+        self.audio_list.add_files(files)
         it = iter(files)
         for p in self.pairs:
             if p.audio_path is None:
@@ -982,8 +982,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 except StopIteration:
                     break
         self.model.layoutChanged.emit()
-        self._update_counts()
-        self._resize_columns()
+        self._post_add()
 
     def _auto_pair(self):
         self._push_history()
