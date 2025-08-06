@@ -4,6 +4,7 @@
 // Architektur & Erweiterungen
 - Alarme für Termine ergänzen
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
+- Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen

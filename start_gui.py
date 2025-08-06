@@ -36,6 +36,9 @@ def _ensure_ffmpeg() -> None:
         else:
             msg += " Siehe https://ffmpeg.org"
         print(msg)
+        print(
+            "FFmpeg nicht gefunden. Bitte manuell von https://ffmpeg.org installieren."
+        )
 
 
 def main() -> None:

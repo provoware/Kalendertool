@@ -16,3 +16,9 @@
 
 1. Alarme für Termine implementieren.
 2. CalDAV-Synchronisation und Gruppen-Kalender entwickeln.
+
+- Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+- Danach: Alarme und CalDAV-Synchronisation umsetzen.
+
+1. Kalender- und CalDAV-Funktionen entwickeln.
+2. Alarme und Gruppen-Kalender verbessern.
