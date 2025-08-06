@@ -2,9 +2,8 @@
 
 ## Offene Aufgaben
 // Architektur & Erweiterungen
-- Alarme für Termine ergänzen
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
-- Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
+- Kalenderfunktionen: vollständige iCal-Unterstützung, Gruppen-Kalender und CalDAV-Synchronisation
 
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
@@ -38,6 +37,7 @@
 - Notizfeld für Aufgaben ergänzt
 - Ausgaben von FFmpeg unterdrückt, spart Speicher
 - requirements.txt und pyproject.toml angelegt
+- Alarme für Termine ergänzen
 - Lizenzdatei hinzugefügt
 - Gemeinsame Hilfsfunktionen in utils.py ausgelagert (Modularisierung)
 - README mit Installationshinweisen erweitert

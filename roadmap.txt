@@ -18,8 +18,8 @@
 - Docstrings in der CLI-Hauptfunktion ergänzt; Tests laufen automatisch über pre-commit.
 
  - SQLite-Verbindung ist jetzt threadsicher.
- - Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
- - Danach: Alarme und CalDAV-Synchronisation sowie Gruppen-Kalender umsetzen.
+ - Alarme für Termine hinzugefügt.
+ - Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
 
  1. Kalender- und CalDAV-Funktionen entwickeln.
- 2. Alarme und Gruppen-Kalender verbessern.
+ 2. Gruppen-Kalender verbessern.
