@@ -24,6 +24,8 @@
  - SQLite-Verbindung ist jetzt threadsicher.
  - Alarme für Termine hinzugefügt.
  - Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
+ - Dauerhafte UID pro Termin und CalDAV-Abgleich mit Konflikterkennung.
+ - Nächster Schritt: Konflikte automatisch auflösen und in die GUI integrieren.
 
- 1. Kalender- und CalDAV-Funktionen entwickeln.
+ 1. Kalender- und CalDAV-Funktionen weiterentwickeln.
  2. Gruppen-Kalender verbessern.
