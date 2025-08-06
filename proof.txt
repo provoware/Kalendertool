@@ -6,3 +6,4 @@
 - API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
 - Datenbank nutzt nur eine einfache JSON-Spalte; strukturierte Tabellen fehlen.
 - Der SQLite-Cache wird nicht invalidiert, wenn externe Änderungen an der Datenbank erfolgen.
+- Automatische ffmpeg-Installation setzt Debian/Ubuntu und Internetzugang voraus; andere Systeme benötigen manuelle Einrichtung.

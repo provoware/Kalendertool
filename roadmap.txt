@@ -5,9 +5,10 @@
 - Weitere Button-Kurzinfos (z.B. Pfad zeigen, Rückgängig, Stopp) ins Hilfemodul ausgelagert.
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
 - Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
+- Automatische Startprüfung und Hilfestart integriert.
 
-- Nächster Schritt: Automatische Startprüfung und Hilfestart integrieren.
-- Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+- Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
+- Danach: Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion.
 
-1. Automatische Startprüfung und Hilfestart integrieren.
-2. Kalender- und CalDAV-Funktionen entwickeln.
+1. Kalender- und CalDAV-Funktionen entwickeln.
+2. Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion.

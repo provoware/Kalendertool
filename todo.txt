@@ -20,6 +20,7 @@
 - Vollautomatische Prüfungen einbauen
 - Selbstreparatur einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
+- GUI-Startdatei mit automatischer Abhängigkeitsprüfung und Reparatur erstellt
 - System Leistung und Ram schützen und Ressourcen schonen
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
