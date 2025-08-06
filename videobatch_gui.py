@@ -24,6 +24,12 @@ from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
 from config.paths import LOG_FILE, NOTES_FILE
+from help.tooltips import (
+    TIP_ADD_IMAGES,
+    TIP_ADD_AUDIOS,
+    TIP_AUTO_PAIR,
+    TIP_START_ENCODE,
+)
 from help.tooltips import TIP_ADD_IMAGES, TIP_ADD_AUDIOS
 
 # ---------- Logging & Persistenz ----------
@@ -743,7 +749,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_auto_pair = QtWidgets.QPushButton("Auto-Paaren")
-        self.btn_auto_pair.setToolTip("Bilder und Audios automatisch verbinden")
+        self.btn_auto_pair.setToolTip(TIP_AUTO_PAIR)
         self.btn_auto_pair.setStatusTip(
             "Verknüpft die Dateien paarweise ohne manuelle Auswahl"
         )
@@ -781,7 +787,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_show_path.clicked.connect(self._show_selected_path)
 
         self.btn_encode = QtWidgets.QPushButton("Start")
-        self.btn_encode.setToolTip("Umwandlung starten")
+        self.btn_encode.setToolTip(TIP_START_ENCODE)
         self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
         self.btn_encode.setAccessibleName("Start")
 

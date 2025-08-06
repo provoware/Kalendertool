@@ -50,3 +50,7 @@
 - Tooltip 'Audios wählen' um Hinweis auf Dateifenster erweitert
 - API-Schicht zur Trennung von GUI und Logik (Grundstruktur)
 - Hilfetexte ausgelagert
+- Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archiv vervollständigt
+- Tooltip 'Auto-Paaren' mit Hinweis auf automatische Zuordnung erweitert
+- AppImage für Linux erstellen
+- Tooltip 'Umwandlung starten' erklärt die Videoerstellung
