@@ -571,9 +571,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.out_dir_edit.setPlaceholderText(
             f"Standard: {default_output_dir()}"
         )
+        self.out_dir_edit.setAccessibleName("Ausgabeordner")
         self.crf_spin = QtWidgets.QSpinBox()
         self.crf_spin.setRange(0, 51)
         self.crf_spin.setValue(self.settings.value("encode/crf", 23, int))
+        self.crf_spin.setAccessibleName("Qualität")
         self.preset_combo = QtWidgets.QComboBox()
         self.preset_combo.addItems(
             [
@@ -591,14 +593,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.preset_combo.setCurrentText(
             self.settings.value("encode/preset", "ultrafast", str)
         )
+        self.preset_combo.setAccessibleName("Geschwindigkeit")
         self.width_spin = QtWidgets.QSpinBox()
         self.width_spin.setRange(16, 7680)
         self.width_spin.setValue(self.settings.value("encode/width", 1920, int))
         self.width_spin.setSuffix(" px")
+        self.width_spin.setAccessibleName("Breite")
         self.height_spin = QtWidgets.QSpinBox()
         self.height_spin.setRange(16, 4320)
         self.height_spin.setValue(self.settings.value("encode/height", 1080, int))
         self.height_spin.setSuffix(" px")
+        self.height_spin.setAccessibleName("Höhe")
         self.abitrate_edit = QtWidgets.QLineEdit(
             self.settings.value("encode/abitrate", "", str)
         )
@@ -608,6 +613,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 QtCore.QRegularExpression(r"\d+[kKmM]?")
             )
         )
+        self.abitrate_edit.setAccessibleName("Audio-Bitrate")
         self.clear_after = QtWidgets.QCheckBox("Nach Fertigstellung Listen leeren")
         self.clear_after.setChecked(self.settings.value("ui/clear_after", False, bool))
 
@@ -710,6 +716,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_undo.setStatusTip(
             "Stellt den Zustand vor der letzten Änderung wieder her"
         )
+        self.btn_undo.setAccessibleName("Rückgängig")
 
         self.btn_save = QtWidgets.QPushButton("Projekt speichern")
         self.btn_save.setToolTip("Projektdatei anlegen")
@@ -733,10 +740,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_encode = QtWidgets.QPushButton("Start")
         self.btn_encode.setToolTip("Umwandlung starten")
         self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
+        self.btn_encode.setAccessibleName("Start")
 
         self.btn_stop = QtWidgets.QPushButton("Stopp")
         self.btn_stop.setToolTip("Vorgang stoppen")
         self.btn_stop.setStatusTip("Bricht die laufende Umwandlung ab")
+        self.btn_stop.setAccessibleName("Stopp")
         self.btn_stop.setEnabled(False)
 
         self.btn_encode.setStyleSheet(

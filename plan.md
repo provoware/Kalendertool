@@ -26,6 +26,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Autonome Startprüfung
 - Ressourcen schonen
 - Portabilität für Linux (Pfadbehandlung mit `pathlib`)
+- Eingabefelder und Buttons mit zugänglichen Namen und Hilfetexten
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

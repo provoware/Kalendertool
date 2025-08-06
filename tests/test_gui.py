@@ -5,7 +5,7 @@ import sys
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from PySide6 import QtWidgets  # noqa: E402
+from PySide6 import QtGui, QtWidgets  # noqa: E402
 from videobatch_gui import (  # noqa: E402
     MainWindow,
     check_ffmpeg,
@@ -77,4 +77,24 @@ def test_placeholders_and_defaults(tmp_path):
     settings = win._gather_settings()
     assert settings["out_dir"] == str(default_output_dir())
     assert settings["abitrate"] == "192k"
+    win.close()
+
+
+def test_input_edge_cases(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    win = MainWindow()
+    validator = win.abitrate_edit.validator()
+    state, _, _ = validator.validate("256K", 0)
+    assert state == QtGui.QValidator.Acceptable
+    state, _, _ = validator.validate("abc", 0)
+    assert state == QtGui.QValidator.Invalid
+    win.width_spin.setValue(10)
+    assert win.width_spin.value() == 16
+    win.width_spin.setValue(10000)
+    assert win.width_spin.value() == 7680
+    win.height_spin.setValue(10)
+    assert win.height_spin.value() == 16
+    win.height_spin.setValue(10000)
+    assert win.height_spin.value() == 4320
     win.close()
