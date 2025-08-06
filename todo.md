@@ -16,4 +16,5 @@
 - Vollautomatische Prüfungen und Selbstrepair einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 # # Final und vollständig abgeschlossen:
+- plan.md angelegt
 - fortschritt.txt angelegt und erste Fortschrittszeile ergänzt

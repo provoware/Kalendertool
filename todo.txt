@@ -20,3 +20,4 @@
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
+- plan.md angelegt
