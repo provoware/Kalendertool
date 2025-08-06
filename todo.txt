@@ -2,12 +2,6 @@
 
 ## Offene Aufgaben
 - Weitere Einsparpotenziale bei Ressourcen prüfen
-- requirements.txt und pyproject.toml für Abhängigkeiten anlegen
-- Lizenzdatei (LICENSE) hinzufügen
-- Installationsanleitung im README erweitern
-- Automatische Tests über GitHub Actions einrichten
-- Code-Formatierung und -Prüfung mit pre-commit (z.B. black, ruff) ergänzen
-- Ausführbares Paket (z.B. mit PyInstaller) vorbereiten
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -36,3 +30,9 @@
 - ffmpeg-Prüfung vor Start und automatische Ergänzung der Audio-Bitrate
 - Thumbnails optional, um Speicher zu sparen
 - Notizfeld für Aufgaben ergänzt
+- requirements.txt und pyproject.toml angelegt
+- Lizenzdatei hinzugefügt
+- README mit Installationshinweisen erweitert
+- Automatische Tests über GitHub Actions eingerichtet
+- pre-commit mit black und ruff ergänzt
+- Skript für ausführbares Paket erstellt

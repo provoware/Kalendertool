@@ -1,0 +1,19 @@
+[project]
+name = "kalendertool"
+version = "0.1.0"
+description = "Werkzeug, das Bilder und Tonspuren zu Videos verbindet"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = [
+    "PySide6>=6.9",
+    "Pillow>=11.0",
+    "ffmpeg-python>=0.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "PyInstaller", "pre-commit", "black", "ruff"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
