@@ -1,6 +1,8 @@
 from pathlib import Path
 import sys
 
+import requests
+
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from start_cli import add_event, export_ical, sync_caldav, close  # noqa: E402
@@ -48,3 +50,22 @@ def test_sync_caldav_calls_put(tmp_path, monkeypatch):
     monkeypatch.setattr("requests.put", fake_put)
     sync_caldav("http://example.com/cal", "user", "pass", "team")
     assert calls["url"] == "http://example.com/cal"
+
+
+def test_sync_caldav_retries_on_error(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")
+    close()
+    add_event("Meeting", "2025-01-01", group="team")
+
+    calls = {"count": 0}
+
+    def fake_put(
+        url, data, headers, auth, timeout
+    ):  # pragma: no cover - einfacher Mock
+        calls["count"] += 1
+        raise requests.RequestException("netzwerk")
+
+    monkeypatch.setattr("requests.put", fake_put)
+    sync_caldav("http://example.com/cal", "user", "pass", "team")
+    assert calls["count"] == 3

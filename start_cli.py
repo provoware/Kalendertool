@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import logging
+import time
 from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
-import logging
 import requests
+from requests import RequestException
 
 from storage import load_project, save_project, close
 from config.paths import PROJECT_DB, ensure_directories
@@ -158,20 +160,31 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> N
         lines.append("END:VEVENT")
     lines.append("END:VCALENDAR")
     ical_data = "\n".join(lines)
-    try:
-        resp = requests.put(
-            url,
-            data=ical_data.encode("utf-8"),
-            headers={"Content-Type": "text/calendar"},
-            auth=(user, password),
-            timeout=10,
-        )
-        if resp.status_code >= 400:
-            raise RuntimeError(f"Serverantwort {resp.status_code}")
-    except Exception as exc:  # pragma: no cover - Netzwerkfehler
-        logger.error("CalDAV-Synchronisation fehlgeschlagen: %s", exc)
-        return
-    logger.info("CalDAV-Synchronisation erfolgreich")
+    for attempt in range(3):
+        try:
+            resp = requests.put(
+                url,
+                data=ical_data.encode("utf-8"),
+                headers={"Content-Type": "text/calendar"},
+                auth=(user, password),
+                timeout=10,
+            )
+            if resp.status_code >= 400:
+                raise RuntimeError(f"Serverantwort {resp.status_code}")
+            logger.info("CalDAV-Synchronisation erfolgreich")
+            return
+        except RequestException as exc:  # pragma: no cover - Netzwerkfehler
+            wait = 2**attempt
+            logger.warning(
+                "CalDAV-Synchronisation fehlgeschlagen (%s). Neuer Versuch in %ss",
+                exc,
+                wait,
+            )
+            time.sleep(wait)
+        except Exception as exc:  # pragma: no cover - sonstige Fehler
+            logger.error("CalDAV-Synchronisation fehlgeschlagen: %s", exc)
+            return
+    logger.error("CalDAV-Synchronisation abgebrochen nach mehreren Versuchen")
 
 
 def main() -> None:

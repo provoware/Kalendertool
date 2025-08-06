@@ -27,6 +27,9 @@
 
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt.
 
+- GUI verwaltet Gruppen-Kalender.
+- CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+
 - SQLite-Verbindung ist jetzt threadsicher.
 - Alarme für Termine hinzugefügt.
 - Nächster Schritt: Release-Tag erstellen und Paket veröffentlichen.

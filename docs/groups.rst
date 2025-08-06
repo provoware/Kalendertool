@@ -14,4 +14,11 @@ Synchronisation per CalDAV (Kalender-Austauschprotokoll)::
    python start_cli.py sync https://example.com/cal user pass --group familie
 
 Die CalDAV-Synchronisation überträgt die Termine per HTTP ``PUT``.
-Fehlermeldungen erscheinen, wenn die Verbindung scheitert.
+Fehlermeldungen erscheinen, wenn die Verbindung scheitert. Bei Netzwerkfehlern
+versucht die Synchronisation automatisch bis zu drei Mal.
+
+GUI
+----
+
+Die grafische Oberfläche (*GUI*) bietet ein Feld für die Gruppe. Über die
+Buttons können Termine gespeichert oder per CalDAV synchronisiert werden.

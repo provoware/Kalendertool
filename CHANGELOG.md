@@ -7,7 +7,11 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 ### Hinzugefügt
 - Gruppen-Kalender mit `--group`-Option in der CLI.
 - CalDAV-Synchronisation über den Befehl `sync`.
+- GUI unterstützt Gruppen-Kalender.
 - Dokumentation zu Gruppen-Kalender und CalDAV.
+
+### Verbessert
+- CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
 
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt

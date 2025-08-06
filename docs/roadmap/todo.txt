@@ -1,14 +1,13 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-// Architektur & Erweiterungen
-- GUI um Gruppen-Kalender erweitern
-- CalDAV-Synchronisation robuster gegen Netzwerkfehler machen
 // Release-Vorbereitung
 - Release-Tag erstellen und Paket veröffentlichen
 
 ## Erledigte Aufgaben
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
+- GUI um Gruppen-Kalender erweitert
+- CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
 - Tests (pre-commit und pytest) vor Release ausgeführt
 - Sphinx-Dokumentation gebaut und geprüft
 - Release-Prozess dokumentiert (docs/release.rst)
