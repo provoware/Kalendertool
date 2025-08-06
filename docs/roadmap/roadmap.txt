@@ -8,7 +8,7 @@
 - Cache wird bei externen Datenbankänderungen automatisch invalidiert.
 - Automatische Startprüfung und Hilfestart integriert.
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
-- Sphinx-Dokumentation enthält eine Startanleitung.
+- Sphinx-Dokumentation enthält Start- und Release-Anleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
 - Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.
@@ -19,13 +19,14 @@
 - Logging zentral konfiguriert und in CLI/GUI integriert.
 - Logrotation begrenzt die Logdateigröße.
 - Release-Prozess dokumentiert.
+- Versionsnummer auf 0.1.1 erhöht.
 - Skripte in eigenes Verzeichnis verschoben und Dokumentationsskript ergänzt.
 - CI baut nun die Sphinx-Dokumentation.
 - Markdown-Dateien unter /docs organisiert.
 
- - SQLite-Verbindung ist jetzt threadsicher.
- - Alarme für Termine hinzugefügt.
- - Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
+- SQLite-Verbindung ist jetzt threadsicher.
+- Alarme für Termine hinzugefügt.
+- Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
 
  1. Kalender- und CalDAV-Funktionen entwickeln.
  2. Gruppen-Kalender verbessern.

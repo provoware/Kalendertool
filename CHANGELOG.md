@@ -3,6 +3,8 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei festgeha
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0/) und Semantic Versioning.
 
 ## [Unreleased]
+
+## [0.1.1] - 2025-08-06
 ### Hinzugefügt
 - Zentrales CHANGELOG nach *Keep a Changelog*-Standard.
 - Logging-Mechanismus mit zentraler Konfiguration.
