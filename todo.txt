@@ -7,6 +7,8 @@
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 - Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
+- AppImage für Linux erstellen
+- Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archiv vervollständigen
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt

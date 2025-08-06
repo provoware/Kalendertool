@@ -30,6 +30,7 @@ from help.tooltips import (
     TIP_AUTO_PAIR,
     TIP_START_ENCODE,
 )
+from help.tooltips import TIP_ADD_IMAGES, TIP_ADD_AUDIOS
 
 # ---------- Logging & Persistenz ----------
 
