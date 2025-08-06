@@ -18,3 +18,5 @@ TIP_SAVE_PROJECT = (
 )
 TIP_LOAD_PROJECT = "Projekt laden" " (lädt eine zuvor gespeicherte Datenbankdatei)"
 TIP_SHOW_PATH = "Pfad zeigen" " (zeigt den Speicherort der ausgewählten Datei unten an)"
+TIP_UNDO = "Letzte Aktion rückgängig" " (stellt gelöschte Zeilen wieder her)"
+TIP_STOP = "Vorgang stoppen" " (bricht die aktuelle Umwandlung sofort ab)"

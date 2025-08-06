@@ -2,13 +2,12 @@
 - Spezialprüfungen für Medienpaare in utils gebündelt.
 - Projekt wird beim Beenden automatisch gespeichert und beim Start geladen.
 - Release-Skript führt Tests aus und baut Paket automatisiert.
-- Weitere Button-Kurzinfos (z.B. Pfad zeigen) ins Hilfemodul ausgelagert.
+- Weitere Button-Kurzinfos (z.B. Pfad zeigen, Rückgängig, Stopp) ins Hilfemodul ausgelagert.
 - Dateiauswahldialoge über Hilfsfunktion vereinheitlicht.
-- Persistente Ablage speichert Projekte jetzt in SQLite.
+- Persistente Ablage speichert Projekte jetzt in SQLite mit Cache und Transaktionen.
 
 - Nächster Schritt: Automatische Startprüfung und Hilfestart integrieren.
 - Danach: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
 
 1. Automatische Startprüfung und Hilfestart integrieren.
 2. Kalender- und CalDAV-Funktionen entwickeln.
-3. Datenbankstruktur verfeinern und Caching ergänzen.

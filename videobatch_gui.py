@@ -31,8 +31,14 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
-from config.paths import LOG_FILE, NOTES_FILE, PROJECT_DB
-from storage import save_project, load_project
+from config.paths import (
+    LOG_FILE,
+    NOTES_FILE,
+    PROJECT_DB,
+    DEFAULT_OUT_DIR,
+    USED_DIR,
+)
+from storage import save_project, load_project, close as close_storage
 from help.tooltips import (
     TIP_ADD_IMAGES,
     TIP_ADD_AUDIOS,
@@ -42,6 +48,8 @@ from help.tooltips import (
     TIP_SAVE_PROJECT,
     TIP_LOAD_PROJECT,
     TIP_SHOW_PATH,
+    TIP_UNDO,
+    TIP_STOP,
 )
 
 # ---------- Logging & Persistenz ----------
@@ -72,14 +80,6 @@ def probe_duration(path: str) -> float:
     except Exception as e:
         logger.debug("Dauer konnte nicht ermittelt werden: %s", e)
     return 0.0
-
-
-def get_used_dir() -> Path:
-    return Path.home() / "benutzte_dateien"
-
-
-def default_output_dir() -> Path:
-    return Path.home() / "Videos" / "VideoBatchTool_Out"
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
@@ -340,7 +340,7 @@ class EncodeWorker(QtCore.QObject):
             self.overall_progress.emit(done / max(1, total) * 100.0)
         if all(p.status == "FERTIG" for p in self.pairs):
             try:
-                dst = get_used_dir()
+                dst = USED_DIR
                 moved = 0
                 for p in self.pairs:
                     for f in (p.image_path, p.audio_path):
@@ -536,7 +536,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.out_dir_edit = QtWidgets.QLineEdit(
             self.settings.value("encode/out_dir", "", str)
         )
-        self.out_dir_edit.setPlaceholderText(f"Standard: {default_output_dir()}")
+        self.out_dir_edit.setPlaceholderText(f"Standard: {DEFAULT_OUT_DIR}")
         self.out_dir_edit.setAccessibleName("Ausgabeordner")
         self.crf_spin = QtWidgets.QSpinBox()
         self.crf_spin.setRange(0, 51)
@@ -696,7 +696,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_undo = QtWidgets.QPushButton("Rückgängig")
-        self.btn_undo.setToolTip("Letzte Aktion rückgängig machen")
+        self.btn_undo.setToolTip(TIP_UNDO)
         self.btn_undo.setStatusTip(
             "Stellt den Zustand vor der letzten Änderung wieder her"
         )
@@ -727,7 +727,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_encode.setAccessibleName("Start")
 
         self.btn_stop = QtWidgets.QPushButton("Stopp")
-        self.btn_stop.setToolTip("Vorgang stoppen")
+        self.btn_stop.setToolTip(TIP_STOP)
         self.btn_stop.setStatusTip("Bricht die laufende Umwandlung ab")
         self.btn_stop.setAccessibleName("Stopp")
         self.btn_stop.setEnabled(False)
@@ -1055,9 +1055,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.model.add_pairs(new)
         s = data.get("settings", {})
         out_dir = s.get("out_dir", "")
-        self.out_dir_edit.setText(
-            "" if out_dir == str(default_output_dir()) else out_dir
-        )
+        self.out_dir_edit.setText("" if out_dir == str(DEFAULT_OUT_DIR) else out_dir)
         self.crf_spin.setValue(s.get("crf", self.crf_spin.value()))
         self.preset_combo.setCurrentText(
             s.get("preset", self.preset_combo.currentText())
@@ -1091,7 +1089,7 @@ class MainWindow(QtWidgets.QMainWindow):
     # ----- encode -----
     def _gather_settings(self) -> Dict[str, Any]:
         return {
-            "out_dir": self.out_dir_edit.text().strip() or str(default_output_dir()),
+            "out_dir": self.out_dir_edit.text().strip() or str(DEFAULT_OUT_DIR),
             "crf": self.crf_spin.value(),
             "preset": self.preset_combo.currentText(),
             "width": self.width_spin.value(),
@@ -1250,6 +1248,8 @@ class MainWindow(QtWidgets.QMainWindow):
             save_project(self._project_data(), PROJECT_DB)
         except Exception as exc:
             logger.error("Projekt konnte nicht gespeichert werden: %s", exc)
+        finally:
+            close_storage()
         super().closeEvent(event)
 
 

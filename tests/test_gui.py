@@ -8,15 +8,10 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from PySide6 import QtGui, QtWidgets  # noqa: E402
 from PySide6.QtCore import Qt  # noqa: E402
-from videobatch_gui import (  # noqa: E402
-    MainWindow,
-    human_time,
-    make_thumb,
-    PairItem,
-    default_output_dir,
-)
+from videobatch_gui import MainWindow, human_time, make_thumb, PairItem  # noqa: E402
 from utils import check_ffmpeg  # noqa: E402
 from storage import load_project  # noqa: E402
+from config.paths import DEFAULT_OUT_DIR  # noqa: E402
 
 
 def test_human_time_gui():
@@ -73,12 +68,12 @@ def test_placeholders_and_defaults(tmp_path):
     os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
     QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
     win = MainWindow()
-    assert win.out_dir_edit.placeholderText() == f"Standard: {default_output_dir()}"
+    assert win.out_dir_edit.placeholderText() == f"Standard: {DEFAULT_OUT_DIR}"
     assert win.abitrate_edit.placeholderText() == "z.B. 192k (Kilobit pro Sekunde)"
     win.out_dir_edit.setText("")
     win.abitrate_edit.setText("")
     settings = win._gather_settings()
-    assert settings["out_dir"] == str(default_output_dir())
+    assert settings["out_dir"] == str(DEFAULT_OUT_DIR)
     assert settings["abitrate"] == "192k"
     win.close()
 
