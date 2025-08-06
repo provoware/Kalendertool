@@ -33,6 +33,22 @@ def test_group_specific_export(tmp_path, monkeypatch):
     assert "SUMMARY:Familie" in content
 
 
+def test_export_requires_force(tmp_path, monkeypatch, caplog):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")
+    close()
+    add_event("Alt", "2025-12-24")
+    out = tmp_path / "events.ics"
+    export_ical(out)
+    add_event("Neu", "2025-12-25")
+    with caplog.at_level("ERROR"):
+        export_ical(out)
+    assert "existiert bereits" in caplog.text
+    export_ical(out, force=True)
+    content = out.read_text(encoding="utf-8")
+    assert "SUMMARY:Neu" in content
+
+
 def test_sync_caldav_calls_put(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")

@@ -21,4 +21,10 @@ Termine lassen sich über die Kommandozeile verwalten:
 
       python start_cli.py export events.ics
 
+   Vorhandene Datei überschreiben:
+
+   .. code-block:: bash
+
+      python start_cli.py export events.ics --force
+
 Die Datei ``events.ics`` kann in gängige Kalender importiert werden.

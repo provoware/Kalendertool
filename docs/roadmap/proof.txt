@@ -6,7 +6,7 @@
 - Datenbank nutzt nur eine einfache JSON-Spalte; strukturierte Tabellen fehlen.
 - Automatische ffmpeg-Installation läuft nur über apt auf Linux; andere Systeme benötigen manuelle Einrichtung.
 - Neue CLI speichert Termine im Klartext ohne Eingabevalidierung oder Verschlüsselung.
-- iCal-Export überschreibt vorhandene Dateien ohne Rückfrage und speichert Termine im Klartext.
+- iCal-Export speichert Termine im Klartext; Verschlüsselung fehlt.
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.
 - Alarme unterstützen nur einfache Minuten-Offsets ohne Wiederholungen.
 - GUI bietet nur Grundfunktionen ohne erweiterte Ansichten.

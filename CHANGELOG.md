@@ -12,6 +12,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 
 ### Verbessert
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+- iCal-Export verweigert Überschreiben ohne `--force`.
 
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt

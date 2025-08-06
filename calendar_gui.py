@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+from datetime import datetime
 
 from start_cli import add_event, _load_groups, sync_caldav, close
 
@@ -45,9 +46,16 @@ def run() -> None:
 
     def add_cb() -> None:
         try:
-            alarm = int(alarm_var.get()) if alarm_var.get() else None
+            datetime.fromisoformat(date_var.get())
         except ValueError:
-            messagebox.showerror("Fehler", "Alarm muss eine Zahl sein")
+            messagebox.showerror("Fehler", "Datum im Format JJJJ-MM-TT angeben")
+            return
+        try:
+            alarm = int(alarm_var.get()) if alarm_var.get() else None
+            if alarm is not None and alarm < 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Fehler", "Alarm muss eine positive Zahl sein")
             return
         add_event(title_var.get(), date_var.get(), alarm, group_var.get())
         refresh()

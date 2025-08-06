@@ -26,5 +26,6 @@ Die wichtigsten Schritte im Überblick:
 
 5. Kalender exportieren:
    - "Exportieren" auswählen und eine iCal-Datei (standardisiertes Kalenderformat) erzeugen.
+   - Bestehende Datei wird nur nach Nachfrage (Option "Überschreiben") ersetzt.
 
 Diese Schritte helfen Einsteigern, Termine anzulegen und zu verwalten.

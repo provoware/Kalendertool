@@ -79,12 +79,23 @@ def list_events(group: str | None = None) -> None:
             logger.info("[%s] %s: %s%s", grp, event["date"], event["title"], alarm)
 
 
-def export_ical(file_path: Path, group: str = "default") -> None:
-    """Termine einer Gruppe als iCal-Datei exportieren."""
+def export_ical(
+    file_path: Path, group: str = "default", *, force: bool = False
+) -> None:
+    """Termine einer Gruppe als iCal-Datei exportieren.
+
+    Überschreibt vorhandene Dateien nur mit ``force=True``.
+    """
     groups, _ = _load_groups()
     events = groups.get(group, [])
     if not events:
         logger.info("Keine Termine zum Export in Gruppe '%s'.", group)
+        return
+    if file_path.exists() and not force:
+        logger.error(
+            "Datei %s existiert bereits. --force zum Überschreiben nutzen.",
+            file_path,
+        )
         return
     lines = [
         "BEGIN:VCALENDAR",
@@ -220,6 +231,11 @@ def main() -> None:
         default="default",
         help="Nur Termine dieser Gruppe exportieren",
     )
+    export_p.add_argument(
+        "--force",
+        action="store_true",
+        help="Vorhandene Datei überschreiben",
+    )
 
     sync_p = sub.add_parser("sync", help="Termine per CalDAV synchronisieren")
     sync_p.add_argument("url", help="CalDAV-URL")
@@ -238,7 +254,7 @@ def main() -> None:
     elif args.cmd == "list":
         list_events(args.group)
     elif args.cmd == "export":
-        export_ical(Path(args.file), args.group)
+        export_ical(Path(args.file), args.group, force=args.force)
     elif args.cmd == "sync":
         sync_caldav(args.url, args.user, args.password, args.group)
     else:
