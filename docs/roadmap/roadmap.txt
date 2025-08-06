@@ -8,7 +8,7 @@
 - Cache wird bei externen Datenbankänderungen automatisch invalidiert.
 - Automatische Startprüfung und Hilfestart integriert.
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
-- Sphinx-Dokumentation enthält Start- und Release-Anleitung.
+- Sphinx-Dokumentation enthält Start-, Grundlagen- und Release-Anleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
 - Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.

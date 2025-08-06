@@ -11,6 +11,7 @@
 - Tests (pre-commit und pytest) vor Release ausgeführt
 - Sphinx-Dokumentation gebaut und geprüft
 - Release-Prozess dokumentiert (docs/release.rst)
+- Dokumentation um Grundfunktionen für Einsteiger erweitert
 - Version in pyproject.toml aktualisiert
 - CHANGELOG um Versionsabschnitt ergänzt
 - Transaktionen und Caching für SQLite ergänzen
