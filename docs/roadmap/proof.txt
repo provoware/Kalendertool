@@ -9,4 +9,4 @@
 - iCal-Export speichert Termine im Klartext; Verschlüsselung fehlt.
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.
 - Alarme unterstützen nur einfache Minuten-Offsets ohne Wiederholungen.
-- Kalenderansicht zeigt nur den aktuellen Monat.
+- Monatsansicht erlaubt keine direkte Bearbeitung oder Erstellung von Terminen.

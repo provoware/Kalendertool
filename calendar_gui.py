@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import tkinter as tk
 from tkinter import messagebox, simpledialog
-from datetime import datetime
+from datetime import datetime, timedelta
 import calendar
 
 from start_cli import (
@@ -179,26 +179,50 @@ def run() -> None:
         if not group_var.get().strip():
             messagebox.showerror("Fehler", "Gruppe angeben")
             return
-        now = datetime.now()
-        weeks = calendar.monthcalendar(now.year, now.month)
-        groups, _ = _load_groups()
-        events = groups.get(group_var.get(), [])
-        days = {
-            int(ev["date"][8:10])
-            for ev in events
-            if ev["date"].startswith(f"{now.year:04d}-{now.month:02d}")
-        }
+        current = datetime.now().replace(day=1)
         win = tk.Toplevel(root)
-        win.title(f"{calendar.month_name[now.month]} {now.year}")
-        for col, name in enumerate(["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]):
-            tk.Label(win, text=name, font=("Arial", 10, "bold")).grid(row=0, column=col)
-        for r, week in enumerate(weeks, start=1):
-            for c, day in enumerate(week):
-                txt = "" if day == 0 else str(day)
-                lbl = tk.Label(win, text=txt)
-                if day in days:
-                    lbl.configure(background="lightblue")
-                lbl.grid(row=r, column=c, padx=2, pady=2)
+
+        def draw() -> None:
+            for widget in win.grid_slaves():
+                widget.destroy()
+            weeks = calendar.monthcalendar(current.year, current.month)
+            groups, _ = _load_groups()
+            events = groups.get(group_var.get(), [])
+            days = {
+                int(ev["date"][8:10])
+                for ev in events
+                if ev["date"].startswith(f"{current.year:04d}-{current.month:02d}")
+            }
+            win.title(f"{calendar.month_name[current.month]} {current.year}")
+            for col, name in enumerate(["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]):
+                tk.Label(win, text=name, font=("Arial", 10, "bold")).grid(
+                    row=0, column=col
+                )
+            for r, week in enumerate(weeks, start=1):
+                for c, day in enumerate(week):
+                    txt = "" if day == 0 else str(day)
+                    lbl = tk.Label(win, text=txt)
+                    if day in days:
+                        lbl.configure(background="lightblue")
+                    lbl.grid(row=r, column=c, padx=2, pady=2)
+            btn_prev = tk.Button(win, text="<", command=prev_month)
+            btn_prev.grid(row=len(weeks) + 1, column=0, columnspan=3, sticky="w")
+            btn_next = tk.Button(win, text=">", command=next_month)
+            btn_next.grid(row=len(weeks) + 1, column=4, columnspan=3, sticky="e")
+            create_tooltip(btn_prev, "Vorherigen Monat anzeigen")
+            create_tooltip(btn_next, "Nächsten Monat anzeigen")
+
+        def prev_month() -> None:
+            nonlocal current
+            current = (current - timedelta(days=1)).replace(day=1)
+            draw()
+
+        def next_month() -> None:
+            nonlocal current
+            current = (current + timedelta(days=31)).replace(day=1)
+            draw()
+
+        draw()
 
     listbox.bind("<<ListboxSelect>>", on_select)
     btn_refresh = tk.Button(root, text="Aktualisieren", command=refresh)

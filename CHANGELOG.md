@@ -18,6 +18,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - iCal-Export verweigert Überschreiben ohne `--force`.
 - GUI füllt Felder bei Auswahl automatisch und meldet Eingabefehler.
 - GUI prüft Gruppenfeld und zeigt Hilfetexte (Tooltips) an.
+- Monatsansicht erlaubt Wechsel zu anderen Monaten.
 
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt

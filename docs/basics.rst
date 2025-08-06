@@ -35,6 +35,7 @@ Die wichtigsten Schritte im Überblick:
 
 #. Monatsübersicht anzeigen:
    - Auf "Monat" klicken.
+   - Mit "<" oder ">" zu anderem Monat wechseln.
    - Es erscheint ein Kalendergitter; Tage mit Terminen sind blau markiert.
 
 Diese Schritte helfen Einsteigern, Termine anzulegen und zu verwalten.
