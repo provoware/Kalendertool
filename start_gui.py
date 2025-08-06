@@ -37,9 +37,12 @@ def main() -> None:
     """Starte das Tool nach automatischer Prüfung."""
     bootstrap_console()
     _ensure_ffmpeg()
-    import videobatch_gui as gui  # Import nach Prüfung
+    try:
+        import videobatch_gui as gui  # Import nach Prüfung
 
-    gui.run_gui()
+        gui.run_gui()
+    except Exception as exc:  # pragma: no cover - GUI-Fehler schwer testbar
+        print(f"GUI konnte nicht gestartet werden: {exc}")
 
 
 if __name__ == "__main__":

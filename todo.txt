@@ -3,7 +3,6 @@
 ## Offene Aufgaben
 // Architektur & Erweiterungen
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
-- Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -66,3 +65,4 @@
 - Tooltip 'Pfad zeigen' erklärt den Speicherort
 - Persistente Ablage auf SQLite migriert
 - Sphinx-Dokumentation vervollständigen
+- Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion

@@ -8,9 +8,10 @@
 - Automatische Startprüfung und Hilfestart integriert.
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
 - Sphinx-Dokumentation enthält eine Startanleitung.
+- Einfache CLI mit Hilfefunktion ergänzt.
 
 - Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.
-- Danach: Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion.
+- Danach: Alarme und CalDAV-Synchronisation umsetzen.
 
 1. Kalender- und CalDAV-Funktionen entwickeln.
-2. Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion.
+2. Alarme und Gruppen-Kalender verbessern.

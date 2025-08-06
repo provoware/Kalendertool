@@ -7,3 +7,4 @@
 - Datenbank nutzt nur eine einfache JSON-Spalte; strukturierte Tabellen fehlen.
 - Der SQLite-Cache wird nicht invalidiert, wenn externe Änderungen an der Datenbank erfolgen.
 - Automatische ffmpeg-Installation läuft nur über apt auf Linux; andere Systeme benötigen manuelle Einrichtung.
+- Neue CLI speichert Termine im Klartext ohne Eingabevalidierung oder Verschlüsselung.
