@@ -12,9 +12,9 @@
 - Schriftgrößen flexibel einstellbar machen und darauf achten das sich alles fehlerfrei automatisch anpasst
 - Fixen
 - einfache verständliche und eindeutige sprache bei Hilfe oder Tips im Tool 
-- Entwicklerdoku.md anlegen und ausbauen.
 - Vollautomatische Prüfungen und Selbstrepair einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 # # Final und vollständig abgeschlossen:
 - plan.md angelegt
 - fortschritt.txt angelegt und erste Fortschrittszeile ergänzt
+- Entwicklerdoku.md angelegt

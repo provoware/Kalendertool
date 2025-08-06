@@ -21,7 +21,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Einheitliche Namen
 - Schriftgrößen flexibel
 - Klarer Hilfetext
-- Entwicklerdoku schreiben
 - Vollautomatische Prüfungen und Selbstreparatur
 - Autonome Startprüfung
 
@@ -29,4 +28,5 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`
 - Fortschritt ergänzen: `echo "$(date +%d.%m.%Y) - Fortschritt: <zahl>%" >> fortschritt.txt`
 - `todo.txt` und diesen Plan anpassen
+- `Entwicklerdoku.md` pflegen: `nano Entwicklerdoku.md` (Textdatei bearbeiten)
 - Änderungen sichern: `git add .` und `git commit -m "<nachricht>"`
