@@ -15,6 +15,7 @@
 - FFmpeg-Aufrufe prüfen jetzt den Rückgabecode und geben verständliche Fehlermeldungen aus.
 - CLI liefert konsistente Exit-Codes.
 - Docstrings für CLI- und GUI-Helfer ergänzt.
+- Docstrings in der CLI-Hauptfunktion ergänzt; Tests laufen automatisch über pre-commit.
 
  - SQLite-Verbindung ist jetzt threadsicher.
  - Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.

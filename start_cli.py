@@ -77,6 +77,7 @@ def export_ical(file_path: Path) -> None:
 
 
 def main() -> None:
+    """Einstiegspunkt für die CLI und Befehlsverarbeitung."""
     parser = argparse.ArgumentParser(description="Kalender per Kommandozeile bedienen")
     sub = parser.add_subparsers(dest="cmd")
 

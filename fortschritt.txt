@@ -33,3 +33,4 @@
 06.08.2025 - Fortschritt: 100% (Startskript robuster, Doku erweitert)
 11.08.2025 - Fortschritt: 100% (CLI ergänzt)
 06.08.2025 - Fortschritt: 100% (iCal-Export ergänzt)
+13.08.2025 - Fortschritt: 100% (Docstring für CLI ergänzt, Tests automatisiert)
