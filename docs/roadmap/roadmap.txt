@@ -21,9 +21,10 @@
 - CI baut nun die Sphinx-Dokumentation.
 - Markdown-Dateien unter /docs organisiert.
 
+ - Konflikt-Dialog für CalDAV-Synchronisation ergänzt.
  - SQLite-Verbindung ist jetzt threadsicher.
  - Alarme für Termine hinzugefügt.
- - Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
+ - Nächster Schritt: Gruppen-Kalender weiter ausbauen.
 
- 1. Kalender- und CalDAV-Funktionen entwickeln.
- 2. Gruppen-Kalender verbessern.
+ 1. Gruppen-Kalender verbessern.
+ 2. Automatische Konfliktauflösung entwickeln.
