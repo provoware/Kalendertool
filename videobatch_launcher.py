@@ -6,41 +6,62 @@
 # =========================================
 
 from __future__ import annotations
-import sys, os, subprocess, shutil
+
+import os
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 REQ_PKGS = ["PySide6", "Pillow", "ffmpeg-python"]
-ENV_DIR  = Path(".videotool_env").resolve()
-SELF     = Path(__file__).resolve()
-FLAG     = "VT_BOOTSTRAPPED"
+ENV_DIR = Path(".videotool_env").resolve()
+SELF = Path(__file__).resolve()
+FLAG = "VT_BOOTSTRAPPED"
+
 
 def in_venv() -> bool:
-    return (hasattr(sys, "real_prefix")
-            or getattr(sys, "base_prefix", sys.prefix) != sys.prefix
-            or os.environ.get("VIRTUAL_ENV"))
+    return (
+        hasattr(sys, "real_prefix")
+        or getattr(sys, "base_prefix", sys.prefix) != sys.prefix
+        or os.environ.get("VIRTUAL_ENV")
+    )
+
 
 def venv_python() -> Path:
     return ENV_DIR / ("Scripts" if os.name == "nt" else "bin") / "python"
+
 
 def ensure_venv() -> None:
     if not ENV_DIR.exists():
         subprocess.check_call([sys.executable, "-m", "venv", str(ENV_DIR)])
 
+
 def pip_show(py: str, pkg: str) -> bool:
-    return subprocess.run([py, "-m", "pip", "show", pkg],
-                          stdout=subprocess.DEVNULL,
-                          stderr=subprocess.DEVNULL).returncode == 0
+    return (
+        subprocess.run(
+            [py, "-m", "pip", "show", pkg],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        ).returncode
+        == 0
+    )
+
 
 def pip_install(py: str, pkgs: list[str]) -> None:
-    if not pkgs: return
-    subprocess.check_call([py, "-m", "pip", "install", "--upgrade", "pip"], stdout=subprocess.DEVNULL)
+    if not pkgs:
+        return
+    subprocess.check_call(
+        [py, "-m", "pip", "install", "--upgrade", "pip"], stdout=subprocess.DEVNULL
+    )
     subprocess.check_call([py, "-m", "pip", "install", "--upgrade"] + pkgs)
 
+
 def reboot_into_venv():
-    py  = str(venv_python())
+    py = str(venv_python())
     env = os.environ.copy()
     env[FLAG] = "1"
     os.execvpe(py, [py, str(SELF)], env)
+
 
 def bootstrap_console():
     if not in_venv():
@@ -54,10 +75,11 @@ def bootstrap_console():
     if missing:
         pip_install(py, missing)
 
+
 def main():
     bootstrap_console()
 
-    from PySide6 import QtWidgets
+    from PySide6 import QtWidgets, QtCore
     import subprocess as sp
 
     class Wizard(QtWidgets.QDialog):
@@ -68,15 +90,16 @@ def main():
             self.py = str(venv_python())
             self._build_ui()
             self._check()
+            QtCore.QTimer.singleShot(0, self._auto_fix)
 
         def _build_ui(self):
-            self.info     = QtWidgets.QTextBrowser()
+            self.info = QtWidgets.QTextBrowser()
             self.info.setOpenExternalLinks(True)
             self.progress = QtWidgets.QProgressBar(maximum=100)
 
-            self.btn_fix   = QtWidgets.QPushButton("Installieren / Reparieren")
+            self.btn_fix = QtWidgets.QPushButton("Installieren / Reparieren")
             self.btn_start = QtWidgets.QPushButton("Tool starten →")
-            self.btn_exit  = QtWidgets.QPushButton("Beenden")
+            self.btn_exit = QtWidgets.QPushButton("Beenden")
 
             self.btn_fix.clicked.connect(self._fix_all)
             self.btn_start.clicked.connect(self.accept)
@@ -126,7 +149,9 @@ def main():
                 try:
                     pip_install(self.py, self.missing_pkgs)
                 except Exception as e:
-                    QtWidgets.QMessageBox.critical(self, "Fehler", f"Pakete konnten nicht installiert werden:\n{e}")
+                    QtWidgets.QMessageBox.critical(
+                        self, "Fehler", f"Pakete konnten nicht installiert werden:\n{e}"
+                    )
 
             if not self.ffmpeg_ok:
                 if sys.platform.startswith("linux"):
@@ -140,15 +165,23 @@ def main():
             self.setEnabled(True)
             self._check()
 
+        def _auto_fix(self):
+            if self.missing_pkgs or not self.ffmpeg_ok:
+                self._fix_all()
+            if self.progress.value() == 100:
+                self.accept()
+
     app = QtWidgets.QApplication(sys.argv)
     wiz = Wizard()
     if wiz.exec() != QtWidgets.QDialog.Accepted:
         sys.exit(0)
 
     import videobatch_gui as gui
+
     w = gui.MainWindow()
     w.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
