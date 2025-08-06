@@ -1,4 +1,6 @@
-# Noch zu erledigen:
+# Todo-Liste
+
+## Offene Aufgaben
 - Fenster flexibel in Größe machen und auch für kleine Bildschirme optimieren
 - Keine Links rechts scrollen im Tool, besser anordnen oder zweite Zeile verwenden, alles soll sichtbar sein
 - 4 verschiedene Farbthemes als Auswahl im Tool, nach gängigen Kontraststandards für Bildschirmarbeiter
@@ -11,9 +13,10 @@
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Schriftgrößen flexibel einstellbar machen und darauf achten das sich alles fehlerfrei automatisch anpasst
 - Fixen
-- einfache verständliche und eindeutige sprache bei Hilfe oder Tips im Tool 
+- einfache verständliche und eindeutige sprache bei Hilfe oder Tips im Tool
 - Entwicklerdoku.md anlegen und ausbauen.
 - Vollautomatische Prüfungen und Selbstrepair einbauen
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
-# # Final und vollständig abgeschlossen:
-- fortschritt.txt angelegt und erste Fortschrittszeile ergänzt
+
+## Erledigte Aufgaben
+- Datei fortschritt.txt anlegen und fortlaufend ergänzen
