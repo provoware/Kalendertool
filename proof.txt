@@ -8,5 +8,5 @@
 - Weitere Button-Kurzinfos liegen noch im GUI-Code; Hilfemodul wird nicht überall genutzt.
 - Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.
 - Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archive noch unvollständig.
-- Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.
 - AppImage-Paket für Linux fehlt.
+- Validierungsprüfungen wiederholen sich; Auslagerung in Hilfsfunktionen würde den Code vereinfachen.

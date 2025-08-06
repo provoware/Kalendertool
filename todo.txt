@@ -8,8 +8,6 @@
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 - Release-Workflow und Veröffentlichung auf PyPI
 - Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
-- AppImage für Linux erstellen
-- Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archiv vervollständigen
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -57,3 +55,5 @@
 - Tooltip 'Auto-Paaren' mit Hinweis auf automatische Zuordnung erweitert
 - AppImage für Linux erstellen
 - Tooltip 'Umwandlung starten' erklärt die Videoerstellung
+- Doppelte Importe im Hauptmodul entfernt und Code komprimiert
+- Tooltip 'Audios wählen' nennt unterstützte Formate
