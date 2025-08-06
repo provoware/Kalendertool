@@ -5,6 +5,8 @@
 - Alarme für Termine ergänzen
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
+- SQLite-Cache invalidieren, wenn Datenbank extern geändert wird
+
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -70,3 +72,4 @@
 - Sphinx-Dokumentation vervollständigen
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
 - Verzeichnisse werden nicht mehr beim Import von config.paths angelegt; Erstellung erfolgt bei Bedarf
+- SQLite-Verbindung mit Lock threadsicher gemacht
