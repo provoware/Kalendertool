@@ -14,7 +14,7 @@ from datetime import datetime
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
 # ---------- Logging ----------
@@ -303,6 +303,21 @@ class InfoDashboard(QtWidgets.QWidget):
 # ---------- MainWindow ----------
 class MainWindow(QtWidgets.QMainWindow):
     FONT_STEP = 1
+    THEMES = {
+        "Hell": "",
+        "Dunkel": (
+            "QWidget { background:#2b2b2b; color:#f0f0f0; }"
+            "QPushButton { background:#3c3c3c; color:#f0f0f0; }"
+        ),
+        "Blau": (
+            "QWidget { background:#e6f0ff; }"
+            "QPushButton { background:#cfe2ff; }"
+        ),
+        "Kontrast": (
+            "QWidget { background:#000000; color:#ffffff; }"
+            "QPushButton { background:#000000; color:#ffffff; border:1px solid #ffffff; }"
+        ),
+    }
 
     def __init__(self):
         super().__init__()
@@ -316,6 +331,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.settings = QtCore.QSettings("Provoware", "VideoBatchTool")
         self._font_size = self.settings.value("ui/font_size", 11, int)
+        self._theme = self.settings.value("ui/theme", "Hell", str)
 
         sys.excepthook = self._global_exception
 
@@ -437,6 +453,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.copy_only = False
         self._build_menus()
+        self._set_theme(self._theme)
 
         self._history: List[List[PairItem]] = []
         self.thread: Optional[QtCore.QThread] = None
@@ -472,6 +489,16 @@ class MainWindow(QtWidgets.QMainWindow):
         act_font_reset = QAction("Schrift Reset", self); act_font_reset.triggered.connect(lambda: self._set_font(11))
         m_ansicht.addActions([act_font_plus, act_font_minus, act_font_reset])
 
+        theme_menu = m_ansicht.addMenu("Theme")
+        theme_group = QActionGroup(self)
+        theme_group.setExclusive(True)
+        for name in self.THEMES:
+            act = QAction(name, self, checkable=True)
+            act.setChecked(name == self._theme)
+            act.triggered.connect(lambda checked, n=name: self._set_theme(n) if checked else None)
+            theme_group.addAction(act)
+            theme_menu.addAction(act)
+
         m_option = menubar.addMenu("Optionen")
         self.act_copy_only = QAction("Dateien nur kopieren (nicht verschieben)", self, checkable=True, checked=self.copy_only)
         self.act_copy_only.triggered.connect(self._toggle_copy_mode)
@@ -493,6 +520,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def _apply_font(self):
         f = QtGui.QFont("DejaVu Sans", self._font_size)
         self.setFont(f)
+
+    def _set_theme(self, name: str):
+        QtWidgets.QApplication.instance().setStyleSheet(self.THEMES.get(name, ""))
+        self.settings.setValue("ui/theme", name)
+        self._theme = name
 
     def _add_form(self, layout: QtWidgets.QFormLayout, label: str, widget: QtWidgets.QWidget, help_text: str):
         widget.setToolTip(help_text); widget.setStatusTip(help_text)

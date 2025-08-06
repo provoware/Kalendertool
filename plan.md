@@ -10,20 +10,20 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 
 ## Aufgaben
 - Keine waagerechten Scrollbalken
-- Vier Farb-Themes nach Kontrast-Standards
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
 - Ressourcen schonen
 - Standards, Best Practices und Barrierefreiheit
 - Portabilität für Linux
 - Einheitliche Namen
-- Schriftgrößen flexibel
 - Klarer Hilfetext
 - Vollautomatische Prüfungen und Selbstreparatur
 - Autonome Startprüfung
 
 ## Erledigt
 - Fenstergröße flexibel machen
+- Vier Farb-Themes nach Kontrast-Standards
+- Schriftgrößen flexibel
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

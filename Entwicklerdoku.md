@@ -17,3 +17,4 @@ Dieses Tool besteht aus drei Hauptdateien:
 ## Beitrag leisten
 - Änderungen mit `git add <datei>` (Datei für Versionsspeicher vormerken) und `git commit -m "Nachricht"` (Änderung speichern) sichern.
 - Bei neuen Bedienelementen `setToolTip` (Kurzinfo beim Zeigen) und `setStatusTip` (Hinweis in der Statusleiste) setzen.
+- Die Oberfläche bietet vier Farb-Themes und anpassbare Schriftgröße; neue Widgets sollen diese Vorgaben übernehmen.
