@@ -1,12 +1,19 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-// Architektur & Erweiterungen
-- Gruppen-Kalender und CalDAV-Synchronisation umsetzen
-- Kalenderfunktionen: vollständige iCal-Unterstützung, Gruppen-Kalender und CalDAV-Synchronisation
-- Logrotation für das zentrale Logging ergänzen
+// Release-Vorbereitung
+- Release-Tag erstellen und Paket veröffentlichen
 
 ## Erledigte Aufgaben
+- Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
+- GUI um Gruppen-Kalender erweitert
+- CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
+- Tests (pre-commit und pytest) vor Release ausgeführt
+- Sphinx-Dokumentation gebaut und geprüft
+- Release-Prozess dokumentiert (docs/release.rst)
+- Dokumentation um Grundfunktionen für Einsteiger erweitert
+- Version in pyproject.toml aktualisiert
+- CHANGELOG um Versionsabschnitt ergänzt
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt
@@ -84,3 +91,4 @@
 - Skripte in /scripts verschoben und Dokumentationsskript ergänzt
 - Markdown-Dateien unter /docs organisiert
 - CI baut Sphinx-Dokumentation
+- Logrotation für das zentrale Logging ergänzt

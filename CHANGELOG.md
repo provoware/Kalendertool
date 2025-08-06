@@ -3,6 +3,17 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei festgeha
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0/) und Semantic Versioning.
 
 ## [Unreleased]
+
+### Hinzugefügt
+- Gruppen-Kalender mit `--group`-Option in der CLI.
+- CalDAV-Synchronisation über den Befehl `sync`.
+- GUI unterstützt Gruppen-Kalender.
+- Dokumentation zu Gruppen-Kalender und CalDAV.
+
+### Verbessert
+- CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+
+## [0.1.1] - 2025-08-06
 ### Hinzugefügt
 - Zentrales CHANGELOG nach *Keep a Changelog*-Standard.
 - Logging-Mechanismus mit zentraler Konfiguration.
@@ -10,6 +21,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - Sphinx erstellt API-Dokumentation automatisch.
 - CI baut nun auch die Dokumentation.
 - Markdown-Dateien in `/docs` organisiert.
+- Logrotation begrenzt die Logdateigröße.
 
 ### Entfernt
 - Veraltete Tracking-Dateien `plan.md`, `fortschritt.txt` und `todo.md`.
