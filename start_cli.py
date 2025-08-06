@@ -7,10 +7,14 @@ from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
+import logging
+
 from storage import load_project, save_project, close
 from config.paths import PROJECT_DB, ensure_directories
+from logging_config import setup_logging
 
 DB_PATH = PROJECT_DB
+logger = logging.getLogger(__name__)
 
 
 def _load_events() -> tuple[list[dict[str, str]], dict]:
@@ -25,10 +29,10 @@ def add_event(title: str, date_str: str, alarm: int | None = None) -> None:
     try:
         date = datetime.fromisoformat(date_str)
     except ValueError:
-        print("Ungültiges Datum. Bitte JJJJ-MM-TT verwenden.")
+        logger.error("Ungültiges Datum. Bitte JJJJ-MM-TT verwenden.")
         return
     if alarm is not None and alarm < 0:
-        print("Alarm muss eine positive Zahl sein.")
+        logger.error("Alarm muss eine positive Zahl sein.")
         return
     events, data = _load_events()
     entry = {"title": title, "date": date.isoformat()}
@@ -36,25 +40,25 @@ def add_event(title: str, date_str: str, alarm: int | None = None) -> None:
         entry["alarm"] = alarm
     events.append(entry)
     save_project(data, DB_PATH)
-    print(f"Termin '{title}' am {date.date()} gespeichert.")
+    logger.info("Termin '%s' am %s gespeichert", title, date.date())
 
 
 def list_events() -> None:
     """Alle Termine anzeigen."""
     events, _ = _load_events()
     if not events:
-        print("Keine Termine vorhanden.")
+        logger.info("Keine Termine vorhanden.")
         return
     for event in events:
         alarm = f" (Alarm {event['alarm']} min vorher)" if event.get("alarm") else ""
-        print(f"{event['date']}: {event['title']}{alarm}")
+        logger.info("%s: %s%s", event["date"], event["title"], alarm)
 
 
 def export_ical(file_path: Path) -> None:
     """Termine als iCal-Datei exportieren."""
     events, _ = _load_events()
     if not events:
-        print("Keine Termine zum Export vorhanden.")
+        logger.info("Keine Termine zum Export vorhanden.")
         return
     lines = [
         "BEGIN:VCALENDAR",
@@ -88,13 +92,14 @@ def export_ical(file_path: Path) -> None:
     try:
         file_path.write_text("\n".join(lines), encoding="utf-8")
     except OSError as exc:
-        print(f"Export fehlgeschlagen: {exc}")
+        logger.error("Export fehlgeschlagen: %s", exc)
         return
-    print(f"iCal-Datei unter {file_path} erstellt.")
+    logger.info("iCal-Datei unter %s erstellt", file_path)
 
 
 def main() -> None:
     """Einstiegspunkt für die CLI und Befehlsverarbeitung."""
+    setup_logging()
     parser = argparse.ArgumentParser(description="Kalender per Kommandozeile bedienen")
     sub = parser.add_subparsers(dest="cmd")
 

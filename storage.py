@@ -18,7 +18,6 @@ _lock = threading.RLock()
 
 def _get_conn(db_path: Path) -> sqlite3.Connection:
     """Get or create the SQLite connection (thread-safe)."""
-
     global _conn
     with _lock:
         if _conn is None:
@@ -31,7 +30,6 @@ def _get_conn(db_path: Path) -> sqlite3.Connection:
 
 def save_project(data: Dict[str, Any], db_path: Path) -> None:
     """Projekt in SQLite-Datenbank speichern (mit Transaktion und Cache)."""
-
     conn = _get_conn(db_path)
     try:
         with _lock, conn:
@@ -46,7 +44,6 @@ def save_project(data: Dict[str, Any], db_path: Path) -> None:
 
 def load_project(db_path: Path) -> Dict[str, Any]:
     """Projekt aus SQLite-Datenbank laden (mit Cache und Invalidation)."""
-
     global _cache, _mtime
     with _lock:
         current_mtime = db_path.stat().st_mtime_ns if db_path.exists() else None
@@ -68,7 +65,6 @@ def load_project(db_path: Path) -> Dict[str, Any]:
 
 def close() -> None:
     """Verbindung schließen und Cache leeren (thread-safe)."""
-
     global _conn, _cache, _mtime
     with _lock:
         if _conn is not None:

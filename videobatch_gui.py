@@ -5,6 +5,8 @@
 # Edit mit micro:                        micro videobatch_gui.py
 # =========================================
 
+"""GUI für die Stapelverarbeitung von Bildern und Audios."""
+
 from __future__ import annotations
 import logging
 import shutil
@@ -25,6 +27,7 @@ from utils import (
 )
 
 from api import build_ffmpeg_cmd, start_ffmpeg
+from logging_config import setup_logging
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
@@ -62,7 +65,6 @@ logger.addHandler(logging.NullHandler())
 # ---------- Helpers ----------
 def probe_duration(path: str) -> float:
     """Return audio duration in seconds using ffmpeg (falls back to 0)."""
-
     try:
         import ffmpeg
 
@@ -80,7 +82,6 @@ def probe_duration(path: str) -> float:
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
     """Move or copy a file into dst_dir and handle name clashes safely."""
-
     try:
         dst_dir.mkdir(parents=True, exist_ok=True)
     except OSError as err:
@@ -108,7 +109,6 @@ def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
 @lru_cache(maxsize=128)
 def make_thumb(path: str, size: Tuple[int, int] = (160, 90)) -> QtGui.QPixmap:
     """Create a thumbnail pixmap for the GUI (returns gray on error)."""
-
     try:
         from PIL import Image
 
@@ -148,42 +148,46 @@ class PairItem:
 
     def update_duration(self) -> None:
         """Ermittle Audiodauer neu."""
-
         if self.audio_path:
             self.duration = probe_duration(self.audio_path)
 
     def load_thumb(self) -> None:
         """Thumbnail bei Bedarf erzeugen."""
-
         if self.thumb is None and self.image_path:
             self.thumb = make_thumb(self.image_path)
 
     def validate(self) -> None:
         """Pfadpaar prüfen und Status setzen."""
-
         ok, msg = validate_pair(self.image_path, self.audio_path)
         self.valid = ok
         self.validation_msg = msg
 
 
 class PairTableModel(QAbstractTableModel):
+    """Tabellenmodell für Bild/Audio-Paare."""
+
     def __init__(self, pairs: List[PairItem], show_thumbs: bool = True):
+        """Initialisiere das Modell."""
         super().__init__()
         self.pairs = pairs
         self.show_thumbs = show_thumbs
 
     def rowCount(self, parent=QModelIndex()):
+        """Anzahl der Zeilen liefern."""
         return len(self.pairs)
 
     def columnCount(self, parent=QModelIndex()):
+        """Anzahl der Spalten liefern."""
         return len(COLUMNS)
 
     def headerData(self, s, o, role=Qt.DisplayRole):
+        """Spalten- und Zeilenüberschriften bereitstellen."""
         if role != Qt.DisplayRole:
             return None
         return COLUMNS[s] if o == Qt.Horizontal else str(s + 1)
 
     def data(self, idx, role=Qt.DisplayRole):
+        """Zellinhalt je nach Rolle liefern."""
         if not idx.isValid():
             return None
         item = self.pairs[idx.row()]
@@ -220,6 +224,7 @@ class PairTableModel(QAbstractTableModel):
         return None
 
     def flags(self, idx):
+        """Editierbarkeit von Zellen steuern."""
         if not idx.isValid():
             return Qt.NoItemFlags
         f = Qt.ItemIsEnabled | Qt.ItemIsSelectable
@@ -228,6 +233,7 @@ class PairTableModel(QAbstractTableModel):
         return f
 
     def setData(self, idx, value, role=Qt.EditRole):
+        """Zellinhalt ändern."""
         if role != Qt.EditRole or not idx.isValid():
             return False
         item = self.pairs[idx.row()]
@@ -247,6 +253,7 @@ class PairTableModel(QAbstractTableModel):
         return True
 
     def add_pairs(self, new_pairs: List[PairItem]):
+        """Neue Paare einfügen."""
         self.beginInsertRows(
             QModelIndex(), len(self.pairs), len(self.pairs) + len(new_pairs) - 1
         )
@@ -254,6 +261,7 @@ class PairTableModel(QAbstractTableModel):
         self.endInsertRows()
 
     def clear(self):
+        """Alle Einträge entfernen."""
         self.beginResetModel()
         self.pairs.clear()
         self.endResetModel()
@@ -261,6 +269,8 @@ class PairTableModel(QAbstractTableModel):
 
 # ---------- Worker ----------
 class EncodeWorker(QtCore.QObject):
+    """Hintergrund-Worker zum Enkodieren der Paare."""
+
     row_progress = Signal(int, float)
     overall_progress = Signal(float)
     row_error = Signal(int, str)
@@ -270,6 +280,7 @@ class EncodeWorker(QtCore.QObject):
     def __init__(
         self, pairs: List[PairItem], settings: Dict[str, Any], copy_only: bool
     ):
+        """Worker vorbereiten."""
         super().__init__()
         self.pairs = pairs
         self.settings = settings
@@ -278,6 +289,7 @@ class EncodeWorker(QtCore.QObject):
         self._proc: Optional[subprocess.Popen] = None
 
     def stop(self):
+        """Aktuellen ffmpeg-Prozess beenden."""
         self._stop = True
         if self._proc and self._proc.poll() is None:
             try:
@@ -286,6 +298,7 @@ class EncodeWorker(QtCore.QObject):
                 self.log.emit(f"Prozess konnte nicht beendet werden: {exc}")
 
     def run(self):
+        """Enkodierungsschleife ausführen."""
         total = len(self.pairs)
         for i, item in enumerate(self.pairs):
             if self._stop:
@@ -374,9 +387,12 @@ class EncodeWorker(QtCore.QObject):
 
 # ---------- UI Widgets ----------
 class DropListWidget(QtWidgets.QListWidget):
+    """Liste mit Drag-and-drop-Unterstützung."""
+
     files_dropped = Signal(list)
 
     def __init__(self, title: str, patterns: Tuple[str, ...]):
+        """Prepare list widget."""
         super().__init__()
         self.patterns = patterns
         self.setAcceptDrops(True)
@@ -386,18 +402,21 @@ class DropListWidget(QtWidgets.QListWidget):
         self.setStatusTip(title)
 
     def dragEnterEvent(self, e):
+        """Drag-Ereignis annehmen."""
         if e.mimeData().hasUrls():
             e.acceptProposedAction()
         else:
             super().dragEnterEvent(e)
 
     def dragMoveEvent(self, e):
+        """Bewegung über der Liste behandeln."""
         if e.mimeData().hasUrls():
             e.acceptProposedAction()
         else:
             super().dragMoveEvent(e)
 
     def dropEvent(self, e):
+        """Dateien aus dem Drop verarbeiten."""
         files = [u.toLocalFile() for u in e.mimeData().urls()]
         acc = [f for f in files if f.lower().endswith(self.patterns)]
         if acc:
@@ -406,22 +425,28 @@ class DropListWidget(QtWidgets.QListWidget):
         e.acceptProposedAction()
 
     def add_files(self, files: List[str]):
+        """Dateien als Einträge hinzufügen."""
         for f in files:
             it = QtWidgets.QListWidgetItem(Path(f).name)
             it.setData(Qt.UserRole, f)
             self.addItem(it)
 
     def selected_paths(self) -> List[str]:
+        """Ausgewählte Dateipfade liefern."""
         return [i.data(Qt.UserRole) for i in self.selectedItems()]
 
 
 class HelpPane(QtWidgets.QTextBrowser):
+    """Einfaches Hilfefenster mit HTML-Inhalt."""
+
     def __init__(self):
+        """Initialisierung der Hilfe."""
         super().__init__()
         self.setOpenExternalLinks(True)
         self.setHtml(self._html())
 
     def _html(self) -> str:
+        """HTML-Text der Hilfe liefern."""
         return (
             "<h2>Bedienhilfe</h2>"
             "<ol><li>Bilder und Audios hinzufügen oder ziehen</li>"
@@ -436,7 +461,10 @@ class HelpPane(QtWidgets.QTextBrowser):
 
 
 class InfoDashboard(QtWidgets.QWidget):
+    """Anzeige für Fortschritt und Status."""
+
     def __init__(self):
+        """Widget zusammenbauen."""
         super().__init__()
         self.total_label = QtWidgets.QLabel("0")
         self.done_label = QtWidgets.QLabel("0")
@@ -469,23 +497,29 @@ class InfoDashboard(QtWidgets.QWidget):
         lay.addWidget(self.mini_log)
 
     def set_counts(self, t, d, e):
+        """Anzahl der Gesamt-, fertigen und fehlerhaften Einträge setzen."""
         self.total_label.setText(str(t))
         self.done_label.setText(str(d))
         self.err_label.setText(str(e))
 
     def set_progress(self, v):
+        """Fortschritt anzeigen."""
         self.progress.setValue(v)
 
     def set_env(self, ff_ok, imp_ok=True):
+        """Status von ffmpeg und Umgebung anzeigen."""
         self.ffmpeg_lbl.setText(f"ffmpeg: {'OK' if ff_ok else 'FEHLT'}")
         self.env_lbl.setText(f"Env: {'OK' if imp_ok else 'FEHLT'}")
 
     def log(self, msg):
+        """Kurznachricht in das Log schreiben."""
         self.mini_log.appendPlainText(msg)
 
 
 # ---------- MainWindow ----------
 class MainWindow(QtWidgets.QMainWindow):
+    """Hauptfenster der Anwendung."""
+
     FONT_STEP = 1
     THEMES = {
         "Hell": "",
@@ -503,6 +537,7 @@ class MainWindow(QtWidgets.QMainWindow):
     }
 
     def __init__(self):
+        """Fenster aufbauen und Komponenten initialisieren."""
         super().__init__()
         ensure_directories()
         self.setWindowTitle("VideoBatchTool 4.1 – Bild + Audio → MP4")
@@ -1234,6 +1269,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.statusBar().showMessage(self.model.data(index, Qt.DisplayRole), 5000)
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        """Aufräumen beim Schließen des Fensters."""
         if self.thread and self.thread.isRunning():
             reply = QtWidgets.QMessageBox.question(
                 self,
@@ -1278,15 +1314,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 # ---- Public
 def run_gui():
+    """GUI starten."""
     ensure_directories()
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler(LOG_FILE, encoding="utf-8"),
-            logging.StreamHandler(sys.stdout),
-        ],
-    )
+    setup_logging(LOG_FILE)
     global logger
     logger = logging.getLogger("VideoBatchTool")
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)

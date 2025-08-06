@@ -6,6 +6,7 @@
 # =========================================
 
 # videobatch_extra.py
+"""Zusatzfunktionen und Selbsttests für die Videobearbeitung."""
 from __future__ import annotations
 
 import re
@@ -32,7 +33,6 @@ def cli_encode(
 
     Returns 0 on success, 1 if lists mismatch, or 2 when ffmpeg fails.
     """
-
     out_dir.mkdir(parents=True, exist_ok=True)
     if len(images) != len(audios):
         print("Fehler: Anzahl Bilder != Anzahl Audios")
@@ -69,7 +69,6 @@ def cli_encode(
 
 def run_selftests() -> int:
     """Run simple self-tests for CLI helpers."""
-
     assert human_time(65) == "01:05"
     with tempfile.TemporaryDirectory() as td:
         out = build_out_name(Path(td) / "a.mp3", Path(td))
@@ -81,7 +80,6 @@ def run_selftests() -> int:
 
 def main() -> None:
     """Command line interface entry point."""
-
     import argparse
 
     p = argparse.ArgumentParser(description="VideoBatchTool CLI / Tests")

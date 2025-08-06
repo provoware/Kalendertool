@@ -4,6 +4,7 @@
 // Architektur & Erweiterungen
 - Gruppen-Kalender und CalDAV-Synchronisation umsetzen
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Gruppen-Kalender und CalDAV-Synchronisation
+- Logrotation für das zentrale Logging ergänzen
 
 ## Erledigte Aufgaben
 - Transaktionen und Caching für SQLite ergänzen
@@ -78,3 +79,8 @@
 - Docstrings für CLI- und GUI-Helfer ergänzt
 - Docstrings für verbleibende Funktionen ergänzt
 - Tests laufen automatisch über pre-commit (pytest)
+- Logging-Mechanismus integriert und zentral konfiguriert
+- CHANGELOG nach Standard eingerichtet
+- Skripte in /scripts verschoben und Dokumentationsskript ergänzt
+- Markdown-Dateien unter /docs organisiert
+- CI baut Sphinx-Dokumentation

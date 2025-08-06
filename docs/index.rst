@@ -7,4 +7,5 @@ Kalendertool Dokumentation
 
    start
    cli
+   api/modules
 

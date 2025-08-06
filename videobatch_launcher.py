@@ -5,6 +5,7 @@
 # Venv löschen (Reset):        rm -rf .videotool_env
 # =========================================
 
+"""Launcher mit virtueller Umgebung und Abhängigkeitsprüfung."""
 from __future__ import annotations
 
 import os
@@ -20,6 +21,7 @@ FLAG = "VT_BOOTSTRAPPED"
 
 
 def in_venv() -> bool:
+    """Prüfen, ob bereits eine virtuelle Umgebung aktiv ist."""
     return (
         hasattr(sys, "real_prefix")
         or getattr(sys, "base_prefix", sys.prefix) != sys.prefix
@@ -28,15 +30,18 @@ def in_venv() -> bool:
 
 
 def venv_python() -> Path:
+    """Pfad zum Python der virtuellen Umgebung bestimmen."""
     return ENV_DIR / ("Scripts" if os.name == "nt" else "bin") / "python"
 
 
 def ensure_venv() -> None:
+    """Virtuelle Umgebung erstellen, falls sie fehlt."""
     if not ENV_DIR.exists():
         subprocess.check_call([sys.executable, "-m", "venv", str(ENV_DIR)])
 
 
 def pip_show(py: str, pkg: str) -> bool:
+    """Prüfen, ob ein Paket bereits installiert ist."""
     return (
         subprocess.run(
             [py, "-m", "pip", "show", pkg],
@@ -48,6 +53,7 @@ def pip_show(py: str, pkg: str) -> bool:
 
 
 def pip_install(py: str, pkgs: list[str]) -> None:
+    """Pakete per pip installieren."""
     if not pkgs:
         return
     subprocess.check_call(
@@ -57,6 +63,7 @@ def pip_install(py: str, pkgs: list[str]) -> None:
 
 
 def reboot_into_venv():
+    """Skript innerhalb der virtuellen Umgebung neu starten."""
     py = str(venv_python())
     env = os.environ.copy()
     env[FLAG] = "1"
@@ -64,6 +71,7 @@ def reboot_into_venv():
 
 
 def bootstrap_console():
+    """Virtuelle Umgebung sicherstellen und fehlende Pakete installieren."""
     if not in_venv():
         ensure_venv()
         reboot_into_venv()
@@ -77,6 +85,7 @@ def bootstrap_console():
 
 
 def main():
+    """Eintrittspunkt zum Starten der GUI."""
     bootstrap_console()
 
     from PySide6 import QtWidgets, QtCore
