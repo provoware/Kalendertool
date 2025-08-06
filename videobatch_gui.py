@@ -18,6 +18,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from api import build_ffmpeg_cmd, run_ffmpeg
+
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
@@ -341,38 +343,17 @@ class EncodeWorker(QtCore.QObject):
                 preset = self.settings["preset"]
                 ab = self.settings["abitrate"]
                 duration = item.duration or 1
-                cmd = [
-                    "ffmpeg",
-                    "-y",
-                    "-loop",
-                    "1",
-                    "-i",
+                cmd = build_ffmpeg_cmd(
                     item.image_path,
-                    "-i",
                     item.audio_path,
-                    "-c:v",
-                    "libx264",
-                    "-tune",
-                    "stillimage",
-                    "-vf",
-                    (
-                        f"scale={w}:{h}:force_original_aspect_ratio=decrease,"
-                        f"pad={w}:{h}:(ow-iw)/2:(oh-ih)/2"
-                    ),
-                    "-c:a",
-                    "aac",
-                    "-b:a",
-                    ab,
-                    "-shortest",
-                    "-preset",
-                    preset,
-                    "-crf",
-                    str(crf),
                     item.output,
-                ]
-                self._proc = subprocess.Popen(
-                    cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True
+                    w,
+                    h,
+                    ab,
+                    crf,
+                    preset,
                 )
+                self._proc = run_ffmpeg(cmd)
                 for line in self._proc.stderr:
                     if self._stop:
                         self._proc.kill()
@@ -749,6 +730,9 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.btn_auto_pair = QtWidgets.QPushButton("Auto-Paaren")
+        self.btn_auto_pair.setToolTip(
+            "Bilder und Audios automatisch verbinden (paart Dateien mit gleichem Namen)"
+        )
         self.btn_auto_pair.setToolTip(TIP_AUTO_PAIR)
         self.btn_auto_pair.setStatusTip(
             "Verknüpft die Dateien paarweise ohne manuelle Auswahl"
@@ -768,7 +752,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_undo.setAccessibleName("Rückgängig")
 
         self.btn_save = QtWidgets.QPushButton("Projekt speichern")
-        self.btn_save.setToolTip("Projektdatei anlegen")
+        self.btn_save.setToolTip(
+            "Projekt als Datei speichern (JSON-Datei, um später weiterzuarbeiten)"
+        )
         self.btn_save.setStatusTip(
             "Speichert aktuelle Paare in einer Datei, z.\u202fB. projekt.json"
         )

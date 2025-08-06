@@ -6,6 +6,7 @@
 - Persistente Ablage mit SQLite oder PostgreSQL samt Transaktionen und Caching
 - Kalenderfunktionen: vollständige iCal-Unterstützung, Alarme, Gruppen-Kalender und CalDAV-Synchronisation
 - Moderne Oberfläche als Web-Frontend oder CLI/TUI mit Hilfefunktion
+- Release-Workflow und Veröffentlichung auf PyPI
 - Sphinx-Dokumentation, Release-Workflow und Veröffentlichung auf PyPI
 - AppImage für Linux erstellen
 - Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archiv vervollständigen
@@ -46,6 +47,8 @@
 - Fehlerbehandlung verbessert und Platzhalter entfernt
 - Sicheres Beenden laufender Prozesse beim Schließen des Tools
 - CI-Pipeline um Linting, Testabdeckung und Security-Scan erweitert
+- Sphinx-Dokumentation Grundgerüst angelegt
+- API-Schicht für ffmpeg-Aufruf erstellt
 - Tooltip 'Bilder wählen' um Hinweis auf Dateifenster erweitert
 - Tooltip 'Audios wählen' um Hinweis auf Dateifenster erweitert
 - API-Schicht zur Trennung von GUI und Logik (Grundstruktur)
