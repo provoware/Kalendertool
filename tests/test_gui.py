@@ -11,6 +11,7 @@ from videobatch_gui import (  # noqa: E402
     check_ffmpeg,
     human_time,
     make_thumb,
+    PairItem,
 )
 
 
@@ -47,3 +48,18 @@ def test_make_thumb_caching(tmp_path):
     assert make_thumb.cache_info().hits == 0
     make_thumb(str(img_path))
     assert make_thumb.cache_info().hits == 1
+
+
+def test_show_selected_path_button(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    from PIL import Image
+
+    img_path = tmp_path / "img.png"
+    Image.new("RGB", (10, 10), "white").save(img_path)
+    win = MainWindow()
+    win.model.add_pairs([PairItem(str(img_path))])
+    win.table.selectRow(0)
+    win.btn_show_path.click()
+    assert win.statusBar().currentMessage() == "img.png"
+    win.close()

@@ -22,3 +22,4 @@
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 - System Leistung und Ram schützen und Ressourcen schonen
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
+- grafische Interaktivität immer über Buttons oder Auswahldialoge

@@ -18,6 +18,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Vier Farb-Themes nach Kontrast-Standards
 - Schriftgrößen flexibel
 - Keine waagerechten Scrollbalken
+- Bedienung nur über Buttons oder Dialoge (z. B. Button "Pfad zeigen")
 - Standards, Best Practices und Barrierefreiheit (Tab-Reihenfolge für Tastenbedienung)
 - Klarer Hilfetext
 - Vollautomatische Prüfungen

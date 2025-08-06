@@ -712,6 +712,13 @@ class MainWindow(QtWidgets.QMainWindow):
             "Lädt eine Projektdatei und stellt alle Paare wieder her"
         )
 
+        self.btn_show_path = QtWidgets.QPushButton("Pfad zeigen")
+        self.btn_show_path.setToolTip("Pfad der Auswahl anzeigen")
+        self.btn_show_path.setStatusTip(
+            "Zeigt den Speicherort der gewählten Datei unten an"
+        )
+        self.btn_show_path.clicked.connect(self._show_selected_path)
+
         self.btn_encode = QtWidgets.QPushButton("START")
         self.btn_encode.setToolTip("Umwandlung starten")
         self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
@@ -734,6 +741,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.btn_undo,
             self.btn_save,
             self.btn_load,
+            self.btn_show_path,
             self.btn_encode,
             self.btn_stop,
         ):
@@ -1151,6 +1159,14 @@ class MainWindow(QtWidgets.QMainWindow):
     def _resize_columns(self):
         header = self.table.horizontalHeader()
         header.resizeSections(QHeaderView.ResizeToContents)
+
+    def _show_selected_path(self):
+        index = self.table.currentIndex()
+        if not index.isValid():
+            return
+        if index.column() not in (2, 3, 5):
+            index = index.siblingAtColumn(2)
+        self._show_statusbar_path(index)
 
     def _show_statusbar_path(self, index: QtCore.QModelIndex):
         if not index.isValid():
