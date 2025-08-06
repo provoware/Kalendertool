@@ -568,6 +568,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.out_dir_edit = QtWidgets.QLineEdit(
             str(self.settings.value("encode/out_dir", default_output_dir(), str))
         )
+        self.out_dir_edit.setPlaceholderText(
+            f"Standard: {default_output_dir()}"
+        )
         self.crf_spin = QtWidgets.QSpinBox()
         self.crf_spin.setRange(0, 51)
         self.crf_spin.setValue(self.settings.value("encode/crf", 23, int))
@@ -597,6 +600,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.abitrate_edit = QtWidgets.QLineEdit(
             self.settings.value("encode/abitrate", "192k", str)
         )
+        self.abitrate_edit.setPlaceholderText("z.B. 192k (Kilobit pro Sekunde)")
         self.clear_after = QtWidgets.QCheckBox("Nach Fertigstellung Listen leeren")
         self.clear_after.setChecked(self.settings.value("ui/clear_after", False, bool))
 
@@ -1063,7 +1067,7 @@ class MainWindow(QtWidgets.QMainWindow):
     # ----- encode -----
     def _gather_settings(self) -> Dict[str, Any]:
         return {
-            "out_dir": self.out_dir_edit.text().strip(),
+            "out_dir": self.out_dir_edit.text().strip() or str(default_output_dir()),
             "crf": self.crf_spin.value(),
             "preset": self.preset_combo.currentText(),
             "width": self.width_spin.value(),
