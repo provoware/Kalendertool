@@ -12,7 +12,6 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Code analysieren und verbessern
 - Bedienung nur über Buttons oder Dialoge
 - Ressourcen schonen
-- Standards, Best Practices und Barrierefreiheit
 - Portabilität für Linux
 - Einheitliche Namen
 - Klarer Hilfetext
@@ -24,6 +23,7 @@ Dieser Plan wird nach jeder Arbeitsrunde aktualisiert.
 - Vier Farb-Themes nach Kontrast-Standards
 - Schriftgrößen flexibel
 - Keine waagerechten Scrollbalken
+- Standards, Best Practices und Barrierefreiheit (Tab-Reihenfolge für Tastenbedienung)
 
 ## Nach jedem Schritt
 - Tests ausführen: `python -m py_compile videobatch_gui.py videobatch_extra.py videobatch_launcher.py`

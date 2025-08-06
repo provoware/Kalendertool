@@ -2,7 +2,6 @@
 - Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
 - System Leistung und Ram schützen und Ressourcen schonen
-- Globale Standards, Best Practices und Barrierefreiheit,
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
@@ -18,3 +17,4 @@
 - 4 verschiedene Farbthemes als Auswahl im Tool, nach gängigen Kontraststandards für Bildschirmarbeiter
 - Schriftgrößen flexibel einstellbar machen und darauf achten das sich alles fehlerfrei automatisch anpasst
 - Keine Links rechts scrollen im Tool, besser anordnen oder zweite Zeile verwenden, alles soll sichtbar sein
+- Globale Standards, Best Practices und Barrierefreiheit

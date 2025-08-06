@@ -472,6 +472,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_stop.clicked.connect(self._stop_encode)
         self.table.doubleClicked.connect(self._show_statusbar_path)
 
+        self._set_tab_order()
         self._apply_font()
         self.restoreGeometry(self.settings.value("ui/geometry", b"", bytes))
         self.restoreState(self.settings.value("ui/window_state", b"", bytes))
@@ -508,6 +509,16 @@ class MainWindow(QtWidgets.QMainWindow):
         m_hilfe = menubar.addMenu("Hilfe")
         act_log = QAction("Logdatei öffnen", self); act_log.triggered.connect(lambda: QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(str(LOG_FILE))))
         m_hilfe.addAction(act_log)
+
+    def _set_tab_order(self):
+        """Reihenfolge der Tastatur-Navigation festlegen (Barrierefreiheit)."""
+        widgets = [
+            self.btn_add_images, self.btn_add_audios, self.btn_auto_pair,
+            self.btn_clear, self.btn_undo, self.btn_save, self.btn_load,
+            self.btn_encode, self.btn_stop, self.table
+        ]
+        for a, b in zip(widgets, widgets[1:]):
+            self.setTabOrder(a, b)
 
     def _change_font(self, delta:int):
         self._set_font(self._font_size + delta)

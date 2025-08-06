@@ -19,3 +19,4 @@ Dieses Tool besteht aus drei Hauptdateien:
 - Bei neuen Bedienelementen `setToolTip` (Kurzinfo beim Zeigen) und `setStatusTip` (Hinweis in der Statusleiste) setzen.
 - Die Oberfläche bietet vier Farb-Themes und anpassbare Schriftgröße; neue Widgets sollen diese Vorgaben übernehmen.
 - Tabellen zeigen nur Dateinamen und blenden horizontale Scrollbalken aus; volle Pfade stehen als Tooltip bereit.
+- Die Tab-Reihenfolge der wichtigsten Elemente wird mit `setTabOrder` (Reihenfolge für Tastatur-Bedienung) festgelegt.
