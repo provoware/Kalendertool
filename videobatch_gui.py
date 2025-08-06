@@ -24,7 +24,7 @@ from utils import (
     validate_pair,
 )
 
-from api import build_ffmpeg_cmd, run_ffmpeg
+from api import build_ffmpeg_cmd, start_ffmpeg
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
@@ -311,11 +311,14 @@ class EncodeWorker(QtCore.QObject):
                     crf,
                     preset,
                 )
-                self._proc = run_ffmpeg(cmd)
+                self._proc = start_ffmpeg(cmd)
+                last_line = ""
                 for line in self._proc.stderr:
                     if self._stop:
                         self._proc.kill()
                         break
+                    if line:
+                        last_line = line.strip()
                     if "time=" in line:
                         try:
                             t = line.split("time=")[1].split(" ")[0]
@@ -331,7 +334,10 @@ class EncodeWorker(QtCore.QObject):
                 self._proc = None
                 if rc != 0:
                     item.status = "FEHLER"
-                    self.row_error.emit(i, "FFmpeg-Fehler")
+                    msg = (
+                        f"FFmpeg-Fehler: {last_line}" if last_line else "FFmpeg-Fehler"
+                    )
+                    self.row_error.emit(i, msg)
                 else:
                     item.status = "FERTIG"
                     item.progress = 100.0

@@ -9,13 +9,13 @@
 from __future__ import annotations
 
 import re
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 from typing import List
 
 from utils import build_out_name, human_time, validate_pair
+from api import build_ffmpeg_cmd, run_ffmpeg
 
 
 def cli_encode(
@@ -40,49 +40,21 @@ def cli_encode(
             print(f"[{i}/{total}] {msg}: {img} / {aud}")
             continue
         out_file = build_out_name(aud, out_dir)
-        cmd = [
-            "ffmpeg",
-            "-y",
-            "-loop",
-            "1",
-            "-i",
+        cmd = build_ffmpeg_cmd(
             str(img),
-            "-i",
             str(aud),
-            "-c:v",
-            "libx264",
-            "-tune",
-            "stillimage",
-            "-vf",
-            (
-                f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
-                f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2"
-            ),
-            "-c:a",
-            "aac",
-            "-b:a",
-            abitrate,
-            "-shortest",
-            "-preset",
-            preset,
-            "-crf",
-            str(crf),
             str(out_file),
-        ]
-        res = subprocess.run(
-            cmd,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE,
-            text=True,
-            stdin=subprocess.DEVNULL,
+            width,
+            height,
+            abitrate,
+            crf,
+            preset,
         )
-        if res.returncode == 0:
+        try:
+            run_ffmpeg(cmd)
             done += 1
-        else:
-            print(
-                "FFmpeg-Fehler:",
-                res.stderr.splitlines()[-1] if res.stderr else "unbekannt",
-            )
+        except RuntimeError as e:
+            print(f"FFmpeg-Fehler: {e}")
     print(f"Fertig: {done}/{total}")
     return 0
 

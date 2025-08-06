@@ -11,6 +11,7 @@
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
 - Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.
+- FFmpeg-Aufrufe prüfen jetzt den Rückgabecode und geben verständliche Fehlermeldungen aus.
 
  - SQLite-Verbindung ist jetzt threadsicher.
  - Nächster Schritt: Kalenderfunktionen mit iCal-Unterstützung ergänzen.

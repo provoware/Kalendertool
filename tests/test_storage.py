@@ -1,7 +1,10 @@
 import threading
 from pathlib import Path
+import sys
 
-from storage import save_project, load_project, close
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
+from storage import save_project, load_project, close  # noqa: E402
 
 
 def _worker(db: Path, value: int):
