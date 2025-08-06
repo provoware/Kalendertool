@@ -8,6 +8,7 @@
 from __future__ import annotations
 import json
 import logging
+import re
 import shutil
 import subprocess
 import sys
@@ -22,10 +23,12 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
-# ---------- Logging ----------
+# ---------- Logging & Persistenz ----------
 LOG_DIR = Path.home() / ".videobatchtool" / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / f"{datetime.now().strftime('%Y%m%d-%H%M%S')}.log"
+# Datei für Notizen
+NOTES_FILE = LOG_DIR.parent / "notes.txt"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -76,6 +79,20 @@ def get_used_dir() -> Path:
 
 def default_output_dir() -> Path:
     return Path.home() / "Videos" / "VideoBatchTool_Out"
+
+
+def normalize_bitrate(text: str) -> str:
+    """Ensure audio bitrate has a unit and fallback to default."""
+    text = text.strip().lower()
+    if not text:
+        return "192k"
+    m = re.fullmatch(r"(\d+)([km]?)", text)
+    if not m:
+        return "192k"
+    value, unit = m.groups()
+    if not unit:
+        unit = "k"
+    return f"{value}{unit}"
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
@@ -177,9 +194,10 @@ class PairItem:
 
 
 class PairTableModel(QAbstractTableModel):
-    def __init__(self, pairs: List[PairItem]):
+    def __init__(self, pairs: List[PairItem], show_thumbs: bool = True):
         super().__init__()
         self.pairs = pairs
+        self.show_thumbs = show_thumbs
 
     def rowCount(self, parent=QModelIndex()):
         return len(self.pairs)
@@ -212,7 +230,7 @@ class PairTableModel(QAbstractTableModel):
                 return f"{int(item.progress)}%"
             if col == 7:
                 return item.status
-        if role == Qt.DecorationRole and col == 1:
+        if role == Qt.DecorationRole and col == 1 and self.show_thumbs:
             item.load_thumb()
             return item.thumb
         if role == Qt.ToolTipRole:
@@ -531,11 +549,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings = QtCore.QSettings("Provoware", "VideoBatchTool")
         self._font_size = self.settings.value("ui/font_size", 11, int)
         self._theme = self.settings.value("ui/theme", "Hell", str)
+        show_thumbs = self.settings.value("ui/show_thumbs", True, bool)
 
         sys.excepthook = self._global_exception
 
         self.pairs: List[PairItem] = []
-        self.model = PairTableModel(self.pairs)
+        self.model = PairTableModel(self.pairs, show_thumbs)
 
         self.dashboard = InfoDashboard()
         self.dashboard.set_env(check_ffmpeg(), True)
@@ -566,11 +585,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Einstellungen
         self.out_dir_edit = QtWidgets.QLineEdit(
-            str(self.settings.value("encode/out_dir", default_output_dir(), str))
+            self.settings.value("encode/out_dir", "", str)
         )
+        self.out_dir_edit.setPlaceholderText(
+            f"Standard: {default_output_dir()}"
+        )
+        self.out_dir_edit.setAccessibleName("Ausgabeordner")
         self.crf_spin = QtWidgets.QSpinBox()
         self.crf_spin.setRange(0, 51)
         self.crf_spin.setValue(self.settings.value("encode/crf", 23, int))
+        self.crf_spin.setAccessibleName("Qualität")
         self.preset_combo = QtWidgets.QComboBox()
         self.preset_combo.addItems(
             [
@@ -588,15 +612,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self.preset_combo.setCurrentText(
             self.settings.value("encode/preset", "ultrafast", str)
         )
+        self.preset_combo.setAccessibleName("Geschwindigkeit")
         self.width_spin = QtWidgets.QSpinBox()
         self.width_spin.setRange(16, 7680)
         self.width_spin.setValue(self.settings.value("encode/width", 1920, int))
+        self.width_spin.setSuffix(" px")
+        self.width_spin.setAccessibleName("Breite")
         self.height_spin = QtWidgets.QSpinBox()
         self.height_spin.setRange(16, 4320)
         self.height_spin.setValue(self.settings.value("encode/height", 1080, int))
+        self.height_spin.setSuffix(" px")
+        self.height_spin.setAccessibleName("Höhe")
         self.abitrate_edit = QtWidgets.QLineEdit(
-            self.settings.value("encode/abitrate", "192k", str)
+            self.settings.value("encode/abitrate", "", str)
         )
+        self.abitrate_edit.setPlaceholderText("z.B. 192k (Kilobit pro Sekunde)")
+        self.abitrate_edit.setValidator(
+            QtGui.QRegularExpressionValidator(
+                QtCore.QRegularExpression(r"\d+[kKmM]?")
+            )
+        )
+        self.abitrate_edit.setAccessibleName("Audio-Bitrate")
+        self.show_thumbs = QtWidgets.QCheckBox("Vorschau-Bilder anzeigen")
+        self.show_thumbs.setToolTip(
+            "Zeigt kleine Vorschaubilder, spart Speicher wenn ausgeschaltet"
+        )
+        self.show_thumbs.setAccessibleName("Vorschau-Bilder anzeigen")
+        self.show_thumbs.setChecked(self.model.show_thumbs)
+        self.show_thumbs.toggled.connect(self._on_toggle_thumbs)
         self.clear_after = QtWidgets.QCheckBox("Nach Fertigstellung Listen leeren")
         self.clear_after.setChecked(self.settings.value("ui/clear_after", False, bool))
 
@@ -637,6 +680,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.abitrate_edit,
             "z. B. 192k",
         )
+        form.addRow("", self.show_thumbs)
         form.addRow("", self.clear_after)
 
         self.settings_widget = QtWidgets.QWidget()
@@ -657,11 +701,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_edit = QtWidgets.QPlainTextEdit()
         self.log_edit.setReadOnly(True)
         self.log_edit.setMaximumBlockCount(5000)
+        self.notes_edit = QtWidgets.QPlainTextEdit()
+        self.notes_edit.setPlaceholderText("Notizen (werden gespeichert)")
+        self.notes_edit.setAccessibleName("Notizfeld")
+        self.notes_edit.setToolTip(
+            "Eigene Aufgaben oder Hinweise; wird automatisch gespeichert"
+        )
+        self.notes_edit.setFixedHeight(80)
+        try:
+            self.notes_edit.setPlainText(NOTES_FILE.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            pass
 
         log_box = QtWidgets.QWidget()
         bl = QtWidgets.QVBoxLayout(log_box)
         bl.addWidget(self.progress_total)
         bl.addWidget(self.log_edit)
+        bl.addWidget(self.notes_edit)
 
         outer_split = QtWidgets.QSplitter(Qt.Vertical)
         outer_split.addWidget(grid_split)
@@ -694,11 +750,12 @@ class MainWindow(QtWidgets.QMainWindow):
             "Entfernt alle geladenen Bilder und Audios aus den Listen"
         )
 
-        self.btn_undo = QtWidgets.QPushButton("Undo")
+        self.btn_undo = QtWidgets.QPushButton("Rückgängig")
         self.btn_undo.setToolTip("Letzte Aktion rückgängig machen")
         self.btn_undo.setStatusTip(
             "Stellt den Zustand vor der letzten Änderung wieder her"
         )
+        self.btn_undo.setAccessibleName("Rückgängig")
 
         self.btn_save = QtWidgets.QPushButton("Projekt speichern")
         self.btn_save.setToolTip("Projektdatei anlegen")
@@ -719,13 +776,15 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         self.btn_show_path.clicked.connect(self._show_selected_path)
 
-        self.btn_encode = QtWidgets.QPushButton("START")
+        self.btn_encode = QtWidgets.QPushButton("Start")
         self.btn_encode.setToolTip("Umwandlung starten")
         self.btn_encode.setStatusTip("Beginnt mit der Erstellung der MP4-Dateien")
+        self.btn_encode.setAccessibleName("Start")
 
-        self.btn_stop = QtWidgets.QPushButton("Stop")
+        self.btn_stop = QtWidgets.QPushButton("Stopp")
         self.btn_stop.setToolTip("Vorgang stoppen")
         self.btn_stop.setStatusTip("Bricht die laufende Umwandlung ab")
+        self.btn_stop.setAccessibleName("Stopp")
         self.btn_stop.setEnabled(False)
 
         self.btn_encode.setStyleSheet(
@@ -917,6 +976,13 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         self.dashboard.set_counts(pair_count, fin_count, err_count)
 
+    def _on_toggle_thumbs(self, checked: bool):
+        self.model.show_thumbs = checked
+        if not checked:
+            for p in self.pairs:
+                p.thumb = None
+        self.table.viewport().update()
+
     # ----- file actions -----
     def _pick_images(self):
         files, _ = QtWidgets.QFileDialog.getOpenFileNames(
@@ -1048,14 +1114,22 @@ class MainWindow(QtWidgets.QMainWindow):
             new.append(p)
         self.model.add_pairs(new)
         s = data.get("settings", {})
-        self.out_dir_edit.setText(s.get("out_dir", self.out_dir_edit.text()))
+        out_dir = s.get("out_dir", "")
+        if out_dir == str(default_output_dir()):
+            self.out_dir_edit.setText("")
+        else:
+            self.out_dir_edit.setText(out_dir)
         self.crf_spin.setValue(s.get("crf", self.crf_spin.value()))
         self.preset_combo.setCurrentText(
             s.get("preset", self.preset_combo.currentText())
         )
         self.width_spin.setValue(s.get("width", self.width_spin.value()))
         self.height_spin.setValue(s.get("height", self.height_spin.value()))
-        self.abitrate_edit.setText(s.get("abitrate", self.abitrate_edit.text()))
+        abitrate = s.get("abitrate", "")
+        if abitrate in ("", "192k"):
+            self.abitrate_edit.setText("")
+        else:
+            self.abitrate_edit.setText(abitrate)
         self._update_counts()
         self._resize_columns()
         self._log(f"Projekt geladen: {path}")
@@ -1063,15 +1137,22 @@ class MainWindow(QtWidgets.QMainWindow):
     # ----- encode -----
     def _gather_settings(self) -> Dict[str, Any]:
         return {
-            "out_dir": self.out_dir_edit.text().strip(),
+            "out_dir": self.out_dir_edit.text().strip() or str(default_output_dir()),
             "crf": self.crf_spin.value(),
             "preset": self.preset_combo.currentText(),
             "width": self.width_spin.value(),
             "height": self.height_spin.value(),
-            "abitrate": self.abitrate_edit.text().strip() or "192k",
+            "abitrate": normalize_bitrate(self.abitrate_edit.text()),
         }
 
     def _start_encode(self):
+        if not check_ffmpeg():
+            QtWidgets.QMessageBox.critical(
+                self,
+                "FFmpeg fehlt",
+                "FFmpeg oder ffprobe nicht gefunden. Bitte installieren.",
+            )
+            return
         if not self.pairs:
             return
         if any(p.audio_path is None for p in self.pairs):
@@ -1178,6 +1259,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("ui/geometry", self.saveGeometry())
         self.settings.setValue("ui/window_state", self.saveState())
         self.settings.setValue("ui/clear_after", self.clear_after.isChecked())
+        self.settings.setValue("ui/show_thumbs", self.show_thumbs.isChecked())
         s = self._gather_settings()
         self.settings.setValue("encode/out_dir", s["out_dir"])
         self.settings.setValue("encode/crf", s["crf"])
@@ -1185,6 +1267,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("encode/width", s["width"])
         self.settings.setValue("encode/height", s["height"])
         self.settings.setValue("encode/abitrate", s["abitrate"])
+        try:
+            NOTES_FILE.write_text(
+                self.notes_edit.toPlainText(), encoding="utf-8"
+            )
+        except Exception as exc:
+            logger.error("Notizen konnten nicht gespeichert werden: %s", exc)
         super().closeEvent(event)
 
 

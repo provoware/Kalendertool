@@ -1,10 +1,7 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-- Code auf suboptimale strukturen und Aspekte analysieren und mit konsistenten, geprüften fehlerfreien Code ersetzen
-- grafische Interaktivität immer über Buttons oder Auswahldialoge
-- Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
-- Fixen
+- Weitere Einsparpotenziale bei Ressourcen prüfen
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -23,3 +20,13 @@
 - System Leistung und Ram schützen und Ressourcen schonen
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
+- Platzhaltertexte und Standardwerte für Ausgabeordner und Audio-Bitrate ergänzt
+- Weitere Eingabefelder auf sinnvolle Platzhalter und Standards geprüft
+- Button-Benennungen vereinheitlicht
+- Code auf suboptimale Strukturen geprüft; Audio-Bitrate validiert und Pixel-Einheiten ergänzt
+- Ausgabeordner und Audio-Bitrate nutzen Standardwerte, wenn Felder leer bleiben
+- Tests für Platzhalter und Standardwerte ergänzen
+- Weitere Grenzfälle für Eingaben getestet
+- ffmpeg-Prüfung vor Start und automatische Ergänzung der Audio-Bitrate
+- Thumbnails optional, um Speicher zu sparen
+- Notizfeld für Aufgaben ergänzt
