@@ -1,5 +1,7 @@
 # Schwachstellen
 
-- Einige Tooltips (Kurzinfos) sind sehr knapp; weitere Erklärungen helfen Einsteigern.
-- Keine separate API-Schicht (Trennung von Oberfläche und Logik fehlt).
+- Weitere Tooltips (Kurzinfos) sind knapp; zusätzliche Erklärungen helfen Einsteigern.
+- API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
+- Verzeichnisstruktur für Daten, Konfiguration, Hilfe und Archive noch unvollständig.
 - Startprüfung und automatischer Start fehlen; Nutzer müssen das Tool manuell starten.
+- AppImage-Paket für Linux fehlt.
