@@ -1,7 +1,6 @@
 # Todo-Liste
 
 ## Offene Aufgaben
-- Weitere Einsparpotenziale bei Ressourcen prüfen
 
 ## Erledigte Aufgaben
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
@@ -30,6 +29,7 @@
 - ffmpeg-Prüfung vor Start und automatische Ergänzung der Audio-Bitrate
 - Thumbnails optional, um Speicher zu sparen
 - Notizfeld für Aufgaben ergänzt
+- Ausgaben von FFmpeg unterdrückt, spart Speicher
 - requirements.txt und pyproject.toml angelegt
 - Lizenzdatei hinzugefügt
 - README mit Installationshinweisen erweitert

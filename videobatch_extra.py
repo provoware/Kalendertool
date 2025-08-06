@@ -79,7 +79,11 @@ def cli_encode(
             str(out_file),
         ]
         res = subprocess.run(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            text=True,
+            stdin=subprocess.DEVNULL,
         )
         if res.returncode == 0:
             done += 1
