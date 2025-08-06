@@ -21,6 +21,11 @@
 - grafische Interaktivität immer über Buttons oder Auswahldialoge
 - Vereinheitlichte Benennung oder Aspekte im Tool benutzen auch bei Buttons etc globale Standards setzen
 - Fixen
+- Drei-Säulen-Layout: klare Trennung Navigation – Content – Settings
+- Farbkodierung modular: jede Karte erhält eigene Akzentfarbe für schnelle Orientierung
+- Dark-Mode-Palette mit kontrastreichen Buttons und weißen Schriften
+- Konsistente Abstände und Einheiten (4 px Basiseinheit, Vielfache davon)
+- Typografie-Hierarchie: klare visuelle Gliederung von Titeln, Buttons, Listeneinträgen
 # # Final und vollständig abgeschlossen:
 - plan.md angelegt
 - fortschritt.txt angelegt und erste Fortschrittszeile ergänzt
