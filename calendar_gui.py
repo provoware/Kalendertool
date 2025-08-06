@@ -126,8 +126,13 @@ def run() -> None:
         if not parsed:
             return
         title, date_str, alarm = parsed
-        add_event(title, date_str, alarm, group_var.get())
+        try:
+            add_event(title, date_str, alarm, group_var.get())
+        except Exception as exc:  # pragma: no cover - defensive
+            messagebox.showerror("Fehler", f"Speichern fehlgeschlagen: {exc}")
+            return
         refresh()
+        messagebox.showinfo("Speichern", "Termin gespeichert")
 
     def sync_cb() -> None:
         if not group_var.get().strip():
@@ -156,8 +161,13 @@ def run() -> None:
         if not group_var.get().strip():
             messagebox.showerror("Fehler", "Gruppe angeben")
             return
-        remove_event(sel[0], group_var.get())
+        try:
+            remove_event(sel[0], group_var.get())
+        except Exception as exc:  # pragma: no cover - defensive
+            messagebox.showerror("Fehler", f"Löschen fehlgeschlagen: {exc}")
+            return
         refresh()
+        messagebox.showinfo("Löschen", "Termin gelöscht")
 
     def edit_cb() -> None:
         sel = listbox.curselection()
@@ -171,8 +181,13 @@ def run() -> None:
         if not parsed:
             return
         title, date_str, alarm = parsed
-        edit_event(sel[0], title, date_str, alarm, group_var.get())
+        try:
+            edit_event(sel[0], title, date_str, alarm, group_var.get())
+        except Exception as exc:  # pragma: no cover - defensive
+            messagebox.showerror("Fehler", f"Ändern fehlgeschlagen: {exc}")
+            return
         refresh()
+        messagebox.showinfo("Ändern", "Termin geändert")
 
     def month_view_cb() -> None:
         if not group_var.get().strip():

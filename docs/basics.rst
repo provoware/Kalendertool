@@ -15,11 +15,13 @@ Die wichtigsten Schritte im Überblick:
    - Auf "Neuer Termin" klicken.
    - Titel und Datum eingeben.
    - Mit "Speichern" bestätigen.
+   - Eine Meldung bestätigt den Erfolg.
 
 #. Termin bearbeiten:
    - Termin in der Liste auswählen.
    - Felder ändern.
    - Auf "Ändern" klicken.
+   - Die Änderung wird in einer Meldung bestätigt.
 
 #. Erinnerung setzen:
    - Im Termin das Feld "Alarm" wählen.

@@ -28,5 +28,7 @@ Die grafische Oberfläche (*GUI*) bietet ein Feld für die Gruppe. Das Feld darf
 nicht leer bleiben, sonst erscheint eine Fehlermeldung. Beim Überfahren der
 Eingabefelder erscheinen kurze Hinweise (Tooltips: kleine Hilfefenster). Über die
 Buttons können Termine gespeichert, bearbeitet, gelöscht oder per CalDAV
-Synchronisation übertragen werden. Nach einer Synchronisation erscheint eine
-Meldung mit Erfolg oder Fehlschlag.
+Synchronisation übertragen werden. Nach dem Speichern, Ändern oder Löschen
+erscheint eine Bestätigung; bei Fehlern zeigt die GUI eine entsprechende
+Meldung. Nach einer Synchronisation erscheint eine Meldung mit Erfolg oder
+Fehlschlag.

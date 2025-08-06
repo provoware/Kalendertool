@@ -10,3 +10,4 @@
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.
 - Alarme unterstützen nur einfache Minuten-Offsets ohne Wiederholungen.
 - Monatsansicht bietet keine Drag-and-Drop-Verschiebung von Terminen.
+- Aktionen in der GUI lassen sich nicht rückgängig machen.

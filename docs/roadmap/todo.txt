@@ -3,6 +3,8 @@
 ## Offene Aufgaben
 // Release-Vorbereitung
 - Release-Tag erstellen und Paket veröffentlichen
+- Drag-and-Drop in Monatsansicht ergänzen
+- Undo-Funktion für Aktionen in der GUI
 
 ## Erledigte Aufgaben
 - GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
@@ -20,6 +22,7 @@
 - Monatsübersicht in GUI integriert
 - Monatsübersicht erlaubt Navigation zu anderen Monaten
 - Monatsübersicht ermöglicht Bearbeiten und Anlegen per Mausklick
+- GUI zeigt Bestätigungen und Fehlerbehandlung beim Speichern, Ändern und Löschen
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt

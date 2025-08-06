@@ -32,6 +32,7 @@
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
 - GUI kann Termine löschen und meldet Ergebnis der Synchronisation.
 - GUI kann Termine bearbeiten.
+- GUI bestätigt Speichern, Ändern und Löschen und zeigt Fehler an.
 - GUI prüft das Gruppenfeld und zeigt Tooltips für Felder und Buttons.
 - GUI zeigt Monatsübersicht zur besseren Terminanzeige.
 - Monatsansicht erlaubt Wechsel zwischen Monaten.

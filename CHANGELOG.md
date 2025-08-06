@@ -20,7 +20,8 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - GUI füllt Felder bei Auswahl automatisch und meldet Eingabefehler.
 - GUI prüft Gruppenfeld und zeigt Hilfetexte (Tooltips) an.
 - Monatsansicht erlaubt Wechsel zu anderen Monaten.
- - Monatsansicht ermöglicht Bearbeiten und Anlegen per Mausklick.
+- Monatsansicht ermöglicht Bearbeiten und Anlegen per Mausklick.
+- GUI zeigt Bestätigungen nach Speichern, Ändern und Löschen und fängt Fehler ab.
 
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt
