@@ -24,5 +24,6 @@ Dieses Tool besteht aus drei Hauptdateien:
 - Interaktionen erfolgen über Buttons oder Dialoge, z. B. zeigt der Button "Pfad zeigen" den Speicherort eines Eintrags an.
 - Die Tab-Reihenfolge der wichtigsten Elemente wird mit `setTabOrder` (Reihenfolge für Tastatur-Bedienung) festgelegt.
 - Der Starter (`videobatch_launcher.py`) prüft beim Start automatisch auf fehlende Pakete oder `ffmpeg` und versucht, alles selbst zu installieren.
+- Vor dem Kodieren prüft die Oberfläche, ob `ffmpeg` verfügbar ist; Zahlen bei der Audio-Bitrate erhalten automatisch ein "k" (Kilobit).
 - Vorschaubilder werden mit einem Zwischenspeicher (`lru_cache`) nur einmal erzeugt, um Rechenzeit zu sparen.
 - Dateipfade werden mit `pathlib.Path` verwaltet, damit das Tool auf verschiedenen Systemen funktioniert.

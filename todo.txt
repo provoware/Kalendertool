@@ -27,3 +27,4 @@
 - Ausgabeordner und Audio-Bitrate nutzen Standardwerte, wenn Felder leer bleiben
 - Tests für Platzhalter und Standardwerte ergänzen
 - Weitere Grenzfälle für Eingaben getestet
+- ffmpeg-Prüfung vor Start und automatische Ergänzung der Audio-Bitrate

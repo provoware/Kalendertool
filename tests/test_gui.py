@@ -98,3 +98,31 @@ def test_input_edge_cases(tmp_path):
     win.height_spin.setValue(10000)
     assert win.height_spin.value() == 4320
     win.close()
+
+
+def test_abitrate_normalization(tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    win = MainWindow()
+    win.abitrate_edit.setText("256")
+    assert win._gather_settings()["abitrate"] == "256k"
+    win.abitrate_edit.setText("abc")
+    assert win._gather_settings()["abitrate"] == "192k"
+    win.close()
+
+
+def test_start_encode_requires_ffmpeg(monkeypatch, tmp_path):
+    os.environ["XDG_CONFIG_HOME"] = str(tmp_path)
+    QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+    win = MainWindow()
+    win.pairs = [PairItem("a.jpg", "b.mp3")]
+    monkeypatch.setattr("videobatch_gui.check_ffmpeg", lambda: False)
+    called = {}
+
+    def fake_critical(parent, title, msg):
+        called["msg"] = msg
+
+    monkeypatch.setattr(QtWidgets.QMessageBox, "critical", fake_critical)
+    win._start_encode()
+    assert called["msg"].startswith("FFmpeg")
+    win.close()

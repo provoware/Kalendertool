@@ -8,6 +8,7 @@
 from __future__ import annotations
 import json
 import logging
+import re
 import shutil
 import subprocess
 import sys
@@ -76,6 +77,20 @@ def get_used_dir() -> Path:
 
 def default_output_dir() -> Path:
     return Path.home() / "Videos" / "VideoBatchTool_Out"
+
+
+def normalize_bitrate(text: str) -> str:
+    """Ensure audio bitrate has a unit and fallback to default."""
+    text = text.strip().lower()
+    if not text:
+        return "192k"
+    m = re.fullmatch(r"(\d+)([km]?)", text)
+    if not m:
+        return "192k"
+    value, unit = m.groups()
+    if not unit:
+        unit = "k"
+    return f"{value}{unit}"
 
 
 def safe_move(src: Path, dst_dir: Path, copy_only: bool = False) -> Path:
@@ -1096,10 +1111,17 @@ class MainWindow(QtWidgets.QMainWindow):
             "preset": self.preset_combo.currentText(),
             "width": self.width_spin.value(),
             "height": self.height_spin.value(),
-            "abitrate": self.abitrate_edit.text().strip() or "192k",
+            "abitrate": normalize_bitrate(self.abitrate_edit.text()),
         }
 
     def _start_encode(self):
+        if not check_ffmpeg():
+            QtWidgets.QMessageBox.critical(
+                self,
+                "FFmpeg fehlt",
+                "FFmpeg oder ffprobe nicht gefunden. Bitte installieren.",
+            )
+            return
         if not self.pairs:
             return
         if any(p.audio_path is None for p in self.pairs):

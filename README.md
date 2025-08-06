@@ -14,3 +14,8 @@ Vorgaben, wenn nichts eingetragen wird. Große Knöpfe haben klare Texte,
 lassen sich über die Tastatur erreichen und besitzen kurze Hilfetexte
 (Tooltips: kleine Hinweisfenster beim Zeigen).
 
+Vor dem Start wird automatisch geprüft, ob **FFmpeg** (Programm zum Umwandeln
+von Medien) vorhanden ist. Bei reinen Zahlen ergänzt das Tool den Buchstaben
+"k" (Kilobit), damit die Audio-Bitrate (Tonqualität in Bits pro Sekunde) gültig
+ist.
+
