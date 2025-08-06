@@ -24,24 +24,59 @@ def run() -> None:
 
     group_var = tk.StringVar(value="default")
     tk.Label(root, text="Gruppe").grid(row=0, column=0)
-    tk.Entry(root, textvariable=group_var).grid(row=0, column=1)
+    group_entry = tk.Entry(root, textvariable=group_var)
+    group_entry.grid(row=0, column=1)
 
     listbox = tk.Listbox(root, width=40)
     listbox.grid(row=1, column=0, columnspan=2, pady=5)
 
     tk.Label(root, text="Titel").grid(row=2, column=0)
     title_var = tk.StringVar()
-    tk.Entry(root, textvariable=title_var).grid(row=2, column=1)
+    title_entry = tk.Entry(root, textvariable=title_var)
+    title_entry.grid(row=2, column=1)
 
     tk.Label(root, text="Datum (JJJJ-MM-TT)").grid(row=3, column=0)
     date_var = tk.StringVar()
-    tk.Entry(root, textvariable=date_var).grid(row=3, column=1)
+    date_entry = tk.Entry(root, textvariable=date_var)
+    date_entry.grid(row=3, column=1)
 
     tk.Label(root, text="Alarm (Minuten)").grid(row=4, column=0)
     alarm_var = tk.StringVar()
-    tk.Entry(root, textvariable=alarm_var).grid(row=4, column=1)
+    alarm_entry = tk.Entry(root, textvariable=alarm_var)
+    alarm_entry.grid(row=4, column=1)
+
+    def create_tooltip(widget: tk.Widget, text: str) -> None:
+        """Zeige Text beim Überfahren des Widgets an."""
+        tip: tk.Toplevel | None = None
+
+        def on_enter(event: tk.Event) -> None:  # pragma: no cover - GUI
+            nonlocal tip
+            tip = tk.Toplevel(widget)
+            tip.wm_overrideredirect(True)
+            x = event.x_root + 10
+            y = event.y_root + 10
+            tip.wm_geometry(f"+{x}+{y}")
+            tk.Label(
+                tip,
+                text=text,
+                background="#ffffe0",
+                relief=tk.SOLID,
+                borderwidth=1,
+            ).pack()
+
+        def on_leave(_: tk.Event) -> None:  # pragma: no cover - GUI
+            nonlocal tip
+            if tip:
+                tip.destroy()
+                tip = None
+
+        widget.bind("<Enter>", on_enter)
+        widget.bind("<Leave>", on_leave)
 
     def refresh() -> None:
+        if not group_var.get().strip():
+            messagebox.showerror("Fehler", "Gruppe angeben")
+            return
         groups, _ = _load_groups()
         events = groups.get(group_var.get(), [])
         listbox.delete(0, tk.END)
@@ -62,6 +97,9 @@ def run() -> None:
         alarm_var.set(str(ev.get("alarm", "")))
 
     def add_cb() -> None:
+        if not group_var.get().strip():
+            messagebox.showerror("Fehler", "Gruppe angeben")
+            return
         if not title_var.get().strip():
             messagebox.showerror("Fehler", "Titel angeben")
             return
@@ -81,6 +119,9 @@ def run() -> None:
         refresh()
 
     def sync_cb() -> None:
+        if not group_var.get().strip():
+            messagebox.showerror("Fehler", "Gruppe angeben")
+            return
         url = simpledialog.askstring("CalDAV", "URL")
         if not url:
             return
@@ -101,6 +142,9 @@ def run() -> None:
         if not sel:
             messagebox.showerror("Fehler", "Bitte Termin auswählen")
             return
+        if not group_var.get().strip():
+            messagebox.showerror("Fehler", "Gruppe angeben")
+            return
         remove_event(sel[0], group_var.get())
         refresh()
 
@@ -108,6 +152,9 @@ def run() -> None:
         sel = listbox.curselection()
         if not sel:
             messagebox.showerror("Fehler", "Bitte Termin auswählen")
+            return
+        if not group_var.get().strip():
+            messagebox.showerror("Fehler", "Gruppe angeben")
             return
         if not title_var.get().strip():
             messagebox.showerror("Fehler", "Titel angeben")
@@ -128,13 +175,26 @@ def run() -> None:
         refresh()
 
     listbox.bind("<<ListboxSelect>>", on_select)
-    tk.Button(root, text="Aktualisieren", command=refresh).grid(row=5, column=0)
-    tk.Button(root, text="Speichern", command=add_cb).grid(row=5, column=1)
-    tk.Button(root, text="Ändern", command=edit_cb).grid(row=6, column=0)
-    tk.Button(root, text="Löschen", command=delete_cb).grid(row=6, column=1)
-    tk.Button(root, text="Synchronisieren", command=sync_cb).grid(
-        row=7, column=0, columnspan=2
-    )
+    btn_refresh = tk.Button(root, text="Aktualisieren", command=refresh)
+    btn_refresh.grid(row=5, column=0)
+    btn_save = tk.Button(root, text="Speichern", command=add_cb)
+    btn_save.grid(row=5, column=1)
+    btn_edit = tk.Button(root, text="Ändern", command=edit_cb)
+    btn_edit.grid(row=6, column=0)
+    btn_delete = tk.Button(root, text="Löschen", command=delete_cb)
+    btn_delete.grid(row=6, column=1)
+    btn_sync = tk.Button(root, text="Synchronisieren", command=sync_cb)
+    btn_sync.grid(row=7, column=0, columnspan=2)
+
+    create_tooltip(group_entry, "Gruppe für den Termin (z. B. familie)")
+    create_tooltip(title_entry, "Titel des Termins")
+    create_tooltip(date_entry, "Datum im Format JJJJ-MM-TT")
+    create_tooltip(alarm_entry, "Alarm in Minuten (leer für keinen Alarm)")
+    create_tooltip(btn_refresh, "Liste neu laden")
+    create_tooltip(btn_save, "Neuen Termin speichern")
+    create_tooltip(btn_edit, "Markierten Termin ändern")
+    create_tooltip(btn_delete, "Markierten Termin löschen")
+    create_tooltip(btn_sync, "Termine mit CalDAV-Server abgleichen")
 
     refresh()
     root.mainloop()

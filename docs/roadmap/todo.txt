@@ -16,6 +16,7 @@
 - Dokumentation um Grundfunktionen für Einsteiger erweitert
 - Version in pyproject.toml aktualisiert
 - CHANGELOG um Versionsabschnitt ergänzt
+- GUI prüft Gruppenfeld und zeigt Tooltips für Eingabefelder und Buttons
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt

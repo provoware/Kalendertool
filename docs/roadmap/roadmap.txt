@@ -32,6 +32,7 @@
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
 - GUI kann Termine löschen und meldet Ergebnis der Synchronisation.
 - GUI kann Termine bearbeiten.
+- GUI prüft das Gruppenfeld und zeigt Tooltips für Felder und Buttons.
 - CLI bietet Befehl zum Bearbeiten bestehender Termine.
 
 - SQLite-Verbindung ist jetzt threadsicher.
