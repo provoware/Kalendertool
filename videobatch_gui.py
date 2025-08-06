@@ -594,13 +594,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.width_spin = QtWidgets.QSpinBox()
         self.width_spin.setRange(16, 7680)
         self.width_spin.setValue(self.settings.value("encode/width", 1920, int))
+        self.width_spin.setSuffix(" px")
         self.height_spin = QtWidgets.QSpinBox()
         self.height_spin.setRange(16, 4320)
         self.height_spin.setValue(self.settings.value("encode/height", 1080, int))
+        self.height_spin.setSuffix(" px")
         self.abitrate_edit = QtWidgets.QLineEdit(
             self.settings.value("encode/abitrate", "192k", str)
         )
         self.abitrate_edit.setPlaceholderText("z.B. 192k (Kilobit pro Sekunde)")
+        self.abitrate_edit.setValidator(
+            QtGui.QRegularExpressionValidator(
+                QtCore.QRegularExpression(r"\d+[kKmM]?")
+            )
+        )
         self.clear_after = QtWidgets.QCheckBox("Nach Fertigstellung Listen leeren")
         self.clear_after.setChecked(self.settings.value("ui/clear_after", False, bool))
 
