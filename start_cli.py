@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import logging
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
@@ -48,7 +48,7 @@ def add_event(
         "uid": str(uuid4()),
         "title": title,
         "date": date.isoformat(),
-        "dtstamp": datetime.utcnow().isoformat(),
+        "dtstamp": datetime.now(UTC).isoformat(),
     }
     if alarm is not None:
         entry["alarm"] = alarm
@@ -180,7 +180,7 @@ def sync_caldav(
         logger.info("Keine Termine zum Synchronisieren in Gruppe '%s'.", group)
         return False
     lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Kalendertool//DE"]
-    stamp = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     for ev in events:
         date = datetime.fromisoformat(ev["date"]).strftime("%Y%m%d")
         lines.extend(
