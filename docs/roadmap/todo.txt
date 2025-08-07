@@ -3,6 +3,11 @@
 ## Offene Aufgaben
 // Release-Vorbereitung
 - Release-Tag erstellen und Paket veröffentlichen
+- Drag-and-Drop in Monatsansicht ergänzen
+- Undo-Funktion für Aktionen in der GUI
+
+## Erledigte Aufgaben
+- GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
 
 ## Erledigte Aufgaben
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
@@ -11,6 +16,15 @@
 - Tests (pre-commit und pytest) vor Release ausgeführt
 - Sphinx-Dokumentation gebaut und geprüft
 - Release-Prozess dokumentiert (docs/release.rst)
+- iCal-Export überschreibt vorhandene Dateien nur mit --force
+- Dokumentation um Grundfunktionen für Einsteiger erweitert
+- Version in pyproject.toml aktualisiert
+- CHANGELOG um Versionsabschnitt ergänzt
+- GUI prüft Gruppenfeld und zeigt Tooltips für Eingabefelder und Buttons
+- Monatsübersicht in GUI integriert
+- Monatsübersicht erlaubt Navigation zu anderen Monaten
+- Monatsübersicht ermöglicht Bearbeiten und Anlegen per Mausklick
+- GUI zeigt Bestätigungen und Fehlerbehandlung beim Speichern, Ändern und Löschen
 - Dokumentation um Grundfunktionen für Einsteiger erweitert
 - Version in pyproject.toml aktualisiert
 - CHANGELOG um Versionsabschnitt ergänzt
@@ -92,3 +106,4 @@
 - Markdown-Dateien unter /docs organisiert
 - CI baut Sphinx-Dokumentation
 - Logrotation für das zentrale Logging ergänzt
+- Bearbeitungsfunktion für Termine in CLI und GUI

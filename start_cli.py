@@ -79,12 +79,25 @@ def list_events(group: str | None = None) -> None:
             logger.info("[%s] %s: %s%s", grp, event["date"], event["title"], alarm)
 
 
+def export_ical(
+    file_path: Path, group: str = "default", *, force: bool = False
+) -> None:
+    """Termine einer Gruppe als iCal-Datei exportieren.
+
+    Überschreibt vorhandene Dateien nur mit ``force=True``.
+    """
 def export_ical(file_path: Path, group: str = "default") -> None:
     """Termine einer Gruppe als iCal-Datei exportieren."""
     groups, _ = _load_groups()
     events = groups.get(group, [])
     if not events:
         logger.info("Keine Termine zum Export in Gruppe '%s'.", group)
+        return
+    if file_path.exists() and not force:
+        logger.error(
+            "Datei %s existiert bereits. --force zum Überschreiben nutzen.",
+            file_path,
+        )
         return
     lines = [
         "BEGIN:VCALENDAR",
@@ -123,12 +136,68 @@ def export_ical(file_path: Path, group: str = "default") -> None:
     logger.info("iCal-Datei unter %s erstellt", file_path)
 
 
+def remove_event(index: int, group: str = "default") -> None:
+    """Termin anhand seines Index aus einer Gruppe löschen."""
+    groups, data = _load_groups()
+    events = groups.get(group, [])
+    try:
+        removed = events.pop(index)
+    except IndexError:
+        logger.error("Kein Termin an Position %s", index)
+        return
+    save_project(data, DB_PATH)
+    logger.info(
+        "Termin '%s' am %s aus Gruppe '%s' gelöscht",
+        removed["title"],
+        removed["date"],
+        group,
+    )
+
+
+def edit_event(
+    index: int,
+    title: str | None = None,
+    date_str: str | None = None,
+    alarm: int | None = None,
+    group: str = "default",
+) -> None:
+    """Bestehenden Termin aktualisieren."""
+    groups, data = _load_groups()
+    events = groups.get(group, [])
+    try:
+        event = events[index]
+    except IndexError:
+        logger.error("Kein Termin an Position %s", index)
+        return
+    if title is not None:
+        event["title"] = title
+    if date_str is not None:
+        try:
+            event["date"] = datetime.fromisoformat(date_str).isoformat()
+        except ValueError:
+            logger.error("Ungültiges Datum. Bitte JJJJ-MM-TT verwenden.")
+            return
+    if alarm is not None:
+        if alarm < 0:
+            logger.error("Alarm muss eine positive Zahl sein.")
+            return
+        event["alarm"] = alarm
+    save_project(data, DB_PATH)
+    logger.info("Termin an Position %s aktualisiert", index)
+
+
+def sync_caldav(url: str, user: str, password: str, group: str = "default") -> bool:
+    """Termine einer Gruppe per CalDAV synchronisieren.
+
+    Gibt ``True`` bei Erfolg und sonst ``False`` zurück.
+    """
 def sync_caldav(url: str, user: str, password: str, group: str = "default") -> None:
     """Termine einer Gruppe per CalDAV synchronisieren."""
     groups, _ = _load_groups()
     events = groups.get(group, [])
     if not events:
         logger.info("Keine Termine zum Synchronisieren in Gruppe '%s'.", group)
+        return False
         return
     lines = [
         "BEGIN:VCALENDAR",
@@ -172,6 +241,7 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> N
             if resp.status_code >= 400:
                 raise RuntimeError(f"Serverantwort {resp.status_code}")
             logger.info("CalDAV-Synchronisation erfolgreich")
+            return True
             return
         except RequestException as exc:  # pragma: no cover - Netzwerkfehler
             wait = 2**attempt
@@ -183,6 +253,9 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> N
             time.sleep(wait)
         except Exception as exc:  # pragma: no cover - sonstige Fehler
             logger.error("CalDAV-Synchronisation fehlgeschlagen: %s", exc)
+            return False
+    logger.error("CalDAV-Synchronisation abgebrochen nach mehreren Versuchen")
+    return False
             return
     logger.error("CalDAV-Synchronisation abgebrochen nach mehreren Versuchen")
 
@@ -213,12 +286,32 @@ def main() -> None:
         help="Nur Termine dieser Gruppe anzeigen",
     )
 
+    edit_p = sub.add_parser("edit", help="Termin bearbeiten")
+    edit_p.add_argument("index", type=int, help="Position des Termins")
+    edit_p.add_argument("--title", help="Neuer Titel")
+    edit_p.add_argument("--date", help="Neues Datum JJJJ-MM-TT")
+    edit_p.add_argument(
+        "--alarm",
+        type=int,
+        help="Neue Erinnerung in Minuten vor dem Termin",
+    )
+    edit_p.add_argument(
+        "--group",
+        default="default",
+        help="Name der Gruppe (z.B. familie)",
+    )
+
     export_p = sub.add_parser("export", help="Termine als iCal exportieren")
     export_p.add_argument("file", help="Zieldatei, z.B. events.ics")
     export_p.add_argument(
         "--group",
         default="default",
         help="Nur Termine dieser Gruppe exportieren",
+    )
+    export_p.add_argument(
+        "--force",
+        action="store_true",
+        help="Vorhandene Datei überschreiben",
     )
 
     sync_p = sub.add_parser("sync", help="Termine per CalDAV synchronisieren")
@@ -237,6 +330,10 @@ def main() -> None:
         add_event(args.title, args.date, args.alarm, args.group)
     elif args.cmd == "list":
         list_events(args.group)
+    elif args.cmd == "edit":
+        edit_event(args.index, args.title, args.date, args.alarm, args.group)
+    elif args.cmd == "export":
+        export_ical(Path(args.file), args.group, force=args.force)
     elif args.cmd == "export":
         export_ical(Path(args.file), args.group)
     elif args.cmd == "sync":

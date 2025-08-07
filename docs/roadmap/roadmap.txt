@@ -11,6 +11,7 @@
 - Sphinx-Dokumentation enthält Start-, Grundlagen- und Release-Anleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
+- iCal-Export überschreibt vorhandene Dateien nur mit --force.
 - Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.
 - FFmpeg-Aufrufe prüfen jetzt den Rückgabecode und geben verständliche Fehlermeldungen aus.
 - CLI liefert konsistente Exit-Codes.
@@ -29,6 +30,14 @@
 
 - GUI verwaltet Gruppen-Kalender.
 - CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+- GUI kann Termine löschen und meldet Ergebnis der Synchronisation.
+- GUI kann Termine bearbeiten.
+- GUI bestätigt Speichern, Ändern und Löschen und zeigt Fehler an.
+- GUI prüft das Gruppenfeld und zeigt Tooltips für Felder und Buttons.
+- GUI zeigt Monatsübersicht zur besseren Terminanzeige.
+- Monatsansicht erlaubt Wechsel zwischen Monaten.
+- Monatsansicht erlaubt Bearbeiten und Anlegen von Terminen.
+- CLI bietet Befehl zum Bearbeiten bestehender Termine.
 
 - SQLite-Verbindung ist jetzt threadsicher.
 - Alarme für Termine hinzugefügt.

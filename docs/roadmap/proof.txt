@@ -1,12 +1,15 @@
 # Schwachstellen
 - Trennung von Oberfläche (GUI) und Logik nur teilweise umgesetzt.
 - Sphinx-Dokumentation deckt Start, CLI, Release, Grund- und Gruppen-Kalender ab; CalDAV-Fehlerbehandlung berücksichtigt Netzwerkprobleme, Konfliktauflösung fehlt.
+- Tooltips erklären zentrale Felder, dennoch fehlen Hinweise für fortgeschrittene Aktionen.
 - Weitere Tooltips (Kurzinfos) sind knapp; zusätzliche Erklärungen helfen Einsteigern.
 - API-Schicht ist erst ansatzweise vorhanden; Logik steckt noch in der Oberfläche.
 - Datenbank nutzt nur eine einfache JSON-Spalte; strukturierte Tabellen fehlen.
 - Automatische ffmpeg-Installation läuft nur über apt auf Linux; andere Systeme benötigen manuelle Einrichtung.
 - Neue CLI speichert Termine im Klartext ohne Eingabevalidierung oder Verschlüsselung.
-- iCal-Export überschreibt vorhandene Dateien ohne Rückfrage und speichert Termine im Klartext.
+- iCal-Export speichert Termine im Klartext; Verschlüsselung fehlt.
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.
 - Alarme unterstützen nur einfache Minuten-Offsets ohne Wiederholungen.
+- Monatsansicht bietet keine Drag-and-Drop-Verschiebung von Terminen.
+- Aktionen in der GUI lassen sich nicht rückgängig machen.
 - GUI bietet nur Grundfunktionen ohne erweiterte Ansichten.
