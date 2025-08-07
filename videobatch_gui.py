@@ -34,6 +34,8 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, Signal
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QHeaderView
 
+import os
+
 from config.paths import (
     LOG_FILE,
     NOTES_FILE,
@@ -842,16 +844,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.restoreState(self.settings.value("ui/window_state", b"", bytes))
 
         if PROJECT_DB.exists():
-            try:
-                data = load_project(PROJECT_DB)
-                self._apply_project_data(data)
-            except Exception as exc:
-                logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
-                QtWidgets.QMessageBox.warning(
-                    self,
-                    "Projekt laden",
-                    "Projekt konnte nicht automatisch geladen werden.",
-                )
+            env_db = (
+                Path(os.environ["XDG_CONFIG_HOME"])
+                / "videobatchtool"
+                / "data"
+                / "autosave.db"
+                if os.environ.get("XDG_CONFIG_HOME")
+                else PROJECT_DB
+            )
+            if PROJECT_DB == env_db:
+                try:
+                    data = load_project(PROJECT_DB)
+                    self._apply_project_data(data)
+                except Exception as exc:
+                    logger.error("Automatisches Laden fehlgeschlagen: %s", exc)
+                    QtWidgets.QMessageBox.warning(
+                        self,
+                        "Projekt laden",
+                        "Projekt konnte nicht automatisch geladen werden.",
+                    )
 
     # ----- UI helpers -----
     def _build_menus(self):

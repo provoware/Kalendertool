@@ -5,18 +5,18 @@ import requests
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from start_cli import add_event, export_ical, sync_caldav  # noqa: E402
-from storage import load_project, close  # noqa: E402
+from pathlib import Path
+
 from start_cli import (
     add_event,
-    edit_event,
     export_ical,
     sync_caldav,
+    edit_event,
     remove_event,
     _load_groups,
     close,
 )  # noqa: E402
-from start_cli import add_event, export_ical, sync_caldav, close  # noqa: E402
+from storage import load_project  # noqa: E402
 
 
 def test_export_creates_file(tmp_path, monkeypatch):
@@ -63,6 +63,8 @@ def test_sync_conflict(tmp_path, monkeypatch):
     assert conflicts
     data = load_project(db)
     assert data["events"][0]["title"] == "Meeting"
+
+
 def test_group_specific_export(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setattr("start_cli.DB_PATH", tmp_path / "events.db")

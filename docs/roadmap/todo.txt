@@ -4,18 +4,17 @@
 // Architektur & Erweiterungen
 - Gruppen-Kalender weiter ausbauen
 - Automatische Konfliktauflösung und vollständige CalDAV-Synchronisation
-- Konflikte bei CalDAV-Synchronisation automatisch auflösen
 - Kalenderfunktionen: vollständige iCal-Unterstützung und Gruppen-Kalender
-- Logrotation für das zentrale Logging ergänzen
 // Release-Vorbereitung
 - Release-Tag erstellen und Paket veröffentlichen
 - Drag-and-Drop in Monatsansicht ergänzen
 - Undo-Funktion für Aktionen in der GUI
-
 ## Erledigte Aufgaben
 - GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
-
-## Erledigte Aufgaben
+- Logrotation für das zentrale Logging ergänzt
+- Syntaxfehler in CLI, GUI und Tests behoben und Testlauf wiederhergestellt
+- Synchronisations-URL in GUI einstellbar und Ergebnis wird als Meldung angezeigt
+- Zeitstempel nutzen timezone-aware datetime.now(UTC) statt veraltetem utcnow()
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
 - GUI um Gruppen-Kalender erweitert
 - CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
