@@ -2,6 +2,8 @@
 
 ## Offene Aufgaben
 // Architektur & Erweiterungen
+- Gruppen-Kalender weiter ausbauen
+- Automatische Konfliktauflösung und vollständige CalDAV-Synchronisation
 - Konflikte bei CalDAV-Synchronisation automatisch auflösen
 - Kalenderfunktionen: vollständige iCal-Unterstützung und Gruppen-Kalender
 - Logrotation für das zentrale Logging ergänzen
@@ -48,6 +50,7 @@
 - Komplett autonome Startprüfung mit autonomer, automatischer Korrektur von Problemen mit Nutzerfeedback
 - GUI-Startdatei mit automatischer Abhängigkeitsprüfung und Reparatur erstellt
 - iCal-Export für CLI-Termine ergänzt
+- Konflikt-Dialog für CalDAV-Synchronisation ergänzt
 - System Leistung und Ram schützen und Ressourcen schonen
 - Partabilität, Linuxkonforme Funktionen oder Ausgaben
 - grafische Interaktivität immer über Buttons oder Auswahldialoge

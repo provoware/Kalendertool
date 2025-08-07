@@ -26,8 +26,13 @@
 - Sphinx-Dokumentation manuell gebaut und geprüft.
 - Markdown-Dateien unter /docs organisiert.
 
+ - Konflikt-Dialog für CalDAV-Synchronisation ergänzt.
  - SQLite-Verbindung ist jetzt threadsicher.
  - Alarme für Termine hinzugefügt.
+ - Nächster Schritt: Gruppen-Kalender weiter ausbauen.
+
+ 1. Gruppen-Kalender verbessern.
+ 2. Automatische Konfliktauflösung entwickeln.
  - Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
  - Dauerhafte UID pro Termin und CalDAV-Abgleich mit Konflikterkennung.
  - Nächster Schritt: Konflikte automatisch auflösen und in die GUI integrieren.
