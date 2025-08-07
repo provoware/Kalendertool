@@ -8,17 +8,22 @@
 - Cache wird bei externen Datenbankänderungen automatisch invalidiert.
 - Automatische Startprüfung und Hilfestart integriert.
 - Startskript prüft ffmpeg robuster und weist bei Bedarf auf manuelle Installation hin.
-- Sphinx-Dokumentation enthält eine Startanleitung.
+- Sphinx-Dokumentation enthält Start-, Grundlagen- und Release-Anleitung.
 - Einfache CLI mit Hilfefunktion ergänzt.
 - CLI exportiert Termine als iCal-Datei.
+- iCal-Export überschreibt vorhandene Dateien nur mit --force.
 - Pfade werden erst bei Bedarf angelegt; CLI nutzt zentrale Pfade.
 - FFmpeg-Aufrufe prüfen jetzt den Rückgabecode und geben verständliche Fehlermeldungen aus.
 - CLI liefert konsistente Exit-Codes.
 - Docstrings für CLI- und GUI-Helfer ergänzt.
 - Docstrings in der CLI-Hauptfunktion ergänzt; Tests laufen automatisch über pre-commit.
 - Logging zentral konfiguriert und in CLI/GUI integriert.
+- Logrotation begrenzt die Logdateigröße.
+- Release-Prozess dokumentiert.
+- Versionsnummer auf 0.1.1 erhöht.
 - Skripte in eigenes Verzeichnis verschoben und Dokumentationsskript ergänzt.
 - CI baut nun die Sphinx-Dokumentation.
+- Sphinx-Dokumentation manuell gebaut und geprüft.
 - Markdown-Dateien unter /docs organisiert.
 
  - Konflikt-Dialog für CalDAV-Synchronisation ergänzt.
@@ -28,3 +33,28 @@
 
  1. Gruppen-Kalender verbessern.
  2. Automatische Konfliktauflösung entwickeln.
+ - Nächster Schritt: Gruppen-Kalender und CalDAV-Synchronisation umsetzen.
+ - Dauerhafte UID pro Termin und CalDAV-Abgleich mit Konflikterkennung.
+ - Nächster Schritt: Konflikte automatisch auflösen und in die GUI integrieren.
+
+ 1. Kalender- und CalDAV-Funktionen weiterentwickeln.
+ 2. Gruppen-Kalender verbessern.
+- Gruppen-Kalender und CalDAV-Synchronisation umgesetzt.
+
+- GUI verwaltet Gruppen-Kalender.
+- CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+- GUI kann Termine löschen und meldet Ergebnis der Synchronisation.
+- GUI kann Termine bearbeiten.
+- GUI bestätigt Speichern, Ändern und Löschen und zeigt Fehler an.
+- GUI prüft das Gruppenfeld und zeigt Tooltips für Felder und Buttons.
+- GUI zeigt Monatsübersicht zur besseren Terminanzeige.
+- Monatsansicht erlaubt Wechsel zwischen Monaten.
+- Monatsansicht erlaubt Bearbeiten und Anlegen von Terminen.
+- CLI bietet Befehl zum Bearbeiten bestehender Termine.
+
+- SQLite-Verbindung ist jetzt threadsicher.
+- Alarme für Termine hinzugefügt.
+- Nächster Schritt: Release-Tag erstellen und Paket veröffentlichen.
+
+ 1. Version anheben und CHANGELOG finalisieren.
+ 2. Paket bauen und auf PyPI hochladen.

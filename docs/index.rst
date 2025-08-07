@@ -6,6 +6,9 @@ Kalendertool Dokumentation
    :caption: Inhalt:
 
    start
+   basics
+   groups
    cli
    api/modules
+   release
 

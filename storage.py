@@ -58,7 +58,7 @@ def load_project(db_path: Path) -> Dict[str, Any]:
         if row:
             _cache = json.loads(row[0])
         else:
-            _cache = {"pairs": [], "settings": {}}
+            _cache = {"pairs": [], "settings": {}, "events": []}
         _mtime = current_mtime
         return _cache
 
