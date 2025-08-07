@@ -6,16 +6,13 @@
 - Automatische Konfliktauflösung und vollständige CalDAV-Synchronisation
 - Konflikte bei CalDAV-Synchronisation automatisch auflösen
 - Kalenderfunktionen: vollständige iCal-Unterstützung und Gruppen-Kalender
-- Logrotation für das zentrale Logging ergänzen
 // Release-Vorbereitung
 - Release-Tag erstellen und Paket veröffentlichen
 - Drag-and-Drop in Monatsansicht ergänzen
 - Undo-Funktion für Aktionen in der GUI
-
 ## Erledigte Aufgaben
 - GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
-
-## Erledigte Aufgaben
+- Logrotation für das zentrale Logging ergänzt
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
 - GUI um Gruppen-Kalender erweitert
 - CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
