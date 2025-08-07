@@ -8,6 +8,8 @@
 
 ## Erledigte Aufgaben
 - GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
+
+## Erledigte Aufgaben
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
 - GUI um Gruppen-Kalender erweitert
 - CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
@@ -23,6 +25,9 @@
 - Monatsübersicht erlaubt Navigation zu anderen Monaten
 - Monatsübersicht ermöglicht Bearbeiten und Anlegen per Mausklick
 - GUI zeigt Bestätigungen und Fehlerbehandlung beim Speichern, Ändern und Löschen
+- Dokumentation um Grundfunktionen für Einsteiger erweitert
+- Version in pyproject.toml aktualisiert
+- CHANGELOG um Versionsabschnitt ergänzt
 - Transaktionen und Caching für SQLite ergänzen
 - Datei fortschritt.txt anlegen und fortlaufend ergänzen
 - plan.md angelegt

@@ -23,6 +23,9 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 - Monatsansicht ermöglicht Bearbeiten und Anlegen per Mausklick.
 - GUI zeigt Bestätigungen nach Speichern, Ändern und Löschen und fängt Fehler ab.
 
+### Verbessert
+- CalDAV-Synchronisation wiederholt Übertragungen bei Netzwerkfehlern.
+
 ## [0.1.1] - 2025-08-06
 ### Hinzugefügt
 - Zentrales CHANGELOG nach *Keep a Changelog*-Standard.

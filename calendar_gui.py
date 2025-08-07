@@ -16,6 +16,8 @@ from start_cli import (
     close,
 )
 
+from start_cli import add_event, _load_groups, sync_caldav, close
+
 
 def run() -> None:
     """Starte die GUI."""
@@ -27,6 +29,7 @@ def run() -> None:
     tk.Label(root, text="Gruppe").grid(row=0, column=0)
     group_entry = tk.Entry(root, textvariable=group_var)
     group_entry.grid(row=0, column=1)
+    tk.Entry(root, textvariable=group_var).grid(row=0, column=1)
 
     listbox = tk.Listbox(root, width=40)
     listbox.grid(row=1, column=0, columnspan=2, pady=5)
@@ -99,6 +102,17 @@ def run() -> None:
         if not group_var.get().strip():
             messagebox.showerror("Fehler", "Gruppe angeben")
             return
+    tk.Entry(root, textvariable=title_var).grid(row=2, column=1)
+
+    tk.Label(root, text="Datum (JJJJ-MM-TT)").grid(row=3, column=0)
+    date_var = tk.StringVar()
+    tk.Entry(root, textvariable=date_var).grid(row=3, column=1)
+
+    tk.Label(root, text="Alarm (Minuten)").grid(row=4, column=0)
+    alarm_var = tk.StringVar()
+    tk.Entry(root, textvariable=alarm_var).grid(row=4, column=1)
+
+    def refresh() -> None:
         groups, _ = _load_groups()
         events = groups.get(group_var.get(), [])
         listbox.delete(0, tk.END)
@@ -138,6 +152,16 @@ def run() -> None:
         if not group_var.get().strip():
             messagebox.showerror("Fehler", "Gruppe angeben")
             return
+    def add_cb() -> None:
+        try:
+            alarm = int(alarm_var.get()) if alarm_var.get() else None
+        except ValueError:
+            messagebox.showerror("Fehler", "Alarm muss eine Zahl sein")
+            return
+        add_event(title_var.get(), date_var.get(), alarm, group_var.get())
+        refresh()
+
+    def sync_cb() -> None:
         url = simpledialog.askstring("CalDAV", "URL")
         if not url:
             return
@@ -335,6 +359,13 @@ def run() -> None:
     create_tooltip(btn_delete, "Markierten Termin löschen")
     create_tooltip(btn_sync, "Termine mit CalDAV-Server abgleichen")
     create_tooltip(btn_month, "Monatsübersicht anzeigen")
+        sync_caldav(url, user, password, group_var.get())
+
+    tk.Button(root, text="Aktualisieren", command=refresh).grid(row=5, column=0)
+    tk.Button(root, text="Speichern", command=add_cb).grid(row=5, column=1)
+    tk.Button(root, text="Synchronisieren", command=sync_cb).grid(
+        row=6, column=0, columnspan=2, pady=5
+    )
 
     refresh()
     root.mainloop()

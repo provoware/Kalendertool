@@ -14,6 +14,7 @@ from start_cli import (
     _load_groups,
     close,
 )  # noqa: E402
+from start_cli import add_event, export_ical, sync_caldav, close  # noqa: E402
 
 
 def test_export_creates_file(tmp_path, monkeypatch):

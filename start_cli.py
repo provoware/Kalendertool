@@ -86,6 +86,8 @@ def export_ical(
 
     Überschreibt vorhandene Dateien nur mit ``force=True``.
     """
+def export_ical(file_path: Path, group: str = "default") -> None:
+    """Termine einer Gruppe als iCal-Datei exportieren."""
     groups, _ = _load_groups()
     events = groups.get(group, [])
     if not events:
@@ -189,11 +191,14 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> b
 
     Gibt ``True`` bei Erfolg und sonst ``False`` zurück.
     """
+def sync_caldav(url: str, user: str, password: str, group: str = "default") -> None:
+    """Termine einer Gruppe per CalDAV synchronisieren."""
     groups, _ = _load_groups()
     events = groups.get(group, [])
     if not events:
         logger.info("Keine Termine zum Synchronisieren in Gruppe '%s'.", group)
         return False
+        return
     lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
@@ -237,6 +242,7 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> b
                 raise RuntimeError(f"Serverantwort {resp.status_code}")
             logger.info("CalDAV-Synchronisation erfolgreich")
             return True
+            return
         except RequestException as exc:  # pragma: no cover - Netzwerkfehler
             wait = 2**attempt
             logger.warning(
@@ -250,6 +256,8 @@ def sync_caldav(url: str, user: str, password: str, group: str = "default") -> b
             return False
     logger.error("CalDAV-Synchronisation abgebrochen nach mehreren Versuchen")
     return False
+            return
+    logger.error("CalDAV-Synchronisation abgebrochen nach mehreren Versuchen")
 
 
 def main() -> None:
@@ -326,6 +334,8 @@ def main() -> None:
         edit_event(args.index, args.title, args.date, args.alarm, args.group)
     elif args.cmd == "export":
         export_ical(Path(args.file), args.group, force=args.force)
+    elif args.cmd == "export":
+        export_ical(Path(args.file), args.group)
     elif args.cmd == "sync":
         sync_caldav(args.url, args.user, args.password, args.group)
     else:

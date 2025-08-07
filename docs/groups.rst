@@ -32,3 +32,5 @@ Synchronisation übertragen werden. Nach dem Speichern, Ändern oder Löschen
 erscheint eine Bestätigung; bei Fehlern zeigt die GUI eine entsprechende
 Meldung. Nach einer Synchronisation erscheint eine Meldung mit Erfolg oder
 Fehlschlag.
+Die grafische Oberfläche (*GUI*) bietet ein Feld für die Gruppe. Über die
+Buttons können Termine gespeichert oder per CalDAV synchronisiert werden.
