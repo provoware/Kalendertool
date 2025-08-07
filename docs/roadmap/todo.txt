@@ -1,6 +1,10 @@
 # Todo-Liste
 
 ## Offene Aufgaben
+// Architektur & Erweiterungen
+- Konflikte bei CalDAV-Synchronisation automatisch auflösen
+- Kalenderfunktionen: vollständige iCal-Unterstützung und Gruppen-Kalender
+- Logrotation für das zentrale Logging ergänzen
 // Release-Vorbereitung
 - Release-Tag erstellen und Paket veröffentlichen
 - Drag-and-Drop in Monatsansicht ergänzen
@@ -60,6 +64,7 @@
 - Ausgaben von FFmpeg unterdrückt, spart Speicher
 - requirements.txt und pyproject.toml angelegt
 - Alarme für Termine ergänzen
+- Persistente UID und CalDAV-Konfliktprüfung implementiert
 - Lizenzdatei hinzugefügt
 - Gemeinsame Hilfsfunktionen in utils.py ausgelagert (Modularisierung)
 - README mit Installationshinweisen erweitert

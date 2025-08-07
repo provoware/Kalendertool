@@ -9,6 +9,9 @@ from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
+import logging
+import requests
+from icalendar import Calendar
 import requests
 from requests import RequestException
 
@@ -43,6 +46,13 @@ def add_event(
     if alarm is not None and alarm < 0:
         logger.error("Alarm muss eine positive Zahl sein.")
         return
+    events, data = _load_events()
+    entry = {
+        "uid": str(uuid4()),
+        "title": title,
+        "date": date.isoformat(),
+        "dtstamp": datetime.utcnow().isoformat(),
+    }
     groups, data = _load_groups()
     entry = {"title": title, "date": date.isoformat()}
     if alarm is not None:
@@ -104,13 +114,13 @@ def export_ical(file_path: Path, group: str = "default") -> None:
         "VERSION:2.0",
         "PRODID:-//Kalendertool//DE",
     ]
-    stamp = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     for ev in events:
         date = datetime.fromisoformat(ev["date"]).strftime("%Y%m%d")
+        stamp = datetime.fromisoformat(ev["dtstamp"]).strftime("%Y%m%dT%H%M%SZ")
         lines.extend(
             [
                 "BEGIN:VEVENT",
-                f"UID:{uuid4()}",
+                f"UID:{ev['uid']}",
                 f"DTSTAMP:{stamp}",
                 f"DTSTART;VALUE=DATE:{date}",
                 f"SUMMARY:{ev['title']}",
@@ -136,6 +146,58 @@ def export_ical(file_path: Path, group: str = "default") -> None:
     logger.info("iCal-Datei unter %s erstellt", file_path)
 
 
+def sync_caldav(url: str) -> list[tuple[dict, dict]]:
+    """Kalender vom Server holen und mit lokalen Terminen abgleichen."""
+    events, data = _load_events()
+    local_by_uid = {ev["uid"]: ev for ev in events}
+    try:
+        resp = requests.get(url, timeout=5)
+        resp.raise_for_status()
+    except requests.RequestException as exc:
+        logger.error("Kalender konnte nicht geladen werden: %s", exc)
+        return []
+    try:
+        cal = Calendar.from_ical(resp.text)
+    except Exception as exc:  # noqa: BLE001
+        logger.error("Kalender konnte nicht gelesen werden: %s", exc)
+        return []
+    conflicts: list[tuple[dict, dict]] = []
+    for comp in cal.walk("VEVENT"):
+        uid = str(comp.get("UID"))
+        dtstamp = comp.get("DTSTAMP")
+        stamp = (
+            dtstamp.dt.isoformat()
+            if getattr(dtstamp, "dt", None) is not None
+            else datetime.utcnow().isoformat()
+        )
+        remote = {
+            "uid": uid,
+            "title": str(comp.get("SUMMARY")),
+            "date": comp.get("DTSTART").dt.isoformat(),
+            "dtstamp": stamp,
+        }
+        alarm = next((a for a in comp.subcomponents if a.name == "VALARM"), None)
+        if alarm is not None:
+            trig = alarm.get("TRIGGER")
+            if getattr(trig, "dt", None) is not None:
+                remote["alarm"] = int(abs(trig.dt.total_seconds()) // 60)
+        local = local_by_uid.get(uid)
+        if local:
+            local_stamp = local.get("dtstamp", "")
+            if stamp > local_stamp and (
+                local["title"] != remote["title"]
+                or local["date"] != remote["date"]
+                or local.get("alarm") != remote.get("alarm")
+            ):
+                conflicts.append((local, remote))
+            elif stamp > local_stamp:
+                local.update(remote)
+        else:
+            events.append(remote)
+    if conflicts:
+        return conflicts
+    save_project(data, DB_PATH)
+    return []
 def remove_event(index: int, group: str = "default") -> None:
     """Termin anhand seines Index aus einer Gruppe löschen."""
     groups, data = _load_groups()

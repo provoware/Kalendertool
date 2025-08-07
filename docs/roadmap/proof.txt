@@ -10,6 +10,8 @@
 - iCal-Export speichert Termine im Klartext; Verschlüsselung fehlt.
 - Uneinheitliche Namenskonventionen erschweren das Lesen des Codes.
 - Alarme unterstützen nur einfache Minuten-Offsets ohne Wiederholungen.
+- Logging nutzt keine Logrotation; Logdatei kann wachsen.
+- CalDAV-Synchronisation meldet Konflikte, führt sie aber nicht automatisch zusammen.
 - Monatsansicht bietet keine Drag-and-Drop-Verschiebung von Terminen.
 - Aktionen in der GUI lassen sich nicht rückgängig machen.
 - GUI bietet nur Grundfunktionen ohne erweiterte Ansichten.
