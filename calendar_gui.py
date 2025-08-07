@@ -28,12 +28,16 @@ def refresh_display(listbox: tk.Listbox, group_var: tk.StringVar) -> None:
         listbox.insert(tk.END, txt)
 
 
-def sync_cb(group_var: tk.StringVar) -> None:
+def sync_cb(url_var: tk.StringVar, group_var: tk.StringVar) -> None:
     """CalDAV-Synchronisation starten."""
     try:
-        sync_caldav("http://example.com/cal", group=group_var.get())
+        sync_caldav(url_var.get(), group=group_var.get())
+        if messagebox:
+            messagebox.showinfo("Synchronisation", "Synchronisation erfolgreich")
     except Exception as exc:  # pragma: no cover - Netzwerkfehler
         logger.error("Synchronisation fehlgeschlagen: %s", exc)
+        if messagebox:
+            messagebox.showerror("Synchronisation", f"Fehler: {exc}")
 
 
 def run() -> None:
@@ -43,17 +47,23 @@ def run() -> None:
         return
     root = tk.Tk()
     root.title("Kalender")
+    url_var = tk.StringVar(value="http://example.com/cal")
     group_var = tk.StringVar(value="default")
 
-    tk.Label(root, text="Gruppe").grid(row=0, column=0)
-    tk.Entry(root, textvariable=group_var).grid(row=0, column=1)
+    tk.Label(root, text="CalDAV-URL").grid(row=0, column=0)
+    tk.Entry(root, textvariable=url_var, width=40).grid(row=0, column=1)
+
+    tk.Label(root, text="Gruppe").grid(row=1, column=0)
+    tk.Entry(root, textvariable=group_var).grid(row=1, column=1)
 
     listbox = tk.Listbox(root, width=40)
-    listbox.grid(row=1, column=0, columnspan=2, pady=5)
+    listbox.grid(row=2, column=0, columnspan=2, pady=5)
 
-    tk.Button(root, text="Synchronisieren", command=lambda: sync_cb(group_var)).grid(
-        row=2, column=0, columnspan=2
-    )
+    tk.Button(
+        root,
+        text="Synchronisieren",
+        command=lambda: sync_cb(url_var, group_var),
+    ).grid(row=3, column=0, columnspan=2)
     refresh_display(listbox, group_var)
 
     root.mainloop()
