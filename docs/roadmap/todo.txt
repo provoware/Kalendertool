@@ -13,6 +13,7 @@
 ## Erledigte Aufgaben
 - GUI ermöglicht Löschen von Terminen und meldet Ergebnis der Synchronisation
 - Logrotation für das zentrale Logging ergänzt
+- Syntaxfehler in CLI, GUI und Tests behoben und Testlauf wiederhergestellt
 - Gruppen-Kalender und CalDAV-Synchronisation umgesetzt
 - GUI um Gruppen-Kalender erweitert
 - CalDAV-Synchronisation robuster gegen Netzwerkfehler gemacht
